@@ -1,0 +1,111 @@
+<!--
+title: How to find old pages of your website that still show up in Google, and remove them properly
+description: Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.
+stand: A page you forgot is still a page a search engine reads. Here is how to find yours and retire them without breaking anything.
+-->
+      <p>To find old pages that still show up in Google, search <code>site:yourdomain.com</code> with words like "price", "hours" or a past year, and export the indexed pages from Google Search Console. For each old page, update it, redirect it to the page that replaced it, or delete it so it returns a 404. Then use Google's Removals tool to hide it while Google catches up.</p>
+      <p>Old pages matter more than they used to. Search engines show them, and AI assistants that search the web read them and repeat what they say. If ChatGPT quotes your 2023 prices, there's usually a 2023 page behind it. This post is the cleanup that follows <a href="/blog/check-what-ai-assistants-say-about-your-business/">checking what assistants say about you</a>.</p>
+
+      <h2>Step 1: find the old pages</h2>
+      <p>Use more than one way. Each one finds pages the others miss.</p>
+      <h3>Search Google with operators</h3>
+      <p>Type these into Google, with your own domain:</p>
+      <pre><code>site:yourdomain.com price
+site:yourdomain.com hours
+site:yourdomain.com 2023
+site:yourdomain.com offer OR promotion OR holiday
+site:yourdomain.com before:2024</code></pre>
+      <p><code>before:</code> finds pages last updated before a date, and takes a year or a full date like <code>before:2024-06-01</code>. Google documents it on its <a href="https://support.google.com/websearch/answer/2466433">Refine searches</a> page, along with <code>site:</code>, <code>-</code> and <code>after:</code>. The date is Google's idea of when the page changed, so treat it as a hint, not a fact.</p>
+      <p>Search for the things that go out of date: prices, hours, addresses, branch names, staff pages, menus, events, job ads, and the names of products you no longer sell.</p>
+
+      <h3>Export the list from Search Console</h3>
+      <ol>
+        <li>In <a href="https://search.google.com/search-console">Google Search Console</a>, open <em>Indexing</em> → <em>Pages</em>.</li>
+        <li>Click <em>View data about indexed pages</em>.</li>
+        <li>Click <em>Export</em> and open the file in a spreadsheet.</li>
+      </ol>
+      <p>The table stops at 1,000 rows (<a href="https://support.google.com/webmasters/answer/7440203">source</a>). Most small sites fit. Read the addresses top to bottom. Old pages give themselves away by their paths: <code>/2022-menu</code>, <code>/summer-sale</code>, <code>/branch-old-street</code>.</p>
+      <p>Do the same in Bing Webmaster Tools. Bing feeds Microsoft Copilot, and its index is not a copy of Google's.</p>
+
+      <h3>Check what still gets visits</h3>
+      <p>Before you delete anything, open Search Console's <em>Performance</em> report, click <em>Pages</em>, and look up each old page. A page that still gets clicks has people arriving on it. It needs a redirect, not a dead end.</p>
+
+      <h2>Step 2: decide what each page becomes</h2>
+      <p>Every old page gets one of four outcomes. Write it in a new column next to the address.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 280" role="img" aria-labelledby="oldpage-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="oldpage-title">Decide each old page: if its facts are still useful, update it. If a newer page replaced it, redirect it with a 301. If nothing replaced it, delete it so it returns 404 or 410. If people still need it but search shouldn't show it, add noindex.</title>
+          <rect width="640" height="280" fill="var(--paper)"/>
+          <rect x="20" y="110" width="130" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="85" y="145" text-anchor="middle" fill="var(--ink)">an old page</text>
+          <line x1="150" y1="140" x2="230" y2="40" stroke="var(--ink)"/>
+          <line x1="150" y1="140" x2="230" y2="107" stroke="var(--ink)"/>
+          <line x1="150" y1="140" x2="230" y2="174" stroke="var(--ink)"/>
+          <line x1="150" y1="140" x2="230" y2="241" stroke="var(--ink)"/>
+          <text x="240" y="36" fill="var(--muted)">still useful?</text>
+          <text x="240" y="54" fill="var(--ink)">update it</text>
+          <text x="240" y="103" fill="var(--muted)">replaced by a newer page?</text>
+          <text x="240" y="121" fill="var(--signal)">301 redirect to it</text>
+          <text x="240" y="170" fill="var(--muted)">nothing replaced it?</text>
+          <text x="240" y="188" fill="var(--ink)">delete: 404 or 410</text>
+          <text x="240" y="237" fill="var(--muted)">people need it, search doesn't?</text>
+          <text x="240" y="255" fill="var(--ink)">noindex</text>
+        </svg>
+      </figure>
+
+      <ul>
+        <li><strong>Update</strong> when the page is still useful but some facts changed. Fix the facts, keep the address. This keeps any links pointing to it.</li>
+        <li><strong>Redirect</strong> when a newer page does the same job: the 2023 price list becomes the current price list, the closed branch points to the nearest open one. Use a permanent redirect (301 or 308). Google treats it as a strong signal that the new page should take the old one's place (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>).</li>
+        <li><strong>Delete</strong> when nothing replaced it: an expired offer, an event that happened, a product you'll never sell again. The server must answer with a 404 or 410 status.</li>
+        <li><strong>Noindex</strong> when some people still need the page but searchers shouldn't land on it, like an old terms-and-conditions page that existing customers signed. Add <code>&lt;meta name="robots" content="noindex"&gt;</code> to its <code>&lt;head&gt;</code>.</li>
+      </ul>
+      <p>404 or 410 doesn't matter much. Google says it treats all 4xx codes except 429 the same way: the page is dropped from the index if it was there (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>). Pick whichever your website builder makes easy.</p>
+
+      <h2>Step 3: check that it actually worked</h2>
+      <p>Website builders get this wrong more often than you'd think. A "deleted" page can still answer with a 200 status and a friendly "page not found" message. Google calls that a soft 404, and it stays a problem (<a href="https://support.google.com/webmasters/answer/7440203">source</a>).</p>
+      <p>Check each changed address. In a terminal, on Mac or Linux:</p>
+      <pre><code>curl -sI https://yourdomain.com/summer-sale | head -1
+# HTTP/2 404              deleted, good
+# HTTP/2 301              redirected, good
+# HTTP/2 200              still there: not done</code></pre>
+      <p>For a redirect, also check where it goes:</p>
+      <pre><code>curl -sIL https://yourdomain.com/2023-prices | grep -i '^location'</code></pre>
+      <p>No terminal? Use Search Console's URL Inspection: paste the address in the bar at the top, then click <em>Test live URL</em>. It shows what Google gets back right now.</p>
+
+      <h2>Step 4: hide it now, while Google catches up</h2>
+      <p>Google drops a deleted page only when it crawls that address again. That can take weeks for a page nobody links to. If the old page is doing harm, like quoting a wrong price, hide it in the meantime:</p>
+      <ul>
+        <li><strong>Google:</strong> Search Console → <em>Indexing</em> → <em>Removals</em> → <em>New request</em>. This hides the page from search for about six months. It does not delete it. Google's own words: the tool "provides only a temporary removal" (<a href="https://support.google.com/webmasters/answer/9689846">source</a>). The 404, redirect or noindex from step 2 is what makes it permanent.</li>
+        <li><strong>Bing:</strong> Bing Webmaster Tools' <a href="https://www.bing.com/webmasters/help/block-urls-264e560b">Block URLs</a>. Also temporary; a block lasts 90 days unless you extend it.</li>
+      </ul>
+      <p>If you already use IndexNow, submit the changed and deleted addresses there too. It tells Bing and other engines that use it to look again.</p>
+
+      <h2>When the old page isn't yours</h2>
+      <p>Sometimes the old fact sits on someone else's site: a directory, a news article, a blog. If that page is gone or has already been fixed but the old version still shows in search, anyone can ask for a refresh:</p>
+      <ul>
+        <li>Google: the <a href="https://search.google.com/search-console/remove-outdated-content">Refresh Outdated Content</a> tool.</li>
+        <li>Bing: the <a href="https://www.bing.com/webmasters/tools/contentremoval">Content Removal</a> tool.</li>
+      </ul>
+      <p>If the page is live and still wrong, these tools can't help. Ask the site to update it. Most directories let owners claim and edit their listing.</p>
+
+      <h2>Mistakes to skip</h2>
+      <ul>
+        <li><strong>Blocking old pages in robots.txt.</strong> It feels like removal. It isn't. If Google can't fetch the page, it never sees the noindex, and "the page can still appear in search results" (<a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">source</a>). Let the crawler in so it can read the 404 or the noindex.</li>
+        <li><strong>Redirecting everything to the home page.</strong> It's one rule instead of twenty, and it helps nobody. Someone who clicked "2023 price list" wants prices, not your welcome banner. Redirect each page to its closest match, and delete the ones that have none.</li>
+        <li><strong>Using a temporary redirect.</strong> 302 and 307 tell Google the move might be undone, so it may keep showing the old address. Use 301 or 308 for pages that are gone for good.</li>
+        <li><strong>Panicking at the 404 count.</strong> After a cleanup, Search Console's <em>Not found (404)</em> list grows. For pages you deleted on purpose, that is the report doing its job, not an error to fix.</li>
+        <li><strong>Forgetting the links.</strong> Search your own site for links to the pages you removed and change them. Your menus and old blog posts are often the reason a dead page keeps getting crawled.</li>
+      </ul>
+
+      <h2>The checklist</h2>
+      <ol>
+        <li>Search <code>site:yourdomain.com</code> with "price", "hours", past years, and <code>before:</code>.</li>
+        <li>Export indexed pages from Search Console (and Bing Webmaster Tools) into a spreadsheet.</li>
+        <li>Look up each old page in the Performance report before you touch it.</li>
+        <li>Mark each one: update, redirect (301), delete (404/410) or noindex.</li>
+        <li>Make the change, then check the status code with <code>curl -sI</code> or URL Inspection.</li>
+        <li>Hide harmful pages with Google's Removals tool and Bing's Block URLs while you wait.</li>
+        <li>Fix your own links to removed pages.</li>
+        <li>Search <code>site:</code> again in a few weeks, and repeat once a year.</li>
+      </ol>
