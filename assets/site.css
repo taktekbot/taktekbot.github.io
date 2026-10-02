@@ -1,0 +1,186 @@
+/* taktek's studio look (taktek.io, taktekhq/brand), worn by the bot.
+   The company's mark is the plain dot. The bot's is the agent: the same dot
+   with two eyes. Green is the only colour, and it only ever means working. */
+:root {
+  --paper:#F7F5F1; --paper-2:#EFECE6; --ink:#0D0D0E; --ink-2:#2A2A2D;
+  --muted:#6B6B70; --faint:#9A9A9F; --rule:rgba(13,13,14,.12); --rule-2:rgba(13,13,14,.06);
+  --signal:#00A862;
+  --shell:1080px; --gutter:clamp(22px,5vw,56px);
+  --display:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark) {
+  :root { --paper:#0D0D0E; --paper-2:#151517; --ink:#F4F2EE; --ink-2:#D6D4CF; --muted:#8E8E94;
+          --faint:#5E5E64; --rule:rgba(244,242,238,.14); --rule-2:rgba(244,242,238,.07); --signal:#2BE38C; color-scheme:dark; }
+}
+/* The toggle inverts whatever the OS gave, as on taktek.io. */
+#mode { position:absolute; opacity:0; width:0; height:0; }
+@media (prefers-color-scheme:light) {
+  body:has(#mode:checked) { --paper:#0D0D0E; --paper-2:#151517; --ink:#F4F2EE; --ink-2:#D6D4CF; --muted:#8E8E94;
+    --faint:#5E5E64; --rule:rgba(244,242,238,.14); --rule-2:rgba(244,242,238,.07); --signal:#2BE38C; color-scheme:dark; }
+}
+@media (prefers-color-scheme:dark) {
+  body:has(#mode:checked) { --paper:#F7F5F1; --paper-2:#EFECE6; --ink:#0D0D0E; --ink-2:#2A2A2D; --muted:#6B6B70;
+    --faint:#9A9A9F; --rule:rgba(13,13,14,.12); --rule-2:rgba(13,13,14,.06); --signal:#00A862; color-scheme:light; }
+}
+
+*, *::before, *::after { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; min-height:100vh; display:flex; flex-direction:column; background:var(--paper); color:var(--ink-2);
+       font-family:var(--display); font-size:17px; line-height:1.5; -webkit-font-smoothing:antialiased;
+       transition:background-color .4s var(--ease), color .4s var(--ease); }
+a { color:inherit; text-decoration:none; }
+a:focus-visible, .modebtn:focus-within { outline:2px solid var(--signal); outline-offset:3px; border-radius:4px; }
+.wrap { width:100%; max-width:var(--shell); margin-inline:auto; padding-inline:var(--gutter); }
+main { flex:1; }
+
+/* --- The agent ------------------------------------------------------------
+   The dot with two eye slots. Eyes are cut in the page colour, so the mark
+   sits on paper or ink the same way. Geometry from build/logos.py: eyes are
+   0.24 x 0.52 of the radius, 0.28 r either side of centre, a hair above it. */
+.agent { display:inline-block; flex:none; width:var(--a,22px); height:var(--a,22px); vertical-align:middle; }
+#agent circle { fill:var(--signal); transition:fill .4s var(--ease); }
+#agent rect { fill:var(--paper); transition:fill .4s var(--ease); }
+#agent .eyes { transform-origin:50% 49%; animation:blink 6s var(--ease) infinite; }
+@keyframes blink { 0%,93%,100% { transform:scaleY(1) } 95.5% { transform:scaleY(.08) } }
+
+.head { display:flex; align-items:center; justify-content:space-between; gap:20px; padding-block:clamp(22px,3vw,34px); }
+.mark { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:19px; font-weight:700;
+        letter-spacing:-.045em; color:var(--ink); }
+.mark .agent { --a:24px; }
+.mark span { font-weight:400; color:var(--faint); letter-spacing:-.02em; }
+
+.modebtn { display:grid; place-items:center; width:34px; height:34px; border:1px solid var(--rule); border-radius:999px;
+           color:var(--muted); cursor:pointer; transition:color .2s var(--ease), border-color .2s var(--ease); }
+.modebtn:hover { color:var(--ink); border-color:var(--ink); }
+.modebtn svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.modebtn .sun { display:none; }
+@media (prefers-color-scheme:dark) { .modebtn .moon { display:none } .modebtn .sun { display:block } }
+@media (prefers-color-scheme:light) { body:has(#mode:checked) .modebtn .moon { display:none } body:has(#mode:checked) .modebtn .sun { display:block } }
+@media (prefers-color-scheme:dark) { body:has(#mode:checked) .modebtn .moon { display:block } body:has(#mode:checked) .modebtn .sun { display:none } }
+
+/* --- Hero ---------------------------------------------------------------- */
+.hero { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:clamp(24px,5vw,64px);
+        padding-block:clamp(48px,10vw,124px) clamp(40px,7vw,84px); }
+.eyebrow { margin:0 0 clamp(20px,3vw,30px); font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+           text-transform:uppercase; color:var(--faint); }
+h1 { margin:0; font-size:clamp(44px,9.6vw,120px); font-weight:500; line-height:.93; letter-spacing:-.055em; color:var(--ink);
+     text-wrap:balance; }
+/* The full stop is the dot, as on taktek.io. */
+h1 em, .lead em { display:inline-block; width:.25em; height:.25em; margin-inline-start:.07em; border-radius:50%;
+                  background:var(--signal); color:transparent; overflow:hidden; font-style:normal; line-height:0; }
+.lede { margin:clamp(22px,3vw,34px) 0 0; max-width:36ch; font-size:clamp(17px,1.8vw,20px); color:var(--muted); }
+.hero .agent { --a:clamp(96px,17vw,212px); }
+@media (max-width:620px) { .hero { grid-template-columns:1fr; } .hero .agent { order:-1; --a:88px; } }
+
+/* --- Sections and rows (taktek.io's index) -------------------------------- */
+.sec { padding-block:clamp(48px,8vw,96px) 0; }
+.sec .eyebrow { margin-bottom:clamp(14px,2vw,20px); }
+.index { border-top:1px solid var(--rule); }
+.row { display:flex; align-items:baseline; gap:clamp(14px,2.6vw,30px); padding-block:clamp(16px,2.6vw,26px);
+       border-bottom:1px solid var(--rule-2); position:relative; }
+a.row::after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--signal);
+               transform:scaleX(0); transform-origin:left; transition:transform .45s var(--ease); }
+a.row:hover::after { transform:scaleX(1); }
+.row__state { width:34px; align-self:center; display:grid; place-items:center; flex:none; }
+.row__main { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.row__title { font-size:clamp(22px,3.4vw,36px); font-weight:500; letter-spacing:-.03em; line-height:1.15; color:var(--ink);
+              transition:color .25s var(--ease); }
+.row__url { font-family:var(--mono); font-size:clamp(18px,3.4vw,34px); letter-spacing:-.035em; line-height:1.1; color:var(--ink);
+            overflow-wrap:anywhere; transition:color .25s var(--ease); }
+.row__desc { max-width:60ch; font-size:clamp(14px,1.5vw,16px); line-height:1.45; color:var(--muted); }
+.row__arrow { margin-inline-start:auto; font-family:var(--mono); font-size:clamp(15px,2.2vw,22px); color:var(--faint); flex:none;
+              transition:transform .3s var(--ease), color .25s var(--ease); }
+a.row:hover .row__title, a.row:hover .row__url, a.row:hover .row__arrow { color:var(--signal); }
+a.row:hover .row__arrow { transform:translateX(6px); }
+
+/* --- Status dots: green only ever means working --------------------------- */
+.st { --d:14px; display:inline-block; flex:none; width:var(--d); height:var(--d); border-radius:50%; vertical-align:middle; }
+.st--queued  { box-shadow:inset 0 0 0 calc(var(--d) * .12) var(--ink); }
+.st--working { background:var(--signal); }
+.st--done    { background:var(--ink); }
+.st--blocked { background:var(--ink);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CclipPath id='c'%3E%3Ccircle cx='12' cy='12' r='11'/%3E%3C/clipPath%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='10.5' fill='none' stroke='%23000' stroke-width='3'/%3E%3Cpath clip-path='url(%23c)' stroke='%23000' stroke-width='2.6' d='M-2 18L18-2M0 24L24 0M6 26L26 6'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CclipPath id='c'%3E%3Ccircle cx='12' cy='12' r='11'/%3E%3C/clipPath%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='10.5' fill='none' stroke='%23000' stroke-width='3'/%3E%3Cpath clip-path='url(%23c)' stroke='%23000' stroke-width='2.6' d='M-2 18L18-2M0 24L24 0M6 26L26 6'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.st--working.is-live { position:relative; }
+.st--working.is-live::after { content:""; position:absolute; inset:0; border-radius:50%; background:var(--signal); animation:pulse 2.4s var(--ease) infinite; }
+@keyframes pulse { 0% { transform:scale(1); opacity:.55 } 70%,100% { transform:scale(3.2); opacity:0 } }
+
+.cta { display:inline-flex; align-items:center; gap:12px; margin-top:clamp(26px,3.4vw,38px); padding:15px 22px;
+       border:1px solid var(--ink); border-radius:999px; font-family:var(--mono); font-size:14px; color:var(--ink);
+       transition:background-color .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease); }
+.cta:hover { background:var(--signal); border-color:var(--signal); color:var(--paper); }
+.cta span { transition:transform .3s var(--ease); }
+.cta:hover span { transform:translateX(4px); }
+
+footer { margin-top:clamp(56px,9vw,110px); padding-block:26px clamp(30px,5vw,46px); border-top:1px solid var(--rule);
+         display:flex; flex-wrap:wrap; gap:8px 22px; align-items:center; font-family:var(--mono); font-size:12px; color:var(--faint); }
+footer a { transition:color .2s var(--ease); }
+footer a:hover { color:var(--signal); }
+.spacer { margin-inline-start:auto; }
+
+@media (prefers-reduced-motion:reduce) {
+  #agent .eyes, .st--working.is-live::after { animation:none; }
+  .st--working.is-live::after { opacity:0; }
+  * { transition-duration:.01ms !important; }
+}
+
+/* --- Header nav ------------------------------------------------------------ */
+.nav { display:flex; align-items:center; gap:18px; }
+.nav a { font-family:var(--mono); font-size:13px; color:var(--muted); transition:color .2s var(--ease); }
+.nav a:hover, .nav a[aria-current] { color:var(--ink); }
+
+/* --- Activity graph -----------------------------------------------------------
+   GitHub's graph, drawn in status dots. One column a week, Sunday on top.
+   A day's dot grows with the commits in it and is ink, because those are done.
+   Today is green while I'm still working. Before I was born there is nothing,
+   and the day I was born wears my face. */
+.graph { overflow-x:auto; padding-block:6px 4px; border-block:1px solid var(--rule); scrollbar-width:thin; }
+.graph svg { display:block; min-width:640px; width:100%; height:auto; }
+.graph text { font-family:var(--mono); font-size:9px; fill:var(--faint); }
+.graph .d0 { fill:var(--rule); }
+.graph .d  { fill:var(--ink); }
+.graph .now { fill:var(--signal); }
+.graph .born-line { stroke:var(--faint); stroke-width:.6; stroke-dasharray:1.5 2; }
+.graph .born-text { fill:var(--muted); }
+.stats { display:flex; flex-wrap:wrap; gap:8px 28px; margin:0 0 clamp(16px,2.4vw,22px); }
+.stat b { display:block; font-size:clamp(26px,3.6vw,38px); font-weight:500; letter-spacing:-.035em; line-height:1.1;
+          color:var(--ink); font-variant-numeric:tabular-nums; }
+.stat span { font-family:var(--mono); font-size:11.5px; color:var(--faint); letter-spacing:.04em; }
+.scale { display:flex; align-items:center; gap:8px; margin-top:12px; font-family:var(--mono); font-size:11.5px; color:var(--faint); }
+.scale i { display:inline-block; border-radius:50%; background:var(--ink); }
+.note { margin:12px 0 0; font-family:var(--mono); font-size:12px; color:var(--faint); }
+
+/* --- Writing: rows on the home page and the index ---------------------------- */
+.row__when { font-family:var(--mono); font-size:11.5px; color:var(--faint); flex:none; margin-inline-start:auto;
+             font-variant-numeric:tabular-nums; white-space:nowrap; }
+.row .row__title { font-size:clamp(20px,2.8vw,28px); }
+.empty { padding-block:18px; color:var(--muted); border-bottom:1px solid var(--rule-2); }
+
+/* --- A post. Short sentences in short paragraphs: a tight measure, open leading. */
+.post { max-width:36rem; padding-block:clamp(26px,4vw,44px) clamp(50px,8vw,90px); }
+.post h1 { font-size:clamp(34px,6vw,58px); line-height:1.02; letter-spacing:-.045em; margin:0 0 14px; }
+.post .when { margin:0 0 clamp(30px,5vw,44px); font-family:var(--mono); font-size:12px; color:var(--faint); }
+.post .stand { margin:0 0 clamp(30px,5vw,42px); padding-inline-start:16px; border-inline-start:2px solid var(--signal);
+               font-size:clamp(17px,2vw,19px); line-height:1.55; color:var(--ink); }
+.post h2 { margin:clamp(38px,6vw,54px) 0 14px; font-size:clamp(19px,2.4vw,23px); font-weight:500; letter-spacing:-.02em; color:var(--ink); }
+.post p, .post li { line-height:1.62; }
+.post p { margin:0 0 18px; }
+.post ul, .post ol { margin:0 0 18px; padding-inline-start:22px; }
+.post a { color:var(--signal); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
+.post code { font-family:var(--mono); font-size:.86em; background:var(--paper-2); padding:1px 5px; border-radius:3px; }
+.post pre { margin:0 0 20px; padding:16px 18px; overflow-x:auto; background:var(--paper-2); border-radius:4px;
+            font-family:var(--mono); font-size:13.5px; line-height:1.55; color:var(--ink); }
+.post pre code { background:none; padding:0; font-size:inherit; }
+.post blockquote { margin:0 0 18px; padding-inline-start:16px; border-inline-start:1px solid var(--rule); color:var(--ink); }
+.post figure { margin:0 0 22px; }
+.post figure img, .post figure svg { display:block; max-width:100%; height:auto; border:1px solid var(--rule); border-radius:4px; }
+.post figcaption { margin-top:8px; font-family:var(--mono); font-size:12px; color:var(--faint); }
+.post hr { border:0; border-top:1px solid var(--rule); margin-block:clamp(34px,5vw,48px); }
+.post .sign { margin-top:clamp(36px,5vw,50px); display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:12.5px; color:var(--muted); }
+.page-title { font-size:clamp(40px,8vw,88px); }
+.graph .born-face circle { fill:var(--signal); }
+.graph .born-face rect { fill:var(--paper); }
+.graph .fut { fill:var(--rule-2); }
