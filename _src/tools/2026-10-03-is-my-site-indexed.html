@@ -1,0 +1,120 @@
+<!--
+title: Is my site indexed? A checklist builder
+description: Type your domain, get the exact links and steps to check whether Google and Bing have found your site, and what to do if they haven't.
+stand: No network calls. It just turns your domain into the right links, in the right order.
+-->
+      <p>If a new site has no visitors, the usual reflex is to improve the pages. Better headings, better copy, more links. But a search engine can't rank a page it has never read. The first question is always: has it been indexed at all?</p>
+      <p>Type your domain below. This builds the exact checks to run, in order, with the right links already filled in. Nothing is sent anywhere; it only assembles links from what you type.</p>
+
+      <div class="idx">
+        <label for="idx-domain">Your domain</label>
+        <input id="idx-domain" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="example.com">
+        <p class="idx-hint">Just the domain, with or without <code>https://</code>.</p>
+      </div>
+
+      <ol class="idx-list" id="idx-list"></ol>
+
+      <h2>Reading the result</h2>
+      <p>Zero results from the <code>site:</code> search is the clearest signal: the engine has not crawled a single page yet. A handful of results on a site with hundreds of pages means the same problem, just partial.</p>
+      <p>If it's been more than two weeks since you submitted a sitemap and verified the property, and the count is still zero, something is blocking the crawler: a <code>noindex</code> tag left over from staging, a <code>robots.txt</code> disallow, or a password wall. Check those before anything else.</p>
+
+      <style>
+        .idx { margin: 0 0 28px; padding: 18px 20px; background: var(--paper-2); border-radius: 6px; }
+        .idx label { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--faint); margin-bottom: 8px; }
+        .idx input { width: 100%; box-sizing: border-box; padding: 11px 13px; font-family: var(--mono); font-size: 16px;
+          color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; }
+        .idx input:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; }
+        .idx-hint { margin: 10px 0 0; font-size: 13px; color: var(--faint); }
+        .idx-list { list-style: none; margin: 0 0 20px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+        .idx-list li { padding: 14px 16px; border: 1px solid var(--rule); border-radius: 6px; }
+        .idx-step__head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+        .idx-step__title { font-weight: 500; color: var(--ink); }
+        .idx-step__why { margin: 6px 0 0; font-size: 14px; color: var(--muted); line-height: 1.5; }
+        .idx-step a.idx-go { font-family: var(--mono); font-size: 13px; color: var(--signal); text-decoration: none; white-space: nowrap; }
+        .idx-step a.idx-go:hover { text-decoration: underline; }
+        .idx-empty { color: var(--faint); font-size: 14px; }
+      </style>
+
+      <script>
+        (function () {
+          var input = document.getElementById('idx-domain');
+          var list = document.getElementById('idx-list');
+
+          function cleanDomain(raw) {
+            var s = (raw || '').trim().toLowerCase();
+            s = s.replace(/^https?:\/\//, '').replace(/^www\./, '');
+            s = s.split('/')[0].split('?')[0].split('#')[0];
+            return s;
+          }
+
+          function esc(s) {
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+          }
+
+          function render() {
+            var domain = cleanDomain(input.value);
+            list.innerHTML = '';
+            if (!domain || domain.indexOf('.') === -1) {
+              var li = document.createElement('li');
+              li.className = 'idx-empty';
+              li.textContent = 'Type a domain above to build the checklist.';
+              list.appendChild(li);
+              return;
+            }
+            var steps = [
+              {
+                title: 'Ask Google what it has seen',
+                why: 'Zero results means Google has not read a single page yet. That is an indexing problem, not an SEO problem.',
+                href: 'https://www.google.com/search?q=' + encodeURIComponent('site:' + domain),
+                go: 'Run the site: search'
+              },
+              {
+                title: 'Check Search Console',
+                why: 'Add the domain as a property, verify it, and submit the sitemap. This is how you tell Google the site exists.',
+                href: 'https://search.google.com/search-console',
+                go: 'Open Search Console'
+              },
+              {
+                title: 'Check the sitemap is actually there',
+                why: 'A sitemap that 404s cannot be submitted. Open it and confirm it lists your real pages.',
+                href: 'https://' + domain + '/sitemap.xml',
+                go: 'Open sitemap.xml'
+              },
+              {
+                title: 'Check robots.txt is not blocking the crawler',
+                why: 'A leftover "Disallow: /" from a staging site is the most common reason a finished site stays invisible.',
+                href: 'https://' + domain + '/robots.txt',
+                go: 'Open robots.txt'
+              },
+              {
+                title: "Don't skip Bing",
+                why: 'Smaller on its own, but several AI assistants and search tools build on its index. You can import straight from Search Console.',
+                href: 'https://www.bing.com/webmasters',
+                go: 'Open Bing Webmaster Tools'
+              },
+              {
+                title: 'Ask Bing what it has seen',
+                why: 'The same check as step 1, on the index that step 5 feeds.',
+                href: 'https://www.bing.com/search?q=' + encodeURIComponent('site:' + domain),
+                go: 'Run the site: search'
+              }
+            ];
+            steps.forEach(function (step, i) {
+              var li = document.createElement('li');
+              li.className = 'idx-step';
+              li.innerHTML =
+                '<div class="idx-step__head">' +
+                  '<span class="idx-step__title">' + (i + 1) + '. ' + esc(step.title) + '</span>' +
+                  '<a class="idx-go" href="' + step.href + '" target="_blank" rel="noopener">' + esc(step.go) + ' &rarr;</a>' +
+                '</div>' +
+                '<p class="idx-step__why">' + esc(step.why) + '</p>';
+              list.appendChild(li);
+            });
+          }
+
+          input.addEventListener('input', render);
+          render();
+        })();
+      </script>
