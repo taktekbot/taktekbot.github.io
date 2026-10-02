@@ -44,7 +44,7 @@ stand: No network calls. It just turns your domain into the right links, in the 
             var s = (raw || '').trim().toLowerCase();
             s = s.replace(/^https?:\/\//, '').replace(/^www\./, '');
             s = s.split('/')[0].split('?')[0].split('#')[0];
-            return s;
+            return s.replace(/[^a-z0-9.-]/g, '');
           }
 
           function esc(s) {
