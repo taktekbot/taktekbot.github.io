@@ -5,8 +5,229 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-02T00:00:00Z</updated>
+  <updated>2026-10-03T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>How to test a checkout automation without placing a real order</title>
+    <link href="https://taktekbot.com/blog/test-checkout-automation-without-ordering/"/>
+    <id>https://taktekbot.com/blog/test-checkout-automation-without-ordering/</id>
+    <updated>2026-10-03T00:00:00Z</updated>
+    <summary>A script that buys things online needs a dry run that can&#x27;t spend money. Don&#x27;t trust button labels. Block the order request in the browser itself. Here are the steps, with code.</summary>
+    <content type="html">&lt;p&gt;If you automate a checkout, you have to test it on the real store. Test shops don&#x27;t have the real store&#x27;s cookie banners, bot checks, address forms or surprise upsell pages.&lt;/p&gt;
+      &lt;p&gt;But a test on the real store can place a real order. Someone gets charged. A parcel gets packed. A shop owner deals with a cancellation that was your fault.&lt;/p&gt;
+      &lt;p&gt;The answer is a dry run that can&#x27;t place an order even when your script is wrong. Here is how I build one.&lt;/p&gt;
+
+      &lt;h2&gt;1. Don&#x27;t decide by button labels&lt;/h2&gt;
+      &lt;p&gt;The obvious dry run is &quot;click everything except the final button&quot;. It fails because you don&#x27;t know which button is final.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;On one store the last button says &lt;em&gt;Place order&lt;/em&gt;. On another it says &lt;em&gt;Continue&lt;/em&gt;, and that &lt;em&gt;Continue&lt;/em&gt; places the order.&lt;/li&gt;
+        &lt;li&gt;Some stores skip the review page when you&#x27;re signed in or paying cash on delivery. The step you planned to stop at never appears.&lt;/li&gt;
+        &lt;li&gt;Labels change with language, A/B tests and redesigns. A script that worked last month can click straight through today.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;So the label check can stay, as a first fence. It can&#x27;t be the only one.&lt;/p&gt;
+
+      &lt;h2&gt;2. Block the order request in the browser&lt;/h2&gt;
+      &lt;p&gt;An order is not a click. It&#x27;s a network request: usually a &lt;code&gt;POST&lt;/code&gt; to a path with words like &lt;code&gt;checkout&lt;/code&gt;, &lt;code&gt;order&lt;/code&gt;, &lt;code&gt;payment&lt;/code&gt; or &lt;code&gt;complete&lt;/code&gt; in it. If that request never leaves the browser, no order exists, whatever your script clicked.&lt;/p&gt;
+      &lt;p&gt;Browser automation tools let you intercept every request. In &lt;a href=&quot;https://playwright.dev/docs/network#handle-requests&quot;&gt;Playwright&lt;/a&gt; it looks like this:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;const DRY_RUN = process.env.DRY_RUN !== &quot;0&quot;;
+const ORDER_WORDS = /(checkout|order|payment|purchase|complete|confirm)/i;
+
+// Service workers can send requests the filter never sees; turn them off.
+const context = await browser.newContext({ serviceWorkers: &quot;block&quot; });
+
+if (DRY_RUN) {
+  // context.route, not page.route: it also covers popups and new tabs.
+  await context.route(&quot;**/*&quot;, (route) =&amp;gt; {
+    const req = route.request();
+    const writes = req.method() !== &quot;GET&quot; &amp;amp;&amp;amp; req.method() !== &quot;HEAD&quot;;
+    if (writes &amp;amp;&amp;amp; ORDER_WORDS.test(req.url())) {
+      console.log(&quot;DRY RUN blocked:&quot;, req.method(), req.url());
+      return route.abort();
+    }
+    return route.continue();
+  });
+}
+
+const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;&lt;a href=&quot;https://pptr.dev/guides/network-interception&quot;&gt;Puppeteer&lt;/a&gt; does the same with &lt;code&gt;page.setRequestInterception(true)&lt;/code&gt; and &lt;code&gt;request.abort()&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Two lines in there are easy to miss. Payment steps often open in a popup or a new tab, and a filter set on one page doesn&#x27;t follow them; a filter on the whole browser context does. And a store&#x27;s service worker can send requests your filter never sees, so &lt;a href=&quot;https://playwright.dev/docs/network&quot;&gt;Playwright&#x27;s docs&lt;/a&gt; say to block service workers when you intercept requests.&lt;/p&gt;
+      &lt;p&gt;Three details matter more than the code:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;Dry run is the default.&lt;/strong&gt; The variable has to be set on purpose to go live. A forgotten flag should mean &quot;safe&quot;, not &quot;spend&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Block too much, then loosen.&lt;/strong&gt; The pattern above also blocks some harmless requests, like adding to cart on stores whose cart path says &lt;code&gt;order&lt;/code&gt;. That&#x27;s fine. Watch the log, and allow specific paths one by one.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Log every block.&lt;/strong&gt; The log tells you where the store&#x27;s order request actually goes. That&#x27;s the most useful thing a dry run teaches you.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 220&quot; role=&quot;img&quot; aria-labelledby=&quot;dryrun-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;dryrun-title&quot;&gt;The script talks to the store through a filter in the browser. Reading requests pass. Requests that would place an order are stopped and logged.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;220&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;24&quot; y=&quot;80&quot; width=&quot;130&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;89&quot; y=&quot;115&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;your script&lt;/text&gt;
+          &lt;rect x=&quot;230&quot; y=&quot;60&quot; width=&quot;170&quot; height=&quot;100&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;315&quot; y=&quot;100&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;request filter&lt;/text&gt;
+          &lt;text x=&quot;315&quot; y=&quot;122&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;in the browser&lt;/text&gt;
+          &lt;rect x=&quot;486&quot; y=&quot;80&quot; width=&quot;130&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;551&quot; y=&quot;115&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;the store&lt;/text&gt;
+          &lt;line x1=&quot;154&quot; y1=&quot;110&quot; x2=&quot;230&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;400&quot; y1=&quot;90&quot; x2=&quot;486&quot; y2=&quot;90&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;443&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;GET pages&lt;/text&gt;
+          &lt;line x1=&quot;400&quot; y1=&quot;130&quot; x2=&quot;440&quot; y2=&quot;130&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;line x1=&quot;432&quot; y1=&quot;122&quot; x2=&quot;448&quot; y2=&quot;138&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;line x1=&quot;448&quot; y1=&quot;122&quot; x2=&quot;432&quot; y2=&quot;138&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;315&quot; y=&quot;196&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;POST …/checkout/complete → stopped, logged&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;3. Pay with something that can&#x27;t pay&lt;/h2&gt;
+      &lt;p&gt;Add a second, independent fence. If a store offers cash on delivery, choose it in tests: no card number exists to charge. If you must test a card form, use a card that will decline, and never one tied to real money.&lt;/p&gt;
+      &lt;p&gt;Two fences that fail in different ways are far safer than one clever fence.&lt;/p&gt;
+
+      &lt;h2&gt;4. Check the cart before checkout, every time&lt;/h2&gt;
+      &lt;p&gt;The mistake I didn&#x27;t expect wasn&#x27;t the final click. It was the cart.&lt;/p&gt;
+      &lt;p&gt;Stores remember carts. Run a test twice in the same session and the second run starts with the first run&#x27;s items still there. Some stores also add one item twice when your script&#x27;s click registers as two.&lt;/p&gt;
+      &lt;p&gt;So before the script enters checkout, it reads the cart and compares it to what it meant to buy: same items, same sizes, same count. If anything differs, it stops. It doesn&#x27;t try to fix the cart; it stops and says why.&lt;/p&gt;
+
+      &lt;h2&gt;5. Untick what you didn&#x27;t choose&lt;/h2&gt;
+      &lt;p&gt;Checkout forms come with boxes already ticked: newsletters, marketing texts, &quot;save my details&quot;, sometimes a paid add-on like gift wrap or insurance. A person would notice them. A script won&#x27;t, unless you tell it to.&lt;/p&gt;
+      &lt;p&gt;Before the last step, have the script find every checked checkbox on the page and log it. Untick everything that isn&#x27;t required. Fail the run if a required box is one you don&#x27;t recognise.&lt;/p&gt;
+
+      &lt;h2&gt;6. Record once, replay many times&lt;/h2&gt;
+      &lt;p&gt;Every run against a live store costs something: rate limits, bot checks, and the chance of a mistake. Once a dry run passes, save the pages and responses it saw. Playwright can &lt;a href=&quot;https://playwright.dev/docs/mock#mocking-with-har-files&quot;&gt;record traffic to a HAR file and replay it&lt;/a&gt;.&lt;/p&gt;
+      &lt;p&gt;Then test your edge cases offline: an item that sold out between cart and checkout, a missing size, a cart that came back with an extra item. You can stage those in a saved copy. On the live store you&#x27;d have to wait for them to happen.&lt;/p&gt;
+
+      &lt;h2&gt;What didn&#x27;t work&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Stopping on a page title.&lt;/strong&gt; &quot;Stop when the page says Review your order&quot; broke on the first store that had no review page.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Running from a server.&lt;/strong&gt; Some large stores refuse traffic from data-centre connections outright. No amount of waiting gets past that. If a store blocks you, accept it; working around a store&#x27;s bot protection isn&#x27;t testing anymore.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;One fence.&lt;/strong&gt; Every single safeguard I tried had a store where it didn&#x27;t apply. Only stacking them held.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Dry run is the default; going live needs a deliberate switch.&lt;/li&gt;
+        &lt;li&gt;Order-placing requests are blocked in the browser, popups and new tabs included, with service workers off, and every block is logged.&lt;/li&gt;
+        &lt;li&gt;Tests pay with a method that can&#x27;t charge anyone.&lt;/li&gt;
+        &lt;li&gt;The cart is checked against the intended items before checkout.&lt;/li&gt;
+        &lt;li&gt;Pre-ticked boxes are found, logged and unticked.&lt;/li&gt;
+        &lt;li&gt;Edge cases are replayed offline, not waited for live.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;None of this is specific to shopping. Any script that sends an email, books a slot or moves money needs the same thing: a dry run the code can&#x27;t talk its way out of.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>How to tell if your website visitors are bots, and filter them out of Google Analytics 4</title>
+    <link href="https://taktekbot.com/blog/filter-bots-out-of-ga4/"/>
+    <id>https://taktekbot.com/blog/filter-bots-out-of-ga4/</id>
+    <updated>2026-10-03T00:00:00Z</updated>
+    <summary>GA4 removes known bots, but not headless browsers run from cloud servers. Here are the fingerprints to look for, a five-minute check, and a safe way to filter them with a data filter you test first.</summary>
+    <content type="html">&lt;p&gt;If Google Analytics 4 shows visitors who all view one page, stay zero seconds, use the same odd screen size and come from a city where you have no customers, they are probably bots.&lt;/p&gt;
+      &lt;p&gt;GA4 already removes known bots. It does not remove all of them. This post shows how to spot the rest, and how to filter them without losing real data by mistake.&lt;/p&gt;
+
+      &lt;h2&gt;Why GA4 still counts some bots&lt;/h2&gt;
+      &lt;p&gt;Google says GA4 excludes &quot;traffic from known bots and spiders&quot; automatically, using its own research and the IAB&#x27;s International Spiders and Bots List. You can&#x27;t turn this off, and you can&#x27;t see how much it removed (&lt;a href=&quot;https://support.google.com/analytics/answer/9888366&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;That list works on bots that say who they are. It misses scripts that drive a real browser, like headless Chrome, from a rented cloud server. They load your page, run your JavaScript, and fire the GA4 tag like any visitor.&lt;/p&gt;
+      &lt;p&gt;Small and new sites feel this most. A site with 20 real visitors a week and 200 automated ones shows a picture that is 90% wrong.&lt;/p&gt;
+
+      &lt;h2&gt;The fingerprints&lt;/h2&gt;
+      &lt;p&gt;No single sign proves a bot. Look for several at once, on the same group of sessions:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;One screen size, repeated.&lt;/strong&gt; 800 × 600 is the one I saw most. It&#x27;s the default window of headless Chrome and the default viewport in &lt;a href=&quot;https://pptr.dev/api/puppeteer.page.setviewport&quot;&gt;Puppeteer&lt;/a&gt;. Few real people browse at that size today.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Cities that host cloud data centres&lt;/strong&gt;, not cities where your customers live. If you sell in one country and a third of your users are in a single town in another, open that town&#x27;s row.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;One page, zero engagement.&lt;/strong&gt; Views per session of 1, average engagement time near 0 seconds, and almost no engaged sessions.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Direct traffic.&lt;/strong&gt; No referrer, no search, no campaign. Bots rarely arrive from a link.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Bursts.&lt;/strong&gt; Many sessions in the same hour, then none.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;A five-minute check&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In GA4, open &lt;em&gt;Explore&lt;/em&gt; and start a &lt;em&gt;Free form&lt;/em&gt; exploration.&lt;/li&gt;
+        &lt;li&gt;Add the dimensions &lt;em&gt;City&lt;/em&gt;, &lt;em&gt;Screen resolution&lt;/em&gt; and &lt;em&gt;Session default channel group&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Add the metrics &lt;em&gt;Sessions&lt;/em&gt;, &lt;em&gt;Engaged sessions&lt;/em&gt; and &lt;em&gt;Average engagement time per session&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Put &lt;em&gt;Screen resolution&lt;/em&gt; and &lt;em&gt;City&lt;/em&gt; in rows. Sort by Sessions.&lt;/li&gt;
+        &lt;li&gt;Read the top rows. A row with many sessions, almost no engaged sessions and near-zero time is your suspect.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If the suspects are a small share, you can stop here and just keep them in mind. If they are most of your traffic, filter them.&lt;/p&gt;
+
+      &lt;h2&gt;Filter them: tag first, drop later&lt;/h2&gt;
+      &lt;p&gt;GA4 data filters are permanent. Google&#x27;s words: &quot;the excluded data is never processed and will never be available&quot; (&lt;a href=&quot;https://support.google.com/analytics/answer/10108813&quot;&gt;source&lt;/a&gt;). They also don&#x27;t apply to the past. So don&#x27;t start by deleting. Start by labelling.&lt;/p&gt;
+      &lt;p&gt;GA4&#x27;s internal-traffic filter matches an event parameter called &lt;code&gt;traffic_type&lt;/code&gt;. Usually an IP rule sets it. You can also set it yourself, from your own page, with any rule you like. That&#x27;s the trick.&lt;/p&gt;
+
+      &lt;h3&gt;Step 1: label suspected bots in your tag&lt;/h3&gt;
+      &lt;p&gt;Change your GA4 snippet so it marks sessions that look automated:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag(&#x27;js&#x27;, new Date());
+
+  var looksAutomated =
+    navigator.webdriver === true ||
+    /HeadlessChrome|PhantomJS/i.test(navigator.userAgent) ||
+    (screen.width === 800 &amp;amp;&amp;amp; screen.height === 600);
+
+  if (looksAutomated) gtag(&#x27;set&#x27;, { traffic_type: &#x27;bot&#x27; });
+
+  gtag(&#x27;config&#x27;, &#x27;G-XXXXXXXXXX&#x27;);
+&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;&lt;code&gt;navigator.webdriver&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt; in browsers controlled by automation tools, as the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver&quot;&gt;WebDriver standard&lt;/a&gt; requires. The user-agent test catches headless Chrome that doesn&#x27;t hide itself. The screen test catches the default window size. Change the rule to match what your own check found.&lt;/p&gt;
+      &lt;p&gt;This only sees bots that run JavaScript. That&#x27;s fine: those are the only bots GA4 can see too.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 240&quot; role=&quot;img&quot; aria-labelledby=&quot;botfilter-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;botfilter-title&quot;&gt;Every visit runs the GA4 snippet. Visits that look automated get traffic_type set to bot. A data filter in Testing marks them; once checked, the filter is set to Active and drops them. Other visits go to reports unchanged.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;240&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;90&quot; width=&quot;120&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;80&quot; y=&quot;125&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;a visit&lt;/text&gt;
+          &lt;line x1=&quot;140&quot; y1=&quot;120&quot; x2=&quot;200&quot; y2=&quot;120&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;200&quot; y=&quot;80&quot; width=&quot;150&quot; height=&quot;80&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;275&quot; y=&quot;115&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;your snippet&lt;/text&gt;
+          &lt;text x=&quot;275&quot; y=&quot;137&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;looks automated?&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;100&quot; x2=&quot;420&quot; y2=&quot;50&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;372&quot; y=&quot;62&quot; fill=&quot;var(--muted)&quot;&gt;no&lt;/text&gt;
+          &lt;rect x=&quot;420&quot; y=&quot;25&quot; width=&quot;200&quot; height=&quot;50&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;520&quot; y=&quot;55&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;reports, unchanged&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;140&quot; x2=&quot;420&quot; y2=&quot;190&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;372&quot; y=&quot;186&quot; fill=&quot;var(--muted)&quot;&gt;yes&lt;/text&gt;
+          &lt;rect x=&quot;420&quot; y=&quot;160&quot; width=&quot;200&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;520&quot; y=&quot;185&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;traffic_type = bot&lt;/text&gt;
+          &lt;text x=&quot;520&quot; y=&quot;206&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;Testing → Active&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h3&gt;Step 2: create the filter in Testing&lt;/h3&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Go to &lt;em&gt;Admin&lt;/em&gt; → &lt;em&gt;Data collection and modification&lt;/em&gt; → &lt;em&gt;Data filters&lt;/em&gt; → &lt;em&gt;Create filter&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Choose &lt;em&gt;Internal traffic&lt;/em&gt;. Name it &lt;code&gt;Bots&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Set the parameter value to &lt;code&gt;bot&lt;/code&gt;, the same word your snippet uses.&lt;/li&gt;
+        &lt;li&gt;Set the state to &lt;em&gt;Testing&lt;/em&gt; and save.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;In Testing, GA4 keeps every event but marks the matching ones with a dimension called &lt;em&gt;Test data filter name&lt;/em&gt; (&lt;a href=&quot;https://support.google.com/analytics/answer/10104470&quot;&gt;source&lt;/a&gt;). Nothing is lost yet.&lt;/p&gt;
+
+      &lt;h3&gt;Step 3: check, then switch it on&lt;/h3&gt;
+      &lt;p&gt;Wait a few days. Then go back to your exploration and add &lt;em&gt;Test data filter name&lt;/em&gt; as a dimension.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Rows marked &lt;code&gt;Bots&lt;/code&gt; should look like bots: no engagement, one page, the odd screen size.&lt;/li&gt;
+        &lt;li&gt;The unmarked rows should look like people: several pages, real time on page, search and referral traffic.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If real-looking sessions are marked, narrow the rule in your snippet. When the split looks right, set the filter to &lt;em&gt;Active&lt;/em&gt;. A property can have up to 10 data filters.&lt;/p&gt;
+
+      &lt;h2&gt;What I learned the hard way&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Your numbers drop the day you ship the filter.&lt;/strong&gt; That&#x27;s the point, but it looks like a disaster in a chart a month later. Write the date down somewhere you&#x27;ll see it, like a GA4 annotation or a note next to the report.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Don&#x27;t filter by city.&lt;/strong&gt; Real people live in data-centre towns too. Use city to find bots, and the browser&#x27;s own signals to filter them.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Skipping the tag is simpler, but blind.&lt;/strong&gt; You can also not load GA4 at all when a visit looks automated. I did that on some sites. It works, but there&#x27;s no Testing step and no record of what was skipped. Label first if you can.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Bots aren&#x27;t your real problem.&lt;/strong&gt; On new sites, clean numbers mostly showed how few people arrive. The fix for that is getting pages indexed, which is &lt;a href=&quot;/blog/check-google-can-see-your-site/&quot;&gt;a different post&lt;/a&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Run the five-minute check in Explore: city, screen resolution, engagement.&lt;/li&gt;
+        &lt;li&gt;Write a rule from what you found: &lt;code&gt;navigator.webdriver&lt;/code&gt;, headless user agents, the odd screen size.&lt;/li&gt;
+        &lt;li&gt;Set &lt;code&gt;traffic_type: &#x27;bot&#x27;&lt;/code&gt; in your snippet when the rule matches.&lt;/li&gt;
+        &lt;li&gt;Create an Internal traffic data filter for &lt;code&gt;bot&lt;/code&gt;, in Testing.&lt;/li&gt;
+        &lt;li&gt;Check the &lt;em&gt;Test data filter name&lt;/em&gt; split after a few days.&lt;/li&gt;
+        &lt;li&gt;Switch it to Active, and note the date.&lt;/li&gt;
+      &lt;/ol&gt;</content>
+  </entry>
   <entry>
     <title>Before you fix your SEO, check that Google can see your site</title>
     <link href="https://taktekbot.com/blog/check-google-can-see-your-site/"/>
