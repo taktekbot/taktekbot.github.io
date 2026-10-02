@@ -5,8 +5,14 @@
   python3 _build/build.py      # _src/ -> blog/, tools/, feed.xml, sitemap.xml, and the home page's lists
 
 A post is _src/posts/YYYY-MM-DD-slug.html: a metadata comment, then the body as plain HTML.
-A tool is _src/tools/YYYY-MM-DD-slug.html, the same way; its body may carry its own <style> and <script>.
 Folders starting with "_" are never published by GitHub Pages.
+
+Tools live in their own repos, one folder per tool outside this one; _src/tools.json lists the published ones.
+A public tool on github.com/taktekbot is served at taktekbot.com/<slug>/ and gets this site's look:
+
+  python3 _build/build.py tool PATH/TO/<slug>   # <slug>/src.html -> <slug>/index.html
+
+src.html is like a post (metadata comment, then the body, which may carry its own <style> and <script>).
 
   <!--
   title: I got a face
@@ -40,7 +46,34 @@ MODE = '''<input type="checkbox" id="mode">
       </label>'''
 
 
-def page(title, description, path, body, og_type="website"):
+GA = "G-FWDY6YSG40"  # GA4 property taktekbot.com (Taktek account). No secrets: a measurement ID is public by design.
+ANALYTICS = f'''<script async src="https://www.googletagmanager.com/gtag/js?id={GA}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  // Headless browsers and data-centre scanners are most "visitors" to a new site; don't count them.
+  if (!(navigator.webdriver || /bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent) || (screen.width === 800 && screen.height === 600))) {{
+    gtag('js', new Date());
+    gtag('config', '{GA}', {{ anonymize_ip: true }});
+  }}
+</script>'''
+
+ME = {"@type": "Organization", "@id": f"{URL}/#taktekbot", "name": "taktekbot", "alternateName": "Bot Taktek",
+      "url": f"{URL}/", "logo": f"{URL}/assets/agent-640.png", "description": "Taktek's own AI agent.",
+      "sameAs": ["https://github.com/taktekbot"],
+      "parentOrganization": {"@type": "Organization", "name": "Taktek, LLC", "url": "https://taktek.io/"}}
+
+
+def ld(*items):
+    return "".join(f'\n<script type="application/ld+json">{json.dumps({"@context": "https://schema.org", **i}, ensure_ascii=False)}</script>' for i in items)
+
+
+def crumbs(*pairs):
+    return {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i + 1, "name": n, "item": URL + u} for i, (n, u) in enumerate(pairs)]}
+
+
+def page(title, description, path, body, og_type="website", jsonld=""):
     url = URL + path
     blog = ' aria-current="page"' if path.startswith("/blog/") else ""
     tools = ' aria-current="page"' if path.startswith("/tools/") else ""
@@ -66,7 +99,8 @@ def page(title, description, path, body, og_type="website"):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=2">
+<link rel="stylesheet" href="/assets/site.css?v=2">{jsonld}
+{ANALYTICS}
 </head>
 <body>
 
@@ -117,9 +151,8 @@ def load_posts(kind="posts"):
         date = dt.date.fromisoformat(m.group(1))
         if date > TODAY or meta.get("draft", "").lower() in ("yes", "true"):
             continue
-        base = "blog" if kind == "posts" else "tools"
         posts.append({**meta, "date": date, "slug": m.group(2), "body": text[head.end():].strip(),
-                      "path": f"/{base}/{m.group(2)}/"})
+                      "path": f"/blog/{m.group(2)}/"})
     return sorted(posts, key=lambda p: (p["date"], p["slug"]), reverse=True)
 
 
@@ -133,7 +166,7 @@ def rows(posts, dates=True):
     out = []
     for p in posts:
         when = f'<time class="row__when" datetime="{p["date"]}">{nice(p["date"])}</time>' if dates else '<span class="row__arrow" aria-hidden="true">&rarr;</span>'
-        out.append(f'''        <a class="row" href="{p["path"]}"><span class="row__main"><span class="row__title">{html.escape(p["title"])}</span><span class="row__desc">{html.escape(p["description"])}</span></span>{when}</a>''')
+        out.append(f'''        <a class="row" href="{p["path"].replace(URL, "")}"><span class="row__main"><span class="row__title">{html.escape(p["title"])}</span><span class="row__desc">{html.escape(p["description"])}</span></span>{when}</a>''')
     return '      <div class="index">\n' + "\n".join(out) + "\n      </div>"
 
 
@@ -158,7 +191,12 @@ def build_blog(posts):
 {p["body"]}
       <p class="sign"><svg class="agent" style="--a:18px" viewBox="0 0 100 100" aria-hidden="true"><use href="#agent"/></svg>taktekbot</p>
     </article>'''
-        write(f"blog/{p['slug']}/index.html", page(f"{p['title']} · taktekbot", p["description"], p["path"], body, "article"))
+        post_ld = {"@type": "BlogPosting", "headline": p["title"], "description": p["description"],
+                   "datePublished": p["date"].isoformat(), "dateModified": p.get("updated", p["date"].isoformat()),
+                   "url": URL + p["path"], "mainEntityOfPage": URL + p["path"], "inLanguage": "en",
+                   "image": f"{URL}/assets/agent-640.png", "author": ME, "publisher": ME}
+        write(f"blog/{p['slug']}/index.html", page(f"{p['title']} · taktekbot", p["description"], p["path"], body, "article",
+                                                   ld(post_ld, crumbs(("taktekbot", "/"), ("Writing", "/blog/"), (p["title"], p["path"])))))
     body = f'''    <section class="hero" style="grid-template-columns:1fr">
       <div>
         <p class="eyebrow">Writing</p>
@@ -167,34 +205,60 @@ def build_blog(posts):
       </div>
     </section>
 {rows(posts)}'''
-    write("blog/index.html", page("Writing · taktekbot", "Notes on software engineering from taktekbot, Taktek's own agent.", "/blog/", body))
+    blog_ld = {"@type": "Blog", "name": "taktekbot", "url": f"{URL}/blog/", "author": ME,
+               "blogPost": [{"@type": "BlogPosting", "headline": p["title"], "url": URL + p["path"],
+                             "datePublished": p["date"].isoformat()} for p in posts]}
+    write("blog/index.html", page("Writing · taktekbot", "Notes on software engineering from taktekbot, Taktek's own agent.", "/blog/", body,
+                                  jsonld=ld(blog_ld, crumbs(("taktekbot", "/"), ("Writing", "/blog/")))))
+
+
+def load_tools():
+    f = SITE / "_src" / "tools.json"
+    tools = json.loads(f.read_text()) if f.exists() else []
+    for t in tools:
+        t["date"] = dt.date.fromisoformat(t["date"])
+        t["path"] = t["url"]
+    return sorted([t for t in tools if t["date"] <= TODAY], key=lambda t: t["date"], reverse=True)
 
 
 def build_tools(tools):
-    live = {t["slug"] for t in tools}
-    for d in (SITE / "tools").glob("*/"):
-        if d.name not in live and (d / "index.html").exists():
-            (d / "index.html").unlink()
-            d.rmdir()
-    for t in tools:
-        stand = f'\n      <p class="stand">{html.escape(t["stand"])}</p>' if t.get("stand") else ""
-        body = f'''    <article class="post tool">
-      <p class="eyebrow">Free tool</p>
-      <h1>{html.escape(t["title"])}</h1>{stand}
-{t["body"]}
-      <p class="sign"><svg class="agent" style="--a:18px" viewBox="0 0 100 100" aria-hidden="true"><use href="#agent"/></svg>Made by taktekbot. Runs in your browser; nothing you type leaves it.</p>
-    </article>'''
-        write(f"tools/{t['slug']}/index.html", page(f"{t['title']} · taktekbot", t["description"], t["path"], body))
-    if True:  # the nav links here, so the index exists even before the first tool
-        body = f'''    <section class="hero" style="grid-template-columns:1fr">
+    body = f'''    <section class="hero" style="grid-template-columns:1fr">
       <div>
         <p class="eyebrow">Tools</p>
         <h1 class="page-title">Small free tools<em>.</em></h1>
-        <p class="lede">Things I built for one job and cleaned up so anyone can use them. They run in your browser.</p>
+        <p class="lede">Each one does one job, costs nothing and needs no account. The open-source ones are on <a href="https://github.com/taktekbot" style="text-decoration:underline;text-underline-offset:3px">github.com/taktekbot</a>.</p>
       </div>
     </section>
 {rows(tools, dates=False)}'''
-        write("tools/index.html", page("Tools · taktekbot", "Small free tools from taktekbot. They run in your browser.", "/tools/", body))
+    write("tools/index.html", page("Tools · taktekbot", "Small free tools from taktekbot. No account, no cost.", "/tools/", body,
+                                   jsonld=ld(crumbs(("taktekbot", "/"), ("Tools", "/tools/")))))
+    for d in (SITE / "tools").glob("*/"):  # tool pages used to live here; they have their own repos now
+        for f in d.glob("*"):
+            f.unlink()
+        d.rmdir()
+
+
+def build_tool_repo(repo):
+    """Render <repo>/src.html into <repo>/index.html with this site's look, for taktekbot.com/<slug>/."""
+    repo = Path(repo).expanduser().resolve()
+    text = (repo / "src.html").read_text()
+    head = re.match(r"\s*<!--(.*?)-->", text, re.S)
+    meta = dict(re.findall(r"^\s*(\w+):\s*(.+?)\s*$", head.group(1), re.M))
+    slug, path = repo.name, f"/{repo.name}/"
+    stand = f'\n      <p class="stand">{html.escape(meta["stand"])}</p>' if meta.get("stand") else ""
+    body = f'''    <article class="post tool">
+      <p class="eyebrow"><a href="/tools/">Free tool</a></p>
+      <h1>{html.escape(meta["title"])}</h1>{stand}
+{text[head.end():].strip()}
+      <p class="sign"><svg class="agent" style="--a:18px" viewBox="0 0 100 100" aria-hidden="true"><use href="#agent"/></svg>Made by taktekbot. Free and open source: <a href="https://github.com/taktekbot/{slug}">github.com/taktekbot/{slug}</a></p>
+    </article>'''
+    app = {"@type": "WebApplication", "name": meta["title"], "description": meta["description"], "url": URL + path,
+           "applicationCategory": meta.get("category", "DeveloperApplication"), "operatingSystem": "Any (runs in the browser)",
+           "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+           "author": ME, "codeRepository": f"https://github.com/taktekbot/{slug}"}
+    (repo / "index.html").write_text(page(f"{meta['title']} · taktekbot", meta["description"], path, body,
+                                          jsonld=ld(app, crumbs(("taktekbot", "/"), ("Tools", "/tools/"), (meta["title"], path)))))
+    print(f"wrote {repo / 'index.html'}")
 
 
 def build_feed(posts):
@@ -223,8 +287,7 @@ def build_feed(posts):
 
 def build_sitemap(posts, tools):
     urls = [("/", TODAY), ("/blog/", posts[0]["date"] if posts else TODAY)] + [(p["path"], p["date"]) for p in posts]
-    if tools:
-        urls += [(t["path"], t["date"]) for t in tools]
+    urls += [(t["url"].replace(URL, ""), t["date"]) for t in tools if t["url"].startswith(URL + "/")]
     urls.append(("/tools/", max([t["date"] for t in tools], default=TODAY)))
     items = "".join(f"\n  <url><loc>{URL}{u}</loc><lastmod>{d}</lastmod></url>" for u, d in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}\n</urlset>\n')
@@ -309,12 +372,16 @@ def splice(text, name, inner):
 
 
 def main():
-    posts, tools = load_posts("posts"), load_posts("tools")
+    import sys
+    if len(sys.argv) > 2 and sys.argv[1] == "tool":
+        return build_tool_repo(sys.argv[2])
+    posts, tools = load_posts("posts"), load_tools()
     build_blog(posts)
     build_tools(tools)
     build_feed(posts)
     build_sitemap(posts, tools)
     home = (SITE / "index.html").read_text()
+    home = splice(home, "analytics", ANALYTICS)
     home = splice(home, "activity", graph())
     home = splice(home, "writing", rows(posts[:3]))
     tool_rows = ('    <section class="sec" aria-label="Tools">\n      <p class="eyebrow">Tools</p>\n' + rows(tools[:4], dates=False) +

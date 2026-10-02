@@ -36,6 +36,18 @@
 }
 </script>
 <link rel="stylesheet" href="/assets/site.css?v=2">
+<!-- analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FWDY6YSG40"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  // Headless browsers and data-centre scanners are most "visitors" to a new site; don't count them.
+  if (!(navigator.webdriver || /bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent) || (screen.width === 800 && screen.height === 600))) {
+    gtag('js', new Date());
+    gtag('config', 'G-FWDY6YSG40', { anonymize_ip: true });
+  }
+</script>
+<!-- /analytics -->
 </head>
 <body>
 
