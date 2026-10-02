@@ -1,0 +1,98 @@
+<!--
+title: How to test a checkout automation without placing a real order
+description: A script that buys things online needs a dry run that can't spend money. Don't trust button labels. Block the order request in the browser itself. Here are the steps, with code.
+stand: I've written scripts that fill carts and walk through checkout on real online stores. The first rule I learned: the dry run has to be enforced by the browser, not by my good intentions.
+-->
+      <p>If you automate a checkout, you have to test it on the real store. Test shops don't have the real store's cookie banners, bot checks, address forms or surprise upsell pages.</p>
+      <p>But a test on the real store can place a real order. Someone gets charged. A parcel gets packed. A shop owner deals with a cancellation that was your fault.</p>
+      <p>The answer is a dry run that can't place an order even when your script is wrong. Here is how I build one.</p>
+
+      <h2>1. Don't decide by button labels</h2>
+      <p>The obvious dry run is "click everything except the final button". It fails because you don't know which button is final.</p>
+      <ul>
+        <li>On one store the last button says <em>Place order</em>. On another it says <em>Continue</em>, and that <em>Continue</em> places the order.</li>
+        <li>Some stores skip the review page when you're signed in or paying cash on delivery. The step you planned to stop at never appears.</li>
+        <li>Labels change with language, A/B tests and redesigns. A script that worked last month can click straight through today.</li>
+      </ul>
+      <p>So the label check can stay, as a first fence. It can't be the only one.</p>
+
+      <h2>2. Block the order request in the browser</h2>
+      <p>An order is not a click. It's a network request: usually a <code>POST</code> to a path with words like <code>checkout</code>, <code>order</code>, <code>payment</code> or <code>complete</code> in it. If that request never leaves the browser, no order exists, whatever your script clicked.</p>
+      <p>Browser automation tools let you intercept every request. In <a href="https://playwright.dev/docs/network#handle-requests">Playwright</a> it looks like this:</p>
+      <pre><code>const DRY_RUN = process.env.DRY_RUN !== "0";
+const ORDER_WORDS = /(checkout|order|payment|purchase|complete|confirm)/i;
+
+if (DRY_RUN) {
+  await page.route("**/*", (route) =&gt; {
+    const req = route.request();
+    const writes = req.method() !== "GET" &amp;&amp; req.method() !== "HEAD";
+    if (writes &amp;&amp; ORDER_WORDS.test(req.url())) {
+      console.log("DRY RUN blocked:", req.method(), req.url());
+      return route.abort();
+    }
+    return route.continue();
+  });
+}</code></pre>
+      <p><a href="https://pptr.dev/guides/network-interception">Puppeteer</a> does the same with <code>page.setRequestInterception(true)</code> and <code>request.abort()</code>.</p>
+      <p>Three details matter more than the code:</p>
+      <ol>
+        <li><strong>Dry run is the default.</strong> The variable has to be set on purpose to go live. A forgotten flag should mean "safe", not "spend".</li>
+        <li><strong>Block too much, then loosen.</strong> The pattern above also blocks some harmless requests, like adding to cart on stores whose cart path says <code>order</code>. That's fine. Watch the log, and allow specific paths one by one.</li>
+        <li><strong>Log every block.</strong> The log tells you where the store's order request actually goes. That's the most useful thing a dry run teaches you.</li>
+      </ol>
+
+      <figure>
+        <svg viewBox="0 0 640 220" role="img" aria-labelledby="dryrun-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="dryrun-title">The script talks to the store through a filter in the browser. Reading requests pass. Requests that would place an order are stopped and logged.</title>
+          <rect width="640" height="220" fill="var(--paper)"/>
+          <rect x="24" y="80" width="130" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="89" y="115" text-anchor="middle" fill="var(--ink)">your script</text>
+          <rect x="230" y="60" width="170" height="100" rx="4" fill="none" stroke="var(--signal)" stroke-width="2"/>
+          <text x="315" y="100" text-anchor="middle" fill="var(--ink)">request filter</text>
+          <text x="315" y="122" text-anchor="middle" fill="var(--muted)">in the browser</text>
+          <rect x="486" y="80" width="130" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="551" y="115" text-anchor="middle" fill="var(--ink)">the store</text>
+          <line x1="154" y1="110" x2="230" y2="110" stroke="var(--ink)"/>
+          <line x1="400" y1="90" x2="486" y2="90" stroke="var(--ink)"/>
+          <text x="443" y="80" text-anchor="middle" fill="var(--muted)">GET pages</text>
+          <line x1="400" y1="130" x2="440" y2="130" stroke="var(--signal)" stroke-width="2"/>
+          <line x1="432" y1="122" x2="448" y2="138" stroke="var(--signal)" stroke-width="2"/>
+          <line x1="448" y1="122" x2="432" y2="138" stroke="var(--signal)" stroke-width="2"/>
+          <text x="315" y="196" text-anchor="middle" fill="var(--ink)">POST …/checkout/complete → stopped, logged</text>
+        </svg>
+      </figure>
+
+      <h2>3. Pay with something that can't pay</h2>
+      <p>Add a second, independent fence. If a store offers cash on delivery, choose it in tests: no card number exists to charge. If you must test a card form, use a card that will decline, and never one tied to real money.</p>
+      <p>Two fences that fail in different ways are far safer than one clever fence.</p>
+
+      <h2>4. Check the cart before checkout, every time</h2>
+      <p>The mistake I didn't expect wasn't the final click. It was the cart.</p>
+      <p>Stores remember carts. Run a test twice in the same session and the second run starts with the first run's items still there. Some stores also add one item twice when your script's click registers as two.</p>
+      <p>So before the script enters checkout, it reads the cart and compares it to what it meant to buy: same items, same sizes, same count. If anything differs, it stops. It doesn't try to fix the cart; it stops and says why.</p>
+
+      <h2>5. Untick what you didn't choose</h2>
+      <p>Checkout forms come with boxes already ticked: newsletters, marketing texts, "save my details", sometimes a paid add-on like gift wrap or insurance. A person would notice them. A script won't, unless you tell it to.</p>
+      <p>Before the last step, have the script find every checked checkbox on the page and log it. Untick everything that isn't required. Fail the run if a required box is one you don't recognise.</p>
+
+      <h2>6. Record once, replay many times</h2>
+      <p>Every run against a live store costs something: rate limits, bot checks, and the chance of a mistake. Once a dry run passes, save the pages and responses it saw. Playwright can <a href="https://playwright.dev/docs/mock#mocking-with-har-files">record traffic to a HAR file and replay it</a>.</p>
+      <p>Then test your edge cases offline: an item that sold out between cart and checkout, a missing size, a cart that came back with an extra item. You can stage those in a saved copy. On the live store you'd have to wait for them to happen.</p>
+
+      <h2>What didn't work</h2>
+      <ul>
+        <li><strong>Stopping on a page title.</strong> "Stop when the page says Review your order" broke on the first store that had no review page.</li>
+        <li><strong>Running from a server.</strong> Some large stores refuse traffic from data-centre connections outright. No amount of waiting gets past that. If a store blocks you, accept it; working around a store's bot protection isn't testing anymore.</li>
+        <li><strong>One fence.</strong> Every single safeguard I tried had a store where it didn't apply. Only stacking them held.</li>
+      </ul>
+
+      <h2>The checklist</h2>
+      <ol>
+        <li>Dry run is the default; going live needs a deliberate switch.</li>
+        <li>Order-placing requests are blocked in the browser, and every block is logged.</li>
+        <li>Tests pay with a method that can't charge anyone.</li>
+        <li>The cart is checked against the intended items before checkout.</li>
+        <li>Pre-ticked boxes are found, logged and unticked.</li>
+        <li>Edge cases are replayed offline, not waited for live.</li>
+      </ol>
+      <p>None of this is specific to shopping. Any script that sends an email, books a slot or moves money needs the same thing: a dry run the code can't talk its way out of.</p>
