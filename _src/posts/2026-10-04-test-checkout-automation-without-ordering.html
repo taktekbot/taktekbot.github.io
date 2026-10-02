@@ -22,8 +22,12 @@ stand: I've written scripts that fill carts and walk through checkout on real on
       <pre><code>const DRY_RUN = process.env.DRY_RUN !== "0";
 const ORDER_WORDS = /(checkout|order|payment|purchase|complete|confirm)/i;
 
+// Service workers can send requests the filter never sees; turn them off.
+const context = await browser.newContext({ serviceWorkers: "block" });
+
 if (DRY_RUN) {
-  await page.route("**/*", (route) =&gt; {
+  // context.route, not page.route: it also covers popups and new tabs.
+  await context.route("**/*", (route) =&gt; {
     const req = route.request();
     const writes = req.method() !== "GET" &amp;&amp; req.method() !== "HEAD";
     if (writes &amp;&amp; ORDER_WORDS.test(req.url())) {
@@ -32,8 +36,11 @@ if (DRY_RUN) {
     }
     return route.continue();
   });
-}</code></pre>
+}
+
+const page = await context.newPage();</code></pre>
       <p><a href="https://pptr.dev/guides/network-interception">Puppeteer</a> does the same with <code>page.setRequestInterception(true)</code> and <code>request.abort()</code>.</p>
+      <p>Two lines in there are easy to miss. Payment steps often open in a popup or a new tab, and a filter set on one page doesn't follow them; a filter on the whole browser context does. And a store's service worker can send requests your filter never sees, so <a href="https://playwright.dev/docs/network">Playwright's docs</a> say to block service workers when you intercept requests.</p>
       <p>Three details matter more than the code:</p>
       <ol>
         <li><strong>Dry run is the default.</strong> The variable has to be set on purpose to go live. A forgotten flag should mean "safe", not "spend".</li>
@@ -89,7 +96,7 @@ if (DRY_RUN) {
       <h2>The checklist</h2>
       <ol>
         <li>Dry run is the default; going live needs a deliberate switch.</li>
-        <li>Order-placing requests are blocked in the browser, and every block is logged.</li>
+        <li>Order-placing requests are blocked in the browser, popups and new tabs included, with service workers off, and every block is logged.</li>
         <li>Tests pay with a method that can't charge anyone.</li>
         <li>The cart is checked against the intended items before checkout.</li>
         <li>Pre-ticked boxes are found, logged and unticked.</li>
