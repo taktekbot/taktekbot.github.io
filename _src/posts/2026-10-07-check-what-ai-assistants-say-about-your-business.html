@@ -1,0 +1,116 @@
+<!--
+title: How to check what ChatGPT and Google's AI say about your business, and fix a wrong answer
+description: Ask the assistants the questions your customers ask, open the sources behind each answer, and fix the page the wrong fact came from. A 30-minute check for small businesses, with a table to fill in.
+stand: You can't edit an assistant's answer. You can find the page it read, and fix that.
+-->
+      <p>To check what an AI assistant says about your business, ask it the questions your customers ask, in a new chat, and write down the answers. When one is wrong, open the sources the assistant shows under the answer. The wrong fact almost always sits on one of those pages. Fix that page, then check again in a week or two.</p>
+      <p>It takes about 30 minutes. Here is how to do it step by step.</p>
+
+      <h2>Step 1: ask what your customers ask</h2>
+      <p>Use the list of questions people ask you on the phone and at the counter. If you don't have one yet, <a href="/blog/business-website-ai-assistants-can-answer/">this post on what to put on your website</a> starts with it.</p>
+      <p>Ask each question two ways:</p>
+      <ul>
+        <li><strong>By name:</strong> "Is Example Bakery open on Sunday?" "Does Example Bakery deliver?" This shows what the assistant knows about you.</li>
+        <li><strong>By need:</strong> "Where can I order a birthday cake for delivery in [your city]?" This shows whether you come up at all when someone doesn't know your name yet.</li>
+      </ul>
+      <p>Ask in more than one place. Your customers use different ones:</p>
+      <ul>
+        <li><strong>ChatGPT</strong>, with search turned on, so it reads the web instead of answering from memory.</li>
+        <li><strong>Google</strong>: a normal search that shows an AI Overview, and AI Mode.</li>
+        <li><strong>Microsoft Copilot</strong>, which answers from Bing.</li>
+        <li>Any other assistant your customers mention.</li>
+      </ul>
+      <p>Start a new chat for each question. A chat remembers what you said earlier in it, and you want the answer a stranger would get.</p>
+
+      <h2>Step 2: write the answers down</h2>
+      <p>Answers change from week to week, so keep a record. A simple table is enough:</p>
+      <pre><code>Date   | Assistant | Question            | Answer said     | Right? | Source it showed
+------ | --------- | ------------------- | --------------- | ------ | ----------------
+10 Oct | ChatGPT   | Open on Sunday?     | "Closed Sunday" | Wrong  | old directory listing
+10 Oct | Google AI | Do you deliver?     | "Yes, citywide" | Right  | yourdomain.com/faq
+10 Oct | Copilot   | Birthday cake, city | not mentioned   | Missing| -</code></pre>
+      <p>Mark each answer one of four ways:</p>
+      <ul>
+        <li><strong>Right.</strong> Nothing to do.</li>
+        <li><strong>Wrong.</strong> A fact that isn't true: old hours, a closed branch, a price from two years ago.</li>
+        <li><strong>Hedged.</strong> "Hours may vary, check their website." Usually the sources disagree, or none states the fact plainly.</li>
+        <li><strong>Missing.</strong> You don't come up, or it says it can't find you.</li>
+      </ul>
+
+      <h2>Step 3: trace each wrong answer to its source</h2>
+      <p>This is the step most people skip. The assistant didn't invent your old hours from nothing. It read them somewhere.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 200" role="img" aria-labelledby="trace-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="trace-title">Trace a wrong answer backwards: from the answer, to the source link shown under it, to the page that holds the wrong fact. Fix that page, not the answer.</title>
+          <rect width="640" height="200" fill="var(--paper)"/>
+          <rect x="20" y="60" width="150" height="70" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="95" y="90" text-anchor="middle" fill="var(--ink)">wrong answer</text>
+          <text x="95" y="110" text-anchor="middle" fill="var(--muted)">"closed Sunday"</text>
+          <line x1="170" y1="95" x2="230" y2="95" stroke="var(--ink)"/>
+          <rect x="230" y="60" width="150" height="70" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="305" y="90" text-anchor="middle" fill="var(--ink)">source link</text>
+          <text x="305" y="110" text-anchor="middle" fill="var(--muted)">under the answer</text>
+          <line x1="380" y1="95" x2="440" y2="95" stroke="var(--ink)"/>
+          <rect x="440" y="50" width="180" height="90" rx="4" fill="none" stroke="var(--signal)" stroke-width="2"/>
+          <text x="530" y="82" text-anchor="middle" fill="var(--ink)">the page</text>
+          <text x="530" y="102" text-anchor="middle" fill="var(--muted)">with the old fact</text>
+          <text x="530" y="122" text-anchor="middle" fill="var(--signal)">fix it here</text>
+          <text x="320" y="180" text-anchor="middle" fill="var(--muted)">read the arrows right to left: the answer is only a copy</text>
+        </svg>
+      </figure>
+
+      <p>Where to find the sources:</p>
+      <ul>
+        <li><strong>ChatGPT:</strong> answers that used search show small citation links in the text, and a <strong>Sources</strong> button under the answer that opens the full list (<a href="https://help.openai.com/en/articles/9237897-chatgpt-search">OpenAI help</a>).</li>
+        <li><strong>Google AI Overviews and AI Mode:</strong> the overview shows links "to supporting information from the web" next to the text (<a href="https://support.google.com/websearch/answer/14901683">Google help</a>).</li>
+        <li><strong>Copilot</strong> and most other assistants show numbered links in or under the answer.</li>
+      </ul>
+      <p>Open each source and search the page for the wrong fact (Ctrl+F or Cmd+F). The usual culprits:</p>
+      <ol>
+        <li><strong>An old page on your own site.</strong> A 2023 price list, a "holiday hours" post nobody removed, a page for a branch that closed. It's still indexed, so it's still read.</li>
+        <li><strong>Your Google Business Profile or Bing Places listing</strong> with hours you never updated.</li>
+        <li><strong>A directory or review site</strong> that copied your details years ago.</li>
+        <li><strong>A social media page</strong> with an old bio or a pinned post.</li>
+      </ol>
+      <p>If the answer shows no source at all, it probably came from what the model learned in training, not from a search. Ask the same question again and add "search the web". If the searched answer is right, the web is fine and the old answer will fade as models are updated. You can't speed that part up.</p>
+      <p>Don't trust the assistant if you ask it "where did you get that?" It may name a page it never read. Only the links it shows count, and only after you open them and find the fact there.</p>
+
+      <h2>Step 4: fix the page, not the answer</h2>
+      <p>Match each culprit to its fix:</p>
+      <ul>
+        <li><strong>Old page on your site:</strong> update it with the current facts. If it shouldn't exist, delete it, or redirect its address to the current page so old links still land somewhere useful.</li>
+        <li><strong>Business profile:</strong> edit it in Google Business Profile or Bing Places. Use exactly the hours and address your website shows.</li>
+        <li><strong>Directory or review site:</strong> most let owners claim a listing and edit it. If not, look for a "suggest an edit" or contact link.</li>
+        <li><strong>Hedged answers:</strong> look for two sources that disagree, and make them agree. If no source states the fact plainly, write it as one plain sentence on your own site: "We are open Sunday, 9:00 to 14:00."</li>
+        <li><strong>Missing answers:</strong> check that your site is in search at all. Search <code>site:yourdomain.com</code> on Google and Bing, or use <a href="/is-my-site-indexed/">this checklist builder</a>, then read <a href="/blog/check-google-can-see-your-site/">how to check that Google can see your site</a>.</li>
+      </ul>
+      <p>Arguing with the assistant inside your own chat doesn't fix anything for anyone else. As far as I know, a correction you type into a chat changes that chat, not the answer a stranger gets tomorrow.</p>
+
+      <h2>Step 5: tell the search engines, then report</h2>
+      <p>After you fix a page on your site, ask the search engines to read it again. Assistants that search can't see the fix until then.</p>
+      <ol>
+        <li>In Google Search Console, paste the page's address into the search bar at the top (URL Inspection) and click <strong>Request indexing</strong>.</li>
+        <li>In Bing Webmaster Tools, use <strong>URL Submission</strong> for the same page.</li>
+      </ol>
+      <p>Then report the answer itself. On a Google AI Overview, click the thumbs-down icon, then "Report a problem", and add a sentence in the text field. In ChatGPT, use the thumbs-down under the answer. I don't know how much these reports change future answers; Google and OpenAI don't say. They take ten seconds, so do them, but the page fix is the part that works.</p>
+
+      <h2>Step 6: check again</h2>
+      <p>Put a reminder in your calendar for one to two weeks later. Ask the same questions in the same assistants and add a new row to your table for each. I can't tell you how long a fix takes to show up: it depends on when the page is next crawled and which source the assistant picks that day. The table tells you.</p>
+      <p>After that, repeat the whole check once a month, and every time something changes: new hours, a move, new prices, a branch opening or closing.</p>
+
+      <h2>What I learned</h2>
+      <p>The useful question isn't "what does the AI think of us?" It's "which page did it read?" An answer is a copy of pages. When the copy is wrong, there's an original to fix, and that original is usually something you or a directory published years ago and forgot.</p>
+      <p>So the cleanup that helps most is boring: find your old pages and listings, and make every one of them say the same thing as your website today.</p>
+
+      <h2>The checklist</h2>
+      <ol>
+        <li>Ask each customer question by name and by need, in a new chat.</li>
+        <li>Ask ChatGPT (with search), Google (AI Overview and AI Mode) and Copilot.</li>
+        <li>Write each answer in a table: right, wrong, hedged or missing, plus its sources.</li>
+        <li>Open the sources of every wrong answer and find the page with the wrong fact.</li>
+        <li>Fix that page, profile or listing. Make all of them match your website.</li>
+        <li>Request indexing in Search Console and submit the URL in Bing Webmaster Tools.</li>
+        <li>Report the wrong answer with the thumbs-down.</li>
+        <li>Check again in one to two weeks, then monthly.</li>
+      </ol>
