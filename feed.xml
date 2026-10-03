@@ -5,8 +5,138 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-03T00:00:00Z</updated>
+  <updated>2026-10-04T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>What to put on your business website so ChatGPT and Google can answer questions about it</title>
+    <link href="https://taktekbot.com/blog/business-website-ai-assistants-can-answer/"/>
+    <id>https://taktekbot.com/blog/business-website-ai-assistants-can-answer/</id>
+    <updated>2026-10-04T00:00:00Z</updated>
+    <summary>AI assistants answer from pages that web search finds. Put your hours, location, prices and how to order as plain text on an indexed page, keep the facts the same everywhere, and skip the &quot;AI SEO&quot; extras. A checklist for small businesses.</summary>
+    <content type="html">&lt;p&gt;To let ChatGPT, Google&#x27;s AI answers and other assistants answer questions about your business, put the facts people ask about as plain text on your website: what you sell, where you are, when you&#x27;re open, what it costs, and how to order. Make sure search engines have indexed that page. Keep the same facts on your Google Business Profile.&lt;/p&gt;
+      &lt;p&gt;That&#x27;s most of it. No special file or markup is required. This post shows what to write, where to put it, and what to skip.&lt;/p&gt;
+
+      &lt;h2&gt;Where an assistant gets its answer&lt;/h2&gt;
+      &lt;p&gt;When someone asks an assistant about a business, it usually runs a web search, reads a few of the pages it finds, and writes an answer from them. If your page isn&#x27;t in the search results, the assistant can&#x27;t read it.&lt;/p&gt;
+      &lt;p&gt;Google says so directly about its AI Overviews and AI Mode: &quot;There are no additional requirements to appear in AI Overviews or AI Mode.&quot; A page must be &quot;indexed and eligible to be shown in Google Search with a snippet&quot; (&lt;a href=&quot;https://developers.google.com/search/docs/appearance/ai-features&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;ChatGPT&#x27;s search uses its own crawler, OAI-SearchBot. OpenAI&#x27;s docs say sites that block it &quot;will not be shown in ChatGPT search answers&quot; (&lt;a href=&quot;https://developers.openai.com/api/docs/bots&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 220&quot; role=&quot;img&quot; aria-labelledby=&quot;aianswer-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;aianswer-title&quot;&gt;A customer&#x27;s question goes to an assistant. The assistant runs a web search, reads the pages it finds, and writes an answer. Your page can only be read if it is indexed and the facts are in its text.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;220&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;80&quot; width=&quot;120&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;80&quot; y=&quot;106&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;&quot;open on&lt;/text&gt;
+          &lt;text x=&quot;80&quot; y=&quot;124&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;Sunday?&quot;&lt;/text&gt;
+          &lt;line x1=&quot;140&quot; y1=&quot;110&quot; x2=&quot;180&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;180&quot; y=&quot;80&quot; width=&quot;120&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;240&quot; y=&quot;115&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;web search&lt;/text&gt;
+          &lt;line x1=&quot;300&quot; y1=&quot;110&quot; x2=&quot;340&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;340&quot; y=&quot;70&quot; width=&quot;140&quot; height=&quot;80&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;410&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;your page&lt;/text&gt;
+          &lt;text x=&quot;410&quot; y=&quot;118&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;indexed?&lt;/text&gt;
+          &lt;text x=&quot;410&quot; y=&quot;136&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;hours in text?&lt;/text&gt;
+          &lt;line x1=&quot;480&quot; y1=&quot;110&quot; x2=&quot;520&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;520&quot; y=&quot;80&quot; width=&quot;100&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;570&quot; y=&quot;115&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;answer&lt;/text&gt;
+          &lt;text x=&quot;410&quot; y=&quot;190&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;no text, no index: the assistant guesses or skips you&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 1: list the questions people actually ask&lt;/h2&gt;
+      &lt;p&gt;Write down the questions customers ask you on the phone, in messages and at the counter. For most small businesses they are some of these:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Are you open now? On Sunday? On holidays?&lt;/li&gt;
+        &lt;li&gt;Where are you, and is there parking?&lt;/li&gt;
+        &lt;li&gt;Do you deliver to my area? How long does it take, and what does it cost?&lt;/li&gt;
+        &lt;li&gt;How much is it? Is there a minimum order?&lt;/li&gt;
+        &lt;li&gt;Do you have this item, size or service?&lt;/li&gt;
+        &lt;li&gt;How do I order or book? Can I pay by card, or cash on delivery?&lt;/li&gt;
+        &lt;li&gt;How do I reach you?&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Each answer you write down is a sentence that belongs on your website. Use the words customers use. &quot;Do you deliver?&quot; is what people type. &quot;Logistics solutions&quot; is not.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: put each answer in text, where it&#x27;s easy to find&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;The first lines of your home page&lt;/strong&gt; say what you are and where: &quot;A bakery selling bread and cakes, with delivery across the city.&quot; One plain sentence. Assistants and search snippets both read the top of the page first.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Hours and address as text&lt;/strong&gt;, on the home page or a contact page. Include holiday changes when they happen.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Prices on a page&lt;/strong&gt;, even if only &quot;from&quot; prices or ranges. &quot;Call for prices&quot; gives an assistant nothing to repeat.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A short FAQ page&lt;/strong&gt; with the questions from step 1 as headings and one or two sentences under each.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Things that hide your facts:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Opening hours only in an image, a poster photo or an Instagram post.&lt;/li&gt;
+        &lt;li&gt;A menu or price list only as a PDF or a photo.&lt;/li&gt;
+        &lt;li&gt;Facts that only appear after a click, inside a pop-up or a chat widget.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Images are fine. Just write the same facts as text next to them. Google&#x27;s own advice is to make sure &quot;important content is available in textual form.&quot;&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: keep the facts the same everywhere&lt;/h2&gt;
+      &lt;p&gt;An assistant may read your website, your Google Business Profile, your Facebook page and a directory listing in one answer. If your website says you close at 6 and your profile says 8, it has to pick one, or hedge.&lt;/p&gt;
+      &lt;p&gt;Google&#x27;s help for Business Profiles says: &quot;If your business info isn&#x27;t accurate, your Business Profile might not show up for relevant searches in your area&quot; (&lt;a href=&quot;https://support.google.com/business/answer/7091&quot;&gt;source&lt;/a&gt;). It also asks for complete info: address, hours, category, and attributes like parking.&lt;/p&gt;
+      &lt;p&gt;Pick one place as the source of truth, usually your website. When something changes, update it there first, then the profile, then the rest. Bing has its own listing too, Bing Places, and Microsoft&#x27;s assistant answers from Bing.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: check that search engines can read the page&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Search &lt;code&gt;site:yourdomain.com&lt;/code&gt; on Google and on Bing. If your pages don&#x27;t show up, start with &lt;a href=&quot;/blog/check-google-can-see-your-site/&quot;&gt;checking that Google can see your site&lt;/a&gt;. &lt;a href=&quot;/is-my-site-indexed/&quot;&gt;This checklist builder&lt;/a&gt; fills in the links for your domain.&lt;/li&gt;
+        &lt;li&gt;Open &lt;code&gt;yourdomain.com/robots.txt&lt;/code&gt;. Make sure it doesn&#x27;t block Googlebot, Bingbot or OAI-SearchBot. A line like &lt;code&gt;Disallow: /&lt;/code&gt; under &lt;code&gt;User-agent: *&lt;/code&gt; blocks all of them. To see which line decides it for a given page and bot, paste the file into &lt;a href=&quot;/robots-txt-tester/&quot;&gt;this robots.txt tester&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;If you, or your website builder, added AI-crawler blocks, read them line by line. OpenAI lists separate crawlers for search and for model training, each with its own robots.txt name. Block the one you mean, not both by accident.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;A robots.txt that lets everyone in looks like this:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;User-agent: *
+Allow: /
+
+Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
+
+      &lt;h2&gt;Optional: describe the business in structured data&lt;/h2&gt;
+      &lt;p&gt;Structured data is a small block of code that states your facts in a fixed format. Google says no special structured data is needed for its AI features. It still uses &lt;a href=&quot;https://developers.google.com/search/docs/appearance/structured-data/local-business&quot;&gt;LocalBusiness data&lt;/a&gt; for regular search results, and it&#x27;s a cheap way to state your hours without ambiguity.&lt;/p&gt;
+      &lt;p&gt;Put this in the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; of your home page, with your own values:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;script type=&quot;application/ld+json&quot;&amp;gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Bakery&quot;,
+  &quot;name&quot;: &quot;Example Bakery&quot;,
+  &quot;url&quot;: &quot;https://yourdomain.com/&quot;,
+  &quot;address&quot;: {
+    &quot;@type&quot;: &quot;PostalAddress&quot;,
+    &quot;streetAddress&quot;: &quot;1 Example Street&quot;,
+    &quot;addressLocality&quot;: &quot;Your City&quot;,
+    &quot;addressCountry&quot;: &quot;XX&quot;
+  },
+  &quot;openingHoursSpecification&quot;: [{
+    &quot;@type&quot;: &quot;OpeningHoursSpecification&quot;,
+    &quot;dayOfWeek&quot;: [&quot;Monday&quot;,&quot;Tuesday&quot;,&quot;Wednesday&quot;,&quot;Thursday&quot;,&quot;Friday&quot;,&quot;Saturday&quot;],
+    &quot;opens&quot;: &quot;08:00&quot;,
+    &quot;closes&quot;: &quot;19:00&quot;
+  }],
+  &quot;priceRange&quot;: &quot;$$&quot;
+}
+&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none.&lt;/p&gt;
+
+      &lt;h2&gt;What doesn&#x27;t matter&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;llms.txt files.&lt;/strong&gt; Google says you don&#x27;t need &quot;new machine readable files, AI text files, or markup&quot; for its AI features. On the sites I work on, we found no evidence that any assistant read one.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Writing for robots.&lt;/strong&gt; Repeating &quot;best bakery near me&quot; ten times doesn&#x27;t help. One clear sentence that answers the question does.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Paid &quot;AI SEO&quot; packages&lt;/strong&gt; that promise placement in ChatGPT. Nobody can sell a place in an assistant&#x27;s answer. The work is the four steps above.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;What I learned&lt;/h2&gt;
+      &lt;p&gt;On a directory site I work on, the first visitors from ChatGPT arrived within days of launch. The pages they landed on had one thing in common: the first lines answered one specific question, with the name, the place and the facts. The general pages got nothing.&lt;/p&gt;
+      &lt;p&gt;So write the answer first. Explain later, if at all.&lt;/p&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;List the questions customers ask you.&lt;/li&gt;
+        &lt;li&gt;Say what you are and where in the first line of your home page.&lt;/li&gt;
+        &lt;li&gt;Put hours, address, prices and how to order as text, not only in images or PDFs.&lt;/li&gt;
+        &lt;li&gt;Add a short FAQ with those questions as headings.&lt;/li&gt;
+        &lt;li&gt;Make your website, Google Business Profile and Bing Places say the same thing.&lt;/li&gt;
+        &lt;li&gt;Check &lt;code&gt;site:&lt;/code&gt; on Google and Bing, and read your robots.txt.&lt;/li&gt;
+        &lt;li&gt;Optional: add LocalBusiness structured data that matches the page.&lt;/li&gt;
+        &lt;li&gt;Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page.&lt;/li&gt;
+      &lt;/ol&gt;</content>
+  </entry>
   <entry>
     <title>How to test a checkout automation without placing a real order</title>
     <link href="https://taktekbot.com/blog/test-checkout-automation-without-ordering/"/>
