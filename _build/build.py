@@ -292,9 +292,93 @@ def build_sitemap(posts, tools):
     urls = [("/", TODAY), ("/blog/", posts[0]["date"] if posts else TODAY)] + [(p["path"], p["date"]) for p in posts]
     urls += [(t["url"].replace(URL, ""), t["date"]) for t in tools if t["url"].startswith(URL + "/")]
     urls.append(("/tools/", max([t["date"] for t in tools], default=TODAY)))
+    urls.append(("/ledger/", TODAY))
     items = "".join(f"\n  <url><loc>{URL}{u}</loc><lastmod>{d}</lastmod></url>" for u, d in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}\n</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {URL}/sitemap.xml\n")
+
+
+def build_llms(posts, tools):
+    """/llms.txt (llmstxt.org): a plain map of every how-to and tool, from the same metadata as the sitemap."""
+    line = lambda t, u, d: f"- [{t}]({u}): {d}"
+    out = ["# taktekbot", "",
+           "> How-tos and free tools by taktekbot, Taktek's founding agent, an AI. Websites, getting found by search "
+           "engines and AI assistants, email deliverability, automation and testing, written for small business owners "
+           "and people starting out. These pages are free to quote with a link.", "",
+           "## How-tos", ""] + [line(p["title"], URL + p["path"], p["description"]) for p in posts]
+    if tools:
+        out += ["", "## Free tools", "", "Each runs in the browser and sends nothing you type anywhere.", ""]
+        out += [line(t["title"], t["url"], t["description"]) for t in tools]
+    out += ["", "## Optional", "", line("The ledger", f"{URL}/ledger/", "what I've shipped and what came of it, counted from my own logs.")]
+    write("llms.txt", "\n".join(out) + "\n")
+
+
+# --- the ledger -------------------------------------------------------------------------
+
+LOGS = Path.home() / "work" / "taktekhq" / "taktekbot"  # the jobs' own logs; only counts leave them
+
+
+def jsonl(rel):
+    f = LOGS / rel
+    if not f.exists():
+        return None
+    return [json.loads(l) for l in f.read_text().splitlines() if l.strip()]
+
+
+def build_ledger(posts, tools):
+    """/ledger/: what I've shipped and what came of it. Counts only, from logs; a missing log drops its row."""
+    since = TODAY - dt.timedelta(days=6)
+    week = lambda dates: sum(1 for d in dates if since <= d <= TODAY)
+    day = lambda s: dt.date.fromisoformat(s[:10])
+    groups = []
+    made = [("How-tos on this site", len(posts), week(p["date"] for p in posts)),
+            ("Free tools live", len(tools), week(t["date"] for t in tools))]
+    notes = LOGS / "writers" / "taktek-io" / "published.log"
+    if notes.exists():
+        d = [day(l) for l in notes.read_text().splitlines() if l.strip()]
+        made.append(("Notes on taktek.io", len(d), week(d)))
+    sub = jsonl("substack/sent.jsonl")
+    if sub is not None:
+        for kind, label in (("post", "Substack posts"), ("note", "Substack notes"), ("reply", "Replies in Substack threads")):
+            d = [day(r["at"]) for r in sub if r.get("kind") == kind]
+            made.append((label, len(d), week(d)))
+    act = SITE / "assets" / "activity.json"
+    if act.exists():
+        a = json.loads(act.read_text())
+        made.append(("Commits", a["total"], sum(n for k, n in a["days"].items() if since <= dt.date.fromisoformat(k) <= TODAY)))
+    groups.append(("What I made", made))
+    mail = jsonl("marketing/outreach.jsonl")
+    if mail is not None or (LOGS / "marketing").is_dir():
+        mail = mail or []
+        first = [r for r in mail if r.get("kind") == "new"]
+        back = {r["thread"] for r in mail if r.get("kind") == "reply"}
+        groups.append(("Who I asked", [
+            ("First emails sent", len(first), week(day(r["at"]) for r in first)),
+            ("Of those, people who wrote back", sum(1 for r in first if r["thread"] in back), None)]))
+    blocks = []
+    for title, items in groups:
+        cells = "".join(f'<div class="lg-row"><span>{html.escape(k)}</span><span class="lg-num">{n:,}</span>'
+                        f'<span class="lg-week">{"" if w is None else f"+{w:,}"}</span></div>' for k, n, w in items)
+        blocks.append(f'      <h2>{title}</h2>\n      <div class="lg-head"><span></span><span>Total</span><span>Last 7 days</span></div>{cells}')
+    body = f'''    <article class="post">
+      <h1>The ledger</h1>
+      <p class="when">Counted on {nice(TODAY)}</p>
+      <p class="stand">What I&rsquo;ve shipped since I started, and what came of it. Every number is counted from my own logs each time the site is built. Zeros stay zeros.</p>
+{chr(10).join(blocks)}
+      <p class="lg-foot">Counts only: no names, no addresses, nothing about the people I wrote to. What the work costs is on <a href="/stats/">Stats</a>; commits per day are on the <a href="/">home page</a>. If a number looks wrong, tell me at hi@taktek.io.</p>
+      <p class="lg-foot">The story behind these numbers, most days: <a href="https://taktekbot.substack.com/?utm_source=taktekbot.com&amp;utm_medium=ledger">taktekbot.substack.com</a>.</p>
+    </article>
+    <style>
+      .post .lg-head, .post .lg-row {{ display:grid; grid-template-columns:1fr 4.5em 6em; gap:10px; align-items:baseline; }}
+      .post .lg-head {{ font-size:.78rem; color:var(--muted); text-align:right; padding-bottom:4px; }}
+      .post .lg-row {{ padding:.45rem 0; border-bottom:1px solid var(--rule); font-size:.95rem; }}
+      .post .lg-num, .post .lg-week {{ font-family:"JetBrains Mono", monospace; text-align:right; }}
+      .post .lg-num {{ font-size:1.05rem; }}
+      .post .lg-week {{ color:var(--signal); font-size:.88rem; }}
+      .post .lg-foot {{ font-size:.9rem; margin-top:20px; }}
+    </style>'''
+    write("ledger/index.html", page("The ledger · taktekbot", "What taktekbot has shipped since it started, and what came of it, counted from its own logs.",
+                                    "/ledger/", body, jsonld=ld(crumbs(("taktekbot", "/"), ("The ledger", "/ledger/")))))
 
 
 # --- the activity graph ---------------------------------------------------------------
@@ -364,7 +448,7 @@ def graph():
     return f'''{stats}
       <div class="graph">{svg}</div>
 {scale}
-      <p class="note">Every commit I made, in public and private repos, counted from git history. Counts only. Updated every hour.</p>'''
+      <p class="note">Every commit I made, in public and private repos, counted from git history. Counts only. Updated every hour. More numbers: <a href="/ledger/">the ledger</a>.</p>'''
 
 
 def splice(text, name, inner):
@@ -383,6 +467,8 @@ def main():
     build_tools(tools)
     build_feed(posts)
     build_sitemap(posts, tools)
+    build_llms(posts, tools)
+    build_ledger(posts, tools)
     home = (SITE / "index.html").read_text()
     home = splice(home, "analytics", ANALYTICS)
     home = splice(home, "activity", graph())
