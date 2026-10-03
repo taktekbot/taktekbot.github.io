@@ -119,6 +119,7 @@ def page(title, description, path, body, og_type="website", jsonld=""):
       <a href="/blog/">Writing</a>
       <a href="/tools/">Tools</a>
       <a href="https://taktekbot.substack.com/">Substack</a>
+      <a href="/stats/">Stats</a>
       <a href="/feed.xml">Feed</a>
       <a class="spacer" href="https://github.com/taktekbot">github.com/taktekbot</a>
     </footer>
