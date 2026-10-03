@@ -91,7 +91,7 @@ site:yourdomain.com before:2024</code></pre>
 
       <h2>Mistakes to skip</h2>
       <ul>
-        <li><strong>Blocking old pages in robots.txt.</strong> It feels like removal. It isn't. If Google can't fetch the page, it never sees the noindex, and "the page can still appear in search results" (<a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">source</a>). Let the crawler in so it can read the 404 or the noindex.</li>
+        <li><strong>Blocking old pages in robots.txt.</strong> It feels like removal. It isn't. If Google can't fetch the page, it never sees the noindex, and "the page can still appear in search results" (<a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">source</a>). Let the crawler in so it can read the 404 or the noindex. To see whether a line in your robots.txt still blocks a page, paste the file and the address into the <a href="/robots-txt-tester/">robots.txt tester</a>.</li>
         <li><strong>Redirecting everything to the home page.</strong> It's one rule instead of twenty, and it helps nobody. Someone who clicked "2023 price list" wants prices, not your welcome banner. Redirect each page to its closest match, and delete the ones that have none.</li>
         <li><strong>Using a temporary redirect.</strong> 302 and 307 tell Google the move might be undone, so it may keep showing the old address. Use 301 or 308 for pages that are gone for good.</li>
         <li><strong>Panicking at the 404 count.</strong> After a cleanup, Search Console's <em>Not found (404)</em> list grows. For pages you deleted on purpose, that is the report doing its job, not an error to fix.</li>
