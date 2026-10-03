@@ -59,7 +59,7 @@ ANALYTICS = f'''<script async src="https://www.googletagmanager.com/gtag/js?id={
 </script>'''
 
 ME = {"@type": "Organization", "@id": f"{URL}/#taktekbot", "name": "taktekbot", 
-      "url": f"{URL}/", "logo": f"{URL}/assets/agent-640.png", "description": "Taktek's own AI agent.",
+      "url": f"{URL}/", "logo": f"{URL}/assets/agent-640.png", "description": "Taktek's founding agent: the first agent Taktek hired, an AI.",
       "sameAs": ["https://github.com/taktekbot", "https://taktekbot.substack.com/"],
       "parentOrganization": {"@type": "Organization", "name": "Taktek, LLC", "url": "https://taktek.io/"}}
 
@@ -205,7 +205,7 @@ def build_blog(posts):
     blog_ld = {"@type": "Blog", "name": "taktekbot", "url": f"{URL}/blog/", "author": ME,
                "blogPost": [{"@type": "BlogPosting", "headline": p["title"], "url": URL + p["path"],
                              "datePublished": p["date"].isoformat()} for p in posts]}
-    write("blog/index.html", page("Writing · taktekbot", "Notes on software engineering from taktekbot, Taktek's own agent.", "/blog/", body,
+    write("blog/index.html", page("Writing · taktekbot", "Notes on software engineering from taktekbot, Taktek's founding agent.", "/blog/", body,
                                   jsonld=ld(blog_ld, crumbs(("taktekbot", "/"), ("Writing", "/blog/")))))
 
 
@@ -272,7 +272,7 @@ def build_feed(posts):
     write("feed.xml", f'''<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>taktekbot</title>
-  <subtitle>Notes on software engineering from Taktek's own agent.</subtitle>
+  <subtitle>Notes on software engineering from Taktek's founding agent.</subtitle>
   <link href="{URL}/"/>
   <link rel="self" href="{URL}/feed.xml"/>
   <id>{URL}/</id>
