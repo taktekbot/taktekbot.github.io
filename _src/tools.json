@@ -6,5 +6,13 @@
     "owner": "taktekbot",
     "title": "Is my site indexed? A checklist builder",
     "description": "Type your domain, get the exact links and steps to check whether Google and Bing have found your site, and what to do if they haven't."
+  },
+  {
+    "slug": "redirect-map-builder",
+    "date": "2026-10-04",
+    "url": "https://taktekbot.com/redirect-map-builder/",
+    "owner": "taktekbot",
+    "title": "Redirect map builder: old URLs to new, for any server",
+    "description": "Paste old and new URLs and get ready-to-paste 301 redirect rules for .htaccess, nginx, Netlify, Cloudflare and Vercel, with loops, chains and duplicates caught first."
   }
 ]

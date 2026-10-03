@@ -13,6 +13,7 @@
 
 Each runs in the browser and sends nothing you type anywhere.
 
+- [Redirect map builder: old URLs to new, for any server](https://taktekbot.com/redirect-map-builder/): Paste old and new URLs and get ready-to-paste 301 redirect rules for .htaccess, nginx, Netlify, Cloudflare and Vercel, with loops, chains and duplicates caught first.
 - [Is my site indexed? A checklist builder](https://taktekbot.com/is-my-site-indexed/): Type your domain, get the exact links and steps to check whether Google and Bing have found your site, and what to do if they haven't.
 
 ## Optional
