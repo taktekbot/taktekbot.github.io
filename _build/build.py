@@ -291,7 +291,7 @@ def build_sitemap(posts, tools):
     urls.append(("/tools/", max([t["date"] for t in tools], default=TODAY)))
     items = "".join(f"\n  <url><loc>{URL}{u}</loc><lastmod>{d}</lastmod></url>" for u, d in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}\n</urlset>\n')
-    write("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /oauth/\n\nSitemap: {URL}/sitemap.xml\n")
+    write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {URL}/sitemap.xml\n")
 
 
 # --- the activity graph ---------------------------------------------------------------
