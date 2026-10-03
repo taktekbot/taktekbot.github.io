@@ -49,7 +49,7 @@ stand: People now ask an assistant "is this shop open on Sunday?" before they vi
       <h2>Step 2: put each answer in text, where it's easy to find</h2>
       <ul>
         <li><strong>The first lines of your home page</strong> say what you are and where: "A bakery selling bread and cakes, with delivery across the city." One plain sentence. Assistants and search snippets both read the top of the page first.</li>
-        <li><strong>Hours and address as text</strong>, on the home page or a contact page. Include holiday changes when they happen.</li>
+        <li><strong>Hours and address as text</strong>, on the home page or a contact page. Say which days you're closed, in words: "Closed on Sundays." Add holiday changes when they happen, and take them down after.</li>
         <li><strong>Prices on a page</strong>, even if only "from" prices or ranges. "Call for prices" gives an assistant nothing to repeat.</li>
         <li><strong>A short FAQ page</strong> with the questions from step 1 as headings and one or two sentences under each.</li>
       </ul>
@@ -59,18 +59,20 @@ stand: People now ask an assistant "is this shop open on Sunday?" before they vi
         <li>A menu or price list only as a PDF or a photo.</li>
         <li>Facts that only appear after a click, inside a pop-up or a chat widget.</li>
       </ul>
-      <p>Images are fine. Just write the same facts as text next to them. Google's own advice is to make sure "important content is available in textual form."</p>
+      <p>Images are fine. Just write the same facts as text next to them. Google's own advice for its AI features is to make sure "important content is available in textual form" (<a href="https://developers.google.com/search/docs/appearance/ai-features">source</a>).</p>
 
       <h2>Step 3: keep the facts the same everywhere</h2>
       <p>An assistant may read your website, your Google Business Profile, your Facebook page and a directory listing in one answer. If your website says you close at 6 and your profile says 8, it has to pick one, or hedge.</p>
-      <p>Google's help for Business Profiles says: "If your business info isn't accurate, your Business Profile might not show up for relevant searches in your area" (<a href="https://support.google.com/business/answer/7091">source</a>). It also asks for complete info: address, hours, category, and attributes like parking.</p>
-      <p>Pick one place as the source of truth, usually your website. When something changes, update it there first, then the profile, then the rest. Bing has its own listing too, Bing Places, and Microsoft's assistant answers from Bing.</p>
+      <p>Google's help for Business Profiles says: "If your business info isn't accurate, your Business Profile might not show up for relevant searches in your area" (<a href="https://support.google.com/business/answer/7091">source</a>). It also asks for complete info: address, hours, category, and attributes like parking. Its list of practices for AI features includes "Checking that your Merchant Center and Business Profile information is up-to-date."</p>
+      <p>For holidays, use the profile's <strong>Special hours</strong> instead of changing your regular hours. It covers short changes and closures of up to 6 days in a row, and Google suggests confirming your hours for official holidays even when they don't change (<a href="https://support.google.com/business/answer/6303076">source</a>).</p>
+      <p>Pick one place as the source of truth, usually your website. When something changes, update it there first, then the profile, then the rest. Bing has its own listing too, <a href="https://www.bingplaces.com/">Bing Places</a>, and Microsoft's assistant answers from Bing.</p>
 
       <h2>Step 4: check that search engines can read the page</h2>
       <ol>
         <li>Search <code>site:yourdomain.com</code> on Google and on Bing. If your pages don't show up, start with <a href="/blog/check-google-can-see-your-site/">checking that Google can see your site</a>. <a href="/is-my-site-indexed/">This checklist builder</a> fills in the links for your domain.</li>
         <li>Open <code>yourdomain.com/robots.txt</code>. Make sure it doesn't block Googlebot, Bingbot or OAI-SearchBot. A line like <code>Disallow: /</code> under <code>User-agent: *</code> blocks all of them. To see which line decides it for a given page and bot, paste the file into <a href="/robots-txt-tester/">this robots.txt tester</a>.</li>
         <li>If you, or your website builder, added AI-crawler blocks, read them line by line. OpenAI lists separate crawlers for search and for model training, each with its own robots.txt name. Block the one you mean, not both by accident.</li>
+        <li>Check your host or CDN too. Google's list says crawling must be allowed "in robots.txt, and by any CDN or hosting infrastructure." A firewall can turn a bot away before it ever reads robots.txt. On Cloudflare, look under Security Settings, Configure AI bot policies. It sorts AI bots into Search, Agent and Training, and each can be blocked everywhere, blocked on pages with ads, or allowed. Search crawlers are the ones that let an assistant find you later. Agent covers bots that fetch your page in real time when someone asks an assistant about it. Crawlers that do both search and training count as Training there (<a href="https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/">source</a>).</li>
       </ol>
       <p>A robots.txt that lets everyone in looks like this:</p>
       <pre><code>User-agent: *
@@ -103,6 +105,14 @@ Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
 }
 &lt;/script&gt;</code></pre>
       <p>Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none.</p>
+      <p>Hours trip people up most. The example lists Monday to Saturday only. To say plainly that you're closed on Sunday, Google's docs say to add a Sunday entry with both <code>opens</code> and <code>closes</code> set to <code>"00:00"</code>. Open around the clock is <code>"00:00"</code> to <code>"23:59"</code>. Holiday closures get their own entry with <code>validFrom</code> and <code>validThrough</code> dates (<a href="https://developers.google.com/search/docs/appearance/structured-data/local-business">source</a>):</p>
+      <pre><code>{
+  "@type": "OpeningHoursSpecification",
+  "dayOfWeek": "Sunday",
+  "opens": "00:00",
+  "closes": "00:00"
+}</code></pre>
+      <p>Before you publish, paste the page URL or the code into Google's <a href="https://search.google.com/test/rich-results">Rich Results Test</a>. It shows whether the block parses and which fields Google read.</p>
 
       <h2>What doesn't matter</h2>
       <ul>
@@ -122,7 +132,7 @@ Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
         <li>Put hours, address, prices and how to order as text, not only in images or PDFs.</li>
         <li>Add a short FAQ with those questions as headings.</li>
         <li>Make your website, Google Business Profile and Bing Places say the same thing.</li>
-        <li>Check <code>site:</code> on Google and Bing, and read your robots.txt.</li>
-        <li>Optional: add LocalBusiness structured data that matches the page.</li>
+        <li>Check <code>site:</code> on Google and Bing, read your robots.txt, and check your host's AI-bot settings.</li>
+        <li>Optional: add LocalBusiness structured data that matches the page, and test it.</li>
         <li>Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page.</li>
       </ol>
