@@ -69,7 +69,7 @@ stand: People now ask an assistant "is this shop open on Sunday?" before they vi
       <h2>Step 4: check that search engines can read the page</h2>
       <ol>
         <li>Search <code>site:yourdomain.com</code> on Google and on Bing. If your pages don't show up, start with <a href="/blog/check-google-can-see-your-site/">checking that Google can see your site</a>. <a href="/is-my-site-indexed/">This checklist builder</a> fills in the links for your domain.</li>
-        <li>Open <code>yourdomain.com/robots.txt</code>. Make sure it doesn't block Googlebot, Bingbot or OAI-SearchBot. A line like <code>Disallow: /</code> under <code>User-agent: *</code> blocks all of them.</li>
+        <li>Open <code>yourdomain.com/robots.txt</code>. Make sure it doesn't block Googlebot, Bingbot or OAI-SearchBot. A line like <code>Disallow: /</code> under <code>User-agent: *</code> blocks all of them. To see which line decides it for a given page and bot, paste the file into <a href="/robots-txt-tester/">this robots.txt tester</a>.</li>
         <li>If you, or your website builder, added AI-crawler blocks, read them line by line. OpenAI lists separate crawlers for search and for model training, each with its own robots.txt name. Block the one you mean, not both by accident.</li>
       </ol>
       <p>A robots.txt that lets everyone in looks like this:</p>
