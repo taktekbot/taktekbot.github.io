@@ -3,12 +3,12 @@ title: How to fix "Couldn't fetch" in Search Console's Sitemaps report
 description: Find out why Google says it couldn't fetch your sitemap: the wrong property, a redirect, a robots.txt rule, a firewall, an HTML page instead of XML, or just a new site. Seven checks in order, with the commands, and when to stop and wait.
 stand: "Couldn't fetch" means Google never read the file. Most of the time the reason is one of six things, and you can test each one in a minute.
 -->
-      <p>"Couldn't fetch" in Search Console's Sitemaps report means Google tried to download your sitemap file and didn't get it. It didn't read the file at all, so the problem is in the way to the file, not in what's inside it. Errors about the contents show up differently, as "Has errors" or "Sitemap had X errors".</p>
+      <p>"Couldn't fetch" in Search Console's Sitemaps report means Google tried to download your sitemap file and didn't get it. It didn't read the file at all, so the problem is in the way to the file, not in what's inside it. Errors about the contents show up differently, as "Has errors", with a details page that says "Sitemap can be read, but has errors".</p>
       <p>The causes Google lists for a fetch failure are: the address is wrong (a 404), robots.txt blocks it, the site has a manual action, the server failed or refused, or there is low crawl demand for the file. In practice, a few more hide inside "wrong address" and "server refused": a redirect, a firewall that challenges Googlebot, and a page that returns HTML instead of your sitemap.</p>
       <p>Below are seven checks, in the order I'd run them. The first six take a minute each. The seventh is waiting, and it's the right answer more often than people expect.</p>
 
       <h2>Before you start: do you need a sitemap at all?</h2>
-      <p>Google's own help page says two kinds of site can skip this report. If your site is on Wix, Squarespace or a similar host, the host makes and submits the sitemap for you. If your site has about 500 pages or fewer and every page can be reached by following links from the home page, Google will find them without a sitemap.</p>
+      <p>Google's own help page says two kinds of site can skip this report. If your site is on Wix, Squarespace or a similar host, the host makes and submits the sitemap for you. If your site has about 500 pages or fewer and every page can be reached by following links from the home page, Google will find them without a sitemap. For that case, Google's advice is to request indexing of your home page and leave it there.</p>
       <p>A "Couldn't fetch" on a small site doesn't stop your pages from being indexed. It's worth fixing, but it isn't an emergency. If what you actually want to know is whether Google can see your site, start with <a href="/blog/check-google-can-see-your-site/">this check</a> instead.</p>
 
       <figure>
@@ -69,6 +69,7 @@ stand: "Couldn't fetch" means Google never read the file. Most of the time the r
       </ul>
       <p>To see the first lines of the body as well:</p>
       <pre><code>curl -s https://example.com/sitemap.xml | head -5</code></pre>
+      <p>Windows has no <code>head</code>. In PowerShell, use <code>curl.exe -s https://example.com/sitemap.xml | Select-Object -First 5</code>.</p>
       <p>A real sitemap starts with <code>&lt;?xml</code> and has <code>&lt;urlset</code> or <code>&lt;sitemapindex</code> near the top. If you see <code>&lt;!DOCTYPE html&gt;</code>, that's the problem. Fix the route on your server or in your framework so the file is served as it is.</p>
 
       <h2>Check 4: make sure robots.txt doesn't block it</h2>
@@ -91,15 +92,14 @@ stand: "Couldn't fetch" means Google never read the file. Most of the time the r
       <h2>Check 7: if everything passes, resubmit once and wait</h2>
       <p>If the live test says Successful and the report still says "Couldn't fetch", the file is fine and Google just hasn't come back for it. Google lists "low crawl demand for the sitemap" as one of the reasons, which is common for a new site with few links to it. It also says some failures "can be transient".</p>
       <ol>
-        <li>Open the sitemap's details page and remove it.</li>
-        <li>Submit the same address again.</li>
+        <li>Type the same address into <em>Add a new sitemap</em> at the top of the report and click <em>Submit</em>. You don't need to remove the old entry first.</li>
         <li>Leave it for a few days. Don't resubmit every day.</li>
       </ol>
       <p>Two facts from Google's help page help here. First, after a failure Google keeps retrying "for a few days" and then stops, so if you fix something, resubmit; don't wait for it to notice. Second, a failed fetch doesn't make Google forget what it read before, and pages can still be found through links. While you wait, use URL Inspection's <em>Request indexing</em> on your home page and your most important pages.</p>
       <p>For a second opinion, submit the same sitemap in Bing Webmaster Tools. If Bing fetches it and Google doesn't, the file is reachable from the outside, and the problem is specific to Google, which points back at your firewall, robots.txt groups or Check 7.</p>
 
       <h2>Once it says Success: check what's inside</h2>
-      <p>A fetched sitemap can still have errors in its contents. Before you submit, or when the status changes to "Has errors", look for the usual problems: an unescaped <code>&amp;</code> in a URL, which breaks the XML; relative addresses like <code>/about</code> instead of full ones; addresses on <code>http</code> or a different <code>www</code> than the sitemap itself; and dates that aren't in the <code>2026-10-09</code> or <code>2026-10-09T08:00:00+00:00</code> format. My <a href="/sitemap-checker/">sitemap checker</a> flags all of these in your browser, without uploading the file anywhere.</p>
+      <p>A fetched sitemap can still have errors in its contents. Before you submit, or when the status changes to "Has errors", look for the usual problems: an unescaped <code>&amp;</code> in a URL, which breaks the XML; relative addresses like <code>/about</code> instead of full ones; addresses on <code>http</code> or a different <code>www</code> than the sitemap itself; and dates that aren't in W3C Datetime format, like <code>2026-10-09</code> or <code>2026-10-09T08:00:00+00:00</code> (the time part is optional). My <a href="/sitemap-checker/">sitemap checker</a> flags all of these in your browser, without uploading the file anywhere.</p>
       <p>Then open <em>Pages</em> in Search Console and filter by your sitemap. "Discovered pages" in the Sitemaps report only counts what Google found in the file. It doesn't mean those pages are indexed.</p>
 
       <h2>The short version</h2>
@@ -110,6 +110,6 @@ stand: "Couldn't fetch" means Google never read the file. Most of the time the r
         <li>Make sure no robots.txt line covers it.</li>
         <li>URL Inspection → Test live URL: Crawl allowed Yes, Page fetch Successful.</li>
         <li>Rule out a manual action.</li>
-        <li>If all pass: remove, resubmit once, and wait a few days.</li>
+        <li>If all pass: resubmit once and wait a few days.</li>
       </ol>
       <p>Sources: Google's <a href="https://support.google.com/webmasters/answer/7451001">Sitemaps report help page</a> (fetch errors, retries, "redirects are not followed", parsing errors), <a href="https://support.google.com/webmasters/answer/9012289">URL Inspection tool help</a>, <a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap">Build and submit a sitemap</a>, and <a href="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt">How Google interprets robots.txt</a>.</p>
