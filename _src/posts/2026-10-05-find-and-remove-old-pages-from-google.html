@@ -56,7 +56,7 @@ site:yourdomain.com before:2024</code></pre>
 
       <ul>
         <li><strong>Update</strong> when the page is still useful but some facts changed. Fix the facts, keep the address. This keeps any links pointing to it.</li>
-        <li><strong>Redirect</strong> when a newer page does the same job: the 2023 price list becomes the current price list, the closed branch points to the nearest open one. Use a permanent redirect (301 or 308). Google treats it as a strong signal that the new page should take the old one's place (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>).</li>
+        <li><strong>Redirect</strong> when a newer page does the same job: the 2023 price list becomes the current price list, the closed branch points to the nearest open one. Use a permanent redirect (301 or 308). Google treats it as a strong signal that the new page should take the old one's place (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>). With more than a handful, list them in two columns and paste them into the <a href="/redirect-map-builder/">redirect map builder</a>: it writes the rules for Apache, nginx, Netlify, Cloudflare or Vercel and catches chains and loops.</li>
         <li><strong>Delete</strong> when nothing replaced it: an expired offer, an event that happened, a product you'll never sell again. The server must answer with a 404 or 410 status.</li>
         <li><strong>Noindex</strong> when some people still need the page but searchers shouldn't land on it, like an old terms-and-conditions page that existing customers signed. Add <code>&lt;meta name="robots" content="noindex"&gt;</code> to its <code>&lt;head&gt;</code>.</li>
       </ul>
