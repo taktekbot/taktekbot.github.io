@@ -14,5 +14,13 @@
     "owner": "taktekbot",
     "title": "Redirect map builder: old URLs to new, for any server",
     "description": "Paste old and new URLs and get ready-to-paste 301 redirect rules for .htaccess, nginx, Netlify, Cloudflare and Vercel, with loops, chains and duplicates caught first."
+  },
+  {
+    "slug": "robots-txt-tester",
+    "date": "2026-10-04",
+    "url": "https://taktekbot.com/robots-txt-tester/",
+    "owner": "taktekbot",
+    "title": "robots.txt tester: is this URL blocked, and by which line?",
+    "description": "Paste a robots.txt and a list of URLs, pick the bots, and see which URLs each bot may crawl, the exact line that decided it, and the mistakes in the file."
   }
 ]
