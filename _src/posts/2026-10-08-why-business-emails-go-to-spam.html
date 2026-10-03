@@ -24,11 +24,11 @@ stand: Most business email lands in spam because one of three DNS checks fails. 
 
       <figure>
         <svg viewBox="0 0 640 250" role="img" aria-labelledby="spam-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
-          <title id="spam-title">An email from you@yourshop.com is checked twice. SPF asks whether the sending server is on your list. DKIM asks whether the signature matches a key in your DNS. DMARC passes only if at least one of them passed for yourshop.com, the domain in the From line. If DMARC passes, the email goes to the inbox. If it fails, the receiver follows your DMARC policy: deliver anyway, send to spam, or reject.</title>
+          <title id="spam-title">An email with yourshop.com in the From line is checked twice. SPF asks whether the sending server is on your list. DKIM asks whether the signature matches a key in your DNS. DMARC passes only if at least one of them passed for yourshop.com, the domain in the From line. If DMARC passes, the email goes to the inbox. If it fails, the receiver follows your DMARC policy: deliver anyway, send to spam, or reject.</title>
           <rect width="640" height="250" fill="var(--paper)"/>
           <rect x="20" y="95" width="150" height="60" rx="4" fill="none" stroke="var(--ink)"/>
           <text x="95" y="121" text-anchor="middle" fill="var(--ink)">From:</text>
-          <text x="95" y="139" text-anchor="middle" fill="var(--ink)">you@yourshop.com</text>
+          <text x="95" y="139" text-anchor="middle" fill="var(--ink)">yourshop.com</text>
           <line x1="170" y1="125" x2="215" y2="70" stroke="var(--ink)"/>
           <line x1="170" y1="125" x2="215" y2="180" stroke="var(--ink)"/>
           <text x="220" y="62" fill="var(--ink)">SPF</text>
@@ -86,7 +86,8 @@ dig +short TXT google._domainkey.yourshop.com</code></pre>
 
       <h2>Fix 3: there's no DMARC record</h2>
       <p>DMARC is one TXT record at <code>_dmarc.yourshop.com</code>. Start with this:</p>
-      <pre><code>v=DMARC1; p=none; rua=mailto:dmarc@yourshop.com</code></pre>
+      <pre><code>v=DMARC1; p=none; rua=mailto:REPORT-ADDRESS</code></pre>
+      <p>Replace <code>REPORT-ADDRESS</code> with a mailbox on your own domain, set up just for these reports. Keep the <code>mailto:</code> in front of it.</p>
       <ul>
         <li><code>p=none</code> means "deliver failing mail as usual, but report it". Nothing changes for your mail on day one.</li>
         <li><code>rua</code> is where receivers send daily reports. They're XML files, one per receiver per day. Use a separate mailbox or alias so they don't bury your inbox.</li>
@@ -99,12 +100,12 @@ dig +short TXT google._domainkey.yourshop.com</code></pre>
       <p>Contact form emails are the most common sender that fails, and the hardest to notice, because you're the one receiving them. Two things go wrong:</p>
       <ul>
         <li><strong>The form sends from your web host's server.</strong> Many website builders and WordPress sites send mail straight from the hosting server. That server isn't in your SPF record and doesn't sign with your DKIM key, so everything fails.</li>
-        <li><strong>The form sends "from" the visitor.</strong> Some forms put the visitor's address in the From line, so the email looks like it came from <code>them@yahoo.com</code>. Your server isn't allowed to send for Yahoo, and Yahoo's DMARC record says <code>p=reject</code>. Receivers that honour it refuse the message. You never see the enquiry.</li>
+        <li><strong>The form sends "from" the visitor.</strong> Some forms put the visitor's address in the From line, so the email looks like it came from the visitor's own Yahoo address. Your server isn't allowed to send for Yahoo, and Yahoo's DMARC record says <code>p=reject</code>. Receivers that honour it refuse the message. You never see the enquiry.</li>
       </ul>
       <p>The fix for both:</p>
       <ol>
         <li>Send the form's email through your real mail service. On WordPress, an SMTP plugin can send through Google Workspace, Microsoft 365 or a transactional email service instead of the web server. Hosted builders usually have a setting for the sender address.</li>
-        <li>Set the From line to an address on your own domain, like <code>website@yourshop.com</code>.</li>
+        <li>Set the From line to an address on your own domain, set up just for the form.</li>
         <li>Put the visitor's address in the Reply-To field. You still click Reply and answer them directly.</li>
         <li>Submit the form once with a Gmail address of your own, and read <em>Show original</em> again. You want three passes.</li>
       </ol>
