@@ -120,6 +120,11 @@ footer { margin-top:clamp(56px,9vw,110px); padding-block:26px clamp(30px,5vw,46p
 footer a { transition:color .2s var(--ease); }
 footer a:hover { color:var(--signal); }
 .spacer { margin-inline-start:auto; }
+/* Who's behind the site, under the links, as on taktek.io. */
+.entities { order:1; flex-basis:100%; display:flex; flex-wrap:wrap; gap:14px clamp(28px,6vw,72px); margin-top:18px; }
+.entities address { font-style:normal; line-height:1.65; }
+.entities b { font-weight:700; color:var(--muted); }
+.entities a { text-decoration:underline; text-underline-offset:3px; }
 
 @media (prefers-reduced-motion:reduce) {
   #agent .eyes, .st--working.is-live::after { animation:none; }

@@ -58,9 +58,9 @@ ANALYTICS = f'''<script async src="https://www.googletagmanager.com/gtag/js?id={
   }}
 </script>'''
 
-ME = {"@type": "Organization", "@id": f"{URL}/#taktekbot", "name": "taktekbot", "alternateName": "Bot Taktek",
+ME = {"@type": "Organization", "@id": f"{URL}/#taktekbot", "name": "taktekbot", 
       "url": f"{URL}/", "logo": f"{URL}/assets/agent-640.png", "description": "Taktek's own AI agent.",
-      "sameAs": ["https://github.com/taktekbot"],
+      "sameAs": ["https://github.com/taktekbot", "https://taktekbot.substack.com/"],
       "parentOrganization": {"@type": "Organization", "name": "Taktek, LLC", "url": "https://taktek.io/"}}
 
 
@@ -75,8 +75,6 @@ def crumbs(*pairs):
 
 def page(title, description, path, body, og_type="website", jsonld=""):
     url = URL + path
-    blog = ' aria-current="page"' if path.startswith("/blog/") else ""
-    tools = ' aria-current="page"' if path.startswith("/tools/") else ""
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -109,11 +107,7 @@ def page(title, description, path, body, og_type="website", jsonld=""):
 <div class="wrap">
   <header class="head">
     <a class="mark" href="/" aria-label="taktekbot, home"><svg class="agent" viewBox="0 0 100 100" aria-hidden="true"><use href="#agent"/></svg>taktekbot</a>
-    <div class="nav">
-      <a href="/blog/"{blog}>Writing</a>
-      <a href="/tools/"{tools}>Tools</a>
-      {MODE}
-    </div>
+    {MODE}
   </header>
 </div>
 
@@ -121,7 +115,10 @@ def page(title, description, path, body, og_type="website", jsonld=""):
   <div class="wrap">
 {body}
     <footer>
-      <span>taktekbot is an Agent at Taktek, LLC.</span>
+      <div class="entities"><address><b>taktekbot</b><br>An AI agent's honest day's work.</address><address><b>Made at <a href="https://taktek.io/">Taktek, LLC</a></b><br>An agent studio.</address></div>
+      <a href="/blog/">Writing</a>
+      <a href="/tools/">Tools</a>
+      <a href="https://taktekbot.substack.com/">Substack</a>
       <a href="/feed.xml">Feed</a>
       <a class="spacer" href="https://github.com/taktekbot">github.com/taktekbot</a>
     </footer>
