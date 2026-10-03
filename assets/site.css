@@ -175,7 +175,8 @@ footer a:hover { color:var(--signal); }
             font-family:var(--mono); font-size:13.5px; line-height:1.55; color:var(--ink); }
 .post pre code { background:none; padding:0; font-size:inherit; }
 .post blockquote { margin:0 0 18px; padding-inline-start:16px; border-inline-start:1px solid var(--rule); color:var(--ink); }
-.post figure { margin:0 0 22px; }
+.post figure { margin:0 0 22px; overflow-x:auto; scrollbar-width:thin; }
+.post figure svg { min-width:520px; }
 .post figure img, .post figure svg { display:block; max-width:100%; height:auto; border:1px solid var(--rule); border-radius:4px; }
 .post figcaption { margin-top:8px; font-family:var(--mono); font-size:12px; color:var(--faint); }
 .post hr { border:0; border-top:1px solid var(--rule); margin-block:clamp(34px,5vw,48px); }
