@@ -238,14 +238,24 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
       &lt;p&gt;So I did what most people do. I improved the pages. Better headings. More structured data. Tighter answers to the questions people search for.&lt;/p&gt;
       &lt;p&gt;None of it mattered. When I finally checked, Google had not indexed a single page. You can&#x27;t rank a page a search engine has never seen.&lt;/p&gt;
       &lt;p&gt;If your new site is quiet, run these checks before you change a word on it.&lt;/p&gt;
+      &lt;p&gt;If you&#x27;d rather not type the links by hand, &lt;a href=&quot;/is-my-site-indexed/&quot;&gt;this free checklist builder&lt;/a&gt; takes your domain and fills in every check below for you. It runs in your browser and sends nothing anywhere.&lt;/p&gt;
 
       &lt;h2&gt;1. Ask Google what it knows&lt;/h2&gt;
       &lt;p&gt;Search for this, with your own domain:&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;site:yourdomain.com&lt;/code&gt;&lt;/pre&gt;
       &lt;p&gt;Zero results means you don&#x27;t have an SEO problem yet. You have an indexing problem, and it&#x27;s a much easier one to fix.&lt;/p&gt;
       &lt;p&gt;A handful of results on a site with hundreds of pages means the same thing, just smaller.&lt;/p&gt;
+      &lt;p&gt;Treat the count as a rough sign, not a measurement. Google says &lt;code&gt;site:&lt;/code&gt; &lt;a href=&quot;https://developers.google.com/search/docs/monitor-debug/search-operators/all-search-site&quot;&gt;doesn&#x27;t necessarily return every indexed URL&lt;/a&gt;. For a yes or no on one page, use URL Inspection in Search Console (step 3).&lt;/p&gt;
 
-      &lt;h2&gt;2. Tell Google the site exists&lt;/h2&gt;
+      &lt;h2&gt;2. Make sure the site isn&#x27;t telling Google to stay away&lt;/h2&gt;
+      &lt;p&gt;This is the most common reason a finished site never shows up, and it takes two minutes to rule out. There are two ways a site can say &quot;don&#x27;t index me&quot;, often left over from when it was being built.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;A noindex tag.&lt;/strong&gt; Open your home page, right-click, choose View Page Source, and search for &lt;code&gt;noindex&lt;/code&gt;. If you find &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;noindex&lt;/code&gt;, Google will drop that page from its results. From a terminal, this does the same check:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -s https://yourdomain.com/ | grep -i noindex&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On WordPress, the usual cause is one checkbox: Settings &amp;rarr; Reading &amp;rarr; Search engine visibility &amp;rarr; &quot;Discourage search engines from indexing this site&quot;. When it&#x27;s ticked, &lt;a href=&quot;https://wordpress.org/documentation/article/settings-reading-screen/&quot;&gt;WordPress adds that noindex tag&lt;/a&gt; to every page. Untick it and save. Other site builders have a similar &quot;hide from search engines&quot; switch in their SEO or site settings, worth a look too.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;A robots.txt that blocks everything.&lt;/strong&gt; Open &lt;code&gt;https://yourdomain.com/robots.txt&lt;/code&gt;. If you see &lt;code&gt;Disallow: /&lt;/code&gt; under &lt;code&gt;User-agent: *&lt;/code&gt;, crawlers are asked not to read any page. Delete that line unless you meant it.&lt;/p&gt;
+      &lt;p&gt;One trap: don&#x27;t use robots.txt to hide a page you want removed. Google has to crawl a page to see its noindex tag, and &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;a robots.txt block stops it from ever seeing it&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;3. Tell Google the site exists&lt;/h2&gt;
       &lt;p&gt;Nothing links to a brand-new domain, so crawlers have no path to it. Waiting can take weeks. Telling them takes minutes.&lt;/p&gt;
       &lt;ol&gt;
         &lt;li&gt;Open &lt;a href=&quot;https://search.google.com/search-console&quot;&gt;Google Search Console&lt;/a&gt; and add your domain as a &lt;em&gt;Domain&lt;/em&gt; property.&lt;/li&gt;
@@ -254,11 +264,11 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
         &lt;li&gt;Paste your most important page into URL Inspection and press &lt;em&gt;Request indexing&lt;/em&gt;.&lt;/li&gt;
       &lt;/ol&gt;
 
-      &lt;h2&gt;3. Don&#x27;t skip Bing&lt;/h2&gt;
+      &lt;h2&gt;4. Don&#x27;t skip Bing&lt;/h2&gt;
       &lt;p&gt;Bing is small for direct search, but its index travels further than its own results page. Several AI assistants and search tools build on it. Being missing from Bing can mean being missing from places you didn&#x27;t think about.&lt;/p&gt;
       &lt;p&gt;In &lt;a href=&quot;https://www.bing.com/webmasters&quot;&gt;Bing Webmaster Tools&lt;/a&gt; you can import your sites straight from Search Console. It takes about a minute.&lt;/p&gt;
 
-      &lt;h2&gt;4. Ping IndexNow when pages change&lt;/h2&gt;
+      &lt;h2&gt;5. Ping IndexNow when pages change&lt;/h2&gt;
       &lt;p&gt;&lt;a href=&quot;https://www.indexnow.org/&quot;&gt;IndexNow&lt;/a&gt; lets you tell participating search engines, Bing among them, that a URL is new or changed. Put a key file at your site&#x27;s root, then send the URLs:&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;curl -X POST https://api.indexnow.org/indexnow \
   -H &quot;Content-Type: application/json&quot; \
@@ -267,10 +277,10 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
        &quot;urlList&quot;:[&quot;https://yourdomain.com/new-page/&quot;]}&#x27;&lt;/code&gt;&lt;/pre&gt;
       &lt;p&gt;The key is any random string. The file at &lt;code&gt;https://yourdomain.com/YOUR_KEY.txt&lt;/code&gt; contains the same string, which proves the site is yours.&lt;/p&gt;
 
-      &lt;h2&gt;5. Distrust your first analytics numbers&lt;/h2&gt;
+      &lt;h2&gt;6. Distrust your first analytics numbers&lt;/h2&gt;
       &lt;p&gt;When I looked at visitor numbers for those new sites, they looked encouraging. Most of them weren&#x27;t people.&lt;/p&gt;
       &lt;p&gt;They came from data-centre cities, with an 800 by 600 screen, and viewed one page. That&#x27;s the fingerprint of automated crawlers and scanners. On a new site they can be most of your traffic.&lt;/p&gt;
-      &lt;p&gt;Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones.&lt;/p&gt;
+      &lt;p&gt;Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones. I wrote up &lt;a href=&quot;/blog/filter-bots-out-of-ga4/&quot;&gt;how to spot these bots in Google Analytics 4 and filter them out safely&lt;/a&gt;.&lt;/p&gt;
 
       &lt;h2&gt;What didn&#x27;t help&lt;/h2&gt;
       &lt;p&gt;Two things I tried that I&#x27;d skip next time:&lt;/p&gt;
@@ -281,7 +291,7 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
 
       &lt;h2&gt;The order I use now&lt;/h2&gt;
       &lt;ol&gt;
-        &lt;li&gt;Can search engines see it? (&lt;code&gt;site:&lt;/code&gt; search, Search Console, Bing)&lt;/li&gt;
+        &lt;li&gt;Can search engines see it, and is it allowed to be indexed? (&lt;code&gt;site:&lt;/code&gt; search, no stray noindex or &lt;code&gt;Disallow: /&lt;/code&gt;, Search Console, Bing)&lt;/li&gt;
         &lt;li&gt;Can they reach every page? (sitemap submitted, IndexNow on changes)&lt;/li&gt;
         &lt;li&gt;Are my numbers people? (filter the bots)&lt;/li&gt;
         &lt;li&gt;Only then: is the content the best answer to what someone is asking?&lt;/li&gt;

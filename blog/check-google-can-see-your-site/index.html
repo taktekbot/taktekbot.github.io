@@ -64,14 +64,24 @@
       <p>So I did what most people do. I improved the pages. Better headings. More structured data. Tighter answers to the questions people search for.</p>
       <p>None of it mattered. When I finally checked, Google had not indexed a single page. You can't rank a page a search engine has never seen.</p>
       <p>If your new site is quiet, run these checks before you change a word on it.</p>
+      <p>If you'd rather not type the links by hand, <a href="/is-my-site-indexed/">this free checklist builder</a> takes your domain and fills in every check below for you. It runs in your browser and sends nothing anywhere.</p>
 
       <h2>1. Ask Google what it knows</h2>
       <p>Search for this, with your own domain:</p>
       <pre><code>site:yourdomain.com</code></pre>
       <p>Zero results means you don't have an SEO problem yet. You have an indexing problem, and it's a much easier one to fix.</p>
       <p>A handful of results on a site with hundreds of pages means the same thing, just smaller.</p>
+      <p>Treat the count as a rough sign, not a measurement. Google says <code>site:</code> <a href="https://developers.google.com/search/docs/monitor-debug/search-operators/all-search-site">doesn't necessarily return every indexed URL</a>. For a yes or no on one page, use URL Inspection in Search Console (step 3).</p>
 
-      <h2>2. Tell Google the site exists</h2>
+      <h2>2. Make sure the site isn't telling Google to stay away</h2>
+      <p>This is the most common reason a finished site never shows up, and it takes two minutes to rule out. There are two ways a site can say "don't index me", often left over from when it was being built.</p>
+      <p><strong>A noindex tag.</strong> Open your home page, right-click, choose View Page Source, and search for <code>noindex</code>. If you find <code>&lt;meta name="robots" content="noindex</code>, Google will drop that page from its results. From a terminal, this does the same check:</p>
+      <pre><code>curl -s https://yourdomain.com/ | grep -i noindex</code></pre>
+      <p>On WordPress, the usual cause is one checkbox: Settings &rarr; Reading &rarr; Search engine visibility &rarr; "Discourage search engines from indexing this site". When it's ticked, <a href="https://wordpress.org/documentation/article/settings-reading-screen/">WordPress adds that noindex tag</a> to every page. Untick it and save. Other site builders have a similar "hide from search engines" switch in their SEO or site settings, worth a look too.</p>
+      <p><strong>A robots.txt that blocks everything.</strong> Open <code>https://yourdomain.com/robots.txt</code>. If you see <code>Disallow: /</code> under <code>User-agent: *</code>, crawlers are asked not to read any page. Delete that line unless you meant it.</p>
+      <p>One trap: don't use robots.txt to hide a page you want removed. Google has to crawl a page to see its noindex tag, and <a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">a robots.txt block stops it from ever seeing it</a>.</p>
+
+      <h2>3. Tell Google the site exists</h2>
       <p>Nothing links to a brand-new domain, so crawlers have no path to it. Waiting can take weeks. Telling them takes minutes.</p>
       <ol>
         <li>Open <a href="https://search.google.com/search-console">Google Search Console</a> and add your domain as a <em>Domain</em> property.</li>
@@ -80,11 +90,11 @@
         <li>Paste your most important page into URL Inspection and press <em>Request indexing</em>.</li>
       </ol>
 
-      <h2>3. Don't skip Bing</h2>
+      <h2>4. Don't skip Bing</h2>
       <p>Bing is small for direct search, but its index travels further than its own results page. Several AI assistants and search tools build on it. Being missing from Bing can mean being missing from places you didn't think about.</p>
       <p>In <a href="https://www.bing.com/webmasters">Bing Webmaster Tools</a> you can import your sites straight from Search Console. It takes about a minute.</p>
 
-      <h2>4. Ping IndexNow when pages change</h2>
+      <h2>5. Ping IndexNow when pages change</h2>
       <p><a href="https://www.indexnow.org/">IndexNow</a> lets you tell participating search engines, Bing among them, that a URL is new or changed. Put a key file at your site's root, then send the URLs:</p>
       <pre><code>curl -X POST https://api.indexnow.org/indexnow \
   -H "Content-Type: application/json" \
@@ -93,10 +103,10 @@
        "urlList":["https://yourdomain.com/new-page/"]}'</code></pre>
       <p>The key is any random string. The file at <code>https://yourdomain.com/YOUR_KEY.txt</code> contains the same string, which proves the site is yours.</p>
 
-      <h2>5. Distrust your first analytics numbers</h2>
+      <h2>6. Distrust your first analytics numbers</h2>
       <p>When I looked at visitor numbers for those new sites, they looked encouraging. Most of them weren't people.</p>
       <p>They came from data-centre cities, with an 800 by 600 screen, and viewed one page. That's the fingerprint of automated crawlers and scanners. On a new site they can be most of your traffic.</p>
-      <p>Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones.</p>
+      <p>Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones. I wrote up <a href="/blog/filter-bots-out-of-ga4/">how to spot these bots in Google Analytics 4 and filter them out safely</a>.</p>
 
       <h2>What didn't help</h2>
       <p>Two things I tried that I'd skip next time:</p>
@@ -107,7 +117,7 @@
 
       <h2>The order I use now</h2>
       <ol>
-        <li>Can search engines see it? (<code>site:</code> search, Search Console, Bing)</li>
+        <li>Can search engines see it, and is it allowed to be indexed? (<code>site:</code> search, no stray noindex or <code>Disallow: /</code>, Search Console, Bing)</li>
         <li>Can they reach every page? (sitemap submitted, IndexNow on changes)</li>
         <li>Are my numbers people? (filter the bots)</li>
         <li>Only then: is the content the best answer to what someone is asking?</li>
