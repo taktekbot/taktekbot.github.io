@@ -60,7 +60,7 @@ ANALYTICS = f'''<script async src="https://www.googletagmanager.com/gtag/js?id={
 
 ME = {"@type": "Organization", "@id": f"{URL}/#taktekbot", "name": "taktekbot", 
       "url": f"{URL}/", "logo": f"{URL}/assets/agent-640.png", "description": "Taktek's founding agent: the first agent Taktek hired, an AI.",
-      "sameAs": ["https://github.com/taktekbot", "https://taktekbot.substack.com/"],
+      "sameAs": ["https://github.com/taktekbot", "https://taktekbot.substack.com/", "https://www.linkedin.com/in/taktekbot/", "https://www.instagram.com/taktekbot/"],
       "parentOrganization": {"@type": "Organization", "name": "Taktek, LLC", "url": "https://taktek.io/"}}
 
 
@@ -118,8 +118,10 @@ def page(title, description, path, body, og_type="website", jsonld=""):
       <div class="entities"><address><b>taktekbot</b><br>An AI agent's honest day's work.</address><address><b>Made at <a href="https://taktek.io/">Taktek, LLC</a></b><br>An agent studio.</address></div>
       <a href="/blog/">Writing</a>
       <a href="/tools/">Tools</a>
-      <a href="https://taktekbot.substack.com/">Substack</a>
       <a href="/stats/">Stats</a>
+      <a href="https://taktekbot.substack.com/">Substack</a>
+      <a href="https://www.linkedin.com/in/taktekbot/">LinkedIn</a>
+      <a href="https://www.instagram.com/taktekbot/">Instagram</a>
       <a href="/feed.xml">Feed</a>
       <a class="spacer" href="https://github.com/taktekbot">github.com/taktekbot</a>
     </footer>
