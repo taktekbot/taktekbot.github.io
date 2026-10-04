@@ -13,7 +13,7 @@ stand: Most business email lands in spam because one of three DNS checks fails. 
         <li>Click the three dots next to Reply, then <em>Show original</em>.</li>
         <li>Read the table at the top. It has three lines: <code>SPF</code>, <code>DKIM</code> and <code>DMARC</code>, each with <code>PASS</code> or <code>FAIL</code> and the domain it checked.</li>
       </ol>
-      <p>In Outlook on the desktop, open the message, choose <em>File</em> → <em>Properties</em>, and look for the <code>Authentication-Results</code> line in the <em>Internet headers</em> box. It says <code>spf=pass</code>, <code>dkim=pass</code>, <code>dmarc=pass</code>, or <code>fail</code>, <code>none</code>, <code>softfail</code>.</p>
+      <p>In classic Outlook on the desktop, open the message, choose <em>File</em> → <em>Properties</em>, and look for the <code>Authentication-Results</code> line in the <em>Internet headers</em> box. In the new Outlook for Windows and Outlook on the web, open the message, click <em>More actions</em> (the three dots), then <em>View</em> → <em>View message details</em> (<a href="https://support.microsoft.com/en-us/outlook/view-internet-message-headers-in-outlook">Microsoft's page</a>). It says <code>spf=pass</code>, <code>dkim=pass</code>, <code>dmarc=pass</code>, or <code>fail</code>, <code>none</code>, <code>softfail</code>.</p>
       <p>Do this once for every way your business sends email: your normal mailbox, your website's contact form, your newsletter, your invoicing app, your booking system, your online shop's order emails. Each one is a separate sender, and each one can fail on its own. Write the results in a list. It usually looks something like this:</p>
       <ul>
         <li>Mailbox: SPF pass, DKIM pass (but for a domain that isn't yours), DMARC pass</li>
@@ -51,7 +51,11 @@ stand: Most business email lands in spam because one of three DNS checks fails. 
       <pre><code>dig +short TXT yourshop.com
 dig +short TXT _dmarc.yourshop.com
 dig +short TXT google._domainkey.yourshop.com</code></pre>
-      <p>On Windows, use <code>nslookup -type=TXT</code> with the same names. Or use Google's free <a href="https://toolbox.googleapps.com/apps/dig/">Dig tool</a> in a browser. The last line needs your DKIM selector: <code>google</code> for Google Workspace, <code>selector1</code> for Microsoft 365. For any other service, open a message it sent, find the <code>DKIM-Signature</code> header in the original, and read the value after <code>s=</code>.</p>
+      <p>On Windows, open Command Prompt or PowerShell and use <code>nslookup</code> with the same names:</p>
+      <pre><code>nslookup -type=TXT yourshop.com
+nslookup -type=TXT _dmarc.yourshop.com
+nslookup -type=TXT google._domainkey.yourshop.com</code></pre>
+      <p>Or use Google's free <a href="https://toolbox.googleapps.com/apps/dig/">Dig tool</a> in a browser. The last line needs your DKIM selector: <code>google</code> for Google Workspace, <code>selector1</code> for Microsoft 365. For any other service, open a message it sent, find the <code>DKIM-Signature</code> header in the original, and read the value after <code>s=</code>.</p>
       <p>Paste what you get into the <a href="/spf-dkim-dmarc-check/">SPF, DKIM and DMARC checker</a>. It runs in your browser, explains each part, and flags the usual mistakes. Then come back here for the fix.</p>
 
       <h2>Fix 1: SPF fails, or there are two SPF records</h2>
@@ -115,7 +119,7 @@ dig +short TXT google._domainkey.yourshop.com</code></pre>
       <p>Passing the checks proves the email is yours. It doesn't prove anyone wants it. If you still land in spam:</p>
       <ul>
         <li><strong>Ask a few recipients to mark you "Not spam".</strong> That's the signal Gmail and Outlook learn from.</li>
-        <li><strong>If you send newsletters, look at complaints.</strong> Gmail wants the spam complaint rate under 0.3%, and you can see yours in Google's free Postmaster Tools once you verify your domain there. Send only to people who asked, and make unsubscribing one click.</li>
+        <li><strong>If you send newsletters, look at complaints.</strong> Gmail requires bulk senders to keep the spam complaint rate under 0.3%, and its best-practice target is under 0.1%. You can see yours in Google's free <a href="https://postmaster.google.com/">Postmaster Tools</a> once you verify your domain there. Send only to people who asked, and make unsubscribing one click.</li>
         <li><strong>Check that your domain isn't brand new.</strong> A domain registered last week has no history. Start with normal, one-to-one email and let volume grow.</li>
         <li><strong>Look at the message itself.</strong> A single large image with no text, a link shortener, or a link to a different domain than yours all look like spam to filters.</li>
       </ul>

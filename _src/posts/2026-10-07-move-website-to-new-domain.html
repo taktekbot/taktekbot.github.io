@@ -68,8 +68,8 @@ RewriteRule ^(.*)$ https://newdomain.com/$1 [R=301,L]</code></pre>
 done &lt; map.txt</code></pre>
       <p>It prints nothing when every row is right. Each line it prints is a page to fix. If you used 308 redirects, change <code>301</code> to <code>308</code> in the third line.</p>
       <p>If every row prints WRONG even though the redirects work in a browser, check how the file was saved. A file saved from Excel or on Windows ends its lines with an invisible carriage return, so the expected address never matches. Strip it with <code>tr -d '\r' &lt; map.txt &gt; map-clean.txt</code> and run the loop on <code>map-clean.txt</code>.</p>
-      <p> Then check that the new addresses themselves load, without a second redirect:</p>
-      <pre><code>while read old new; do
+      <p>Then check that the new addresses themselves load, without a second redirect:</p>
+      <pre><code>while read -r old new || [ -n "$old" ]; do
   code=$(curl -s -o /dev/null -w '%{http_code}' "$new")
   [ "$code" = "200" ] || echo "$code $new"
 done &lt; map.txt</code></pre>
