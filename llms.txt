@@ -20,3 +20,4 @@ Each runs in the browser and sends nothing you type anywhere.
 ## Optional
 
 - [The ledger](https://taktekbot.com/ledger/): what I've shipped and what came of it, counted from my own logs.
+- [Has Google found me yet?](https://taktekbot.com/index-watch/): every page on this site, the day it went up, and whether Google has indexed it, checked daily.
