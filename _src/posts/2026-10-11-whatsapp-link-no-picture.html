@@ -1,0 +1,115 @@
+<!--
+title: Why doesn't my website link show a picture on WhatsApp? How to fix the preview
+description: A link with no picture on WhatsApp, Facebook or LinkedIn almost always means a missing or broken og:image tag. Six checks to find which one, the one image size that works in all three apps, and how to make each app fetch the page again.
+stand: You paste your website into WhatsApp and get a bare link, or a tiny square where the picture should be. The cause is in four lines of your page's code, and you can check each of them without being a developer.
+story: link-preview-checker
+-->
+      <p>When a link to your website shows up on WhatsApp with no picture, the page is almost always missing an <code>og:image</code> tag, or the tag points at an image the app can't use.</p>
+      <p>WhatsApp, Facebook, Messenger, Instagram and LinkedIn all build the preview card the same way. They fetch your page, read a few lines in its <code>&lt;head&gt;</code> called Open Graph tags, and turn them into a title, a description and a picture. If a line is missing, too far down, or points at the wrong place, you get a bare link or a small square instead of a large picture.</p>
+      <p>Below: how to test the preview the way WhatsApp does, the six checks that find the problem, one image size that works in all three apps, and how to make each app forget the old, broken card.</p>
+
+      <h2>What the card is made of</h2>
+      <figure>
+        <svg viewBox="0 0 640 300" role="img" aria-labelledby="card-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="card-title">A link preview card and the tags behind it. The picture comes from og:image. The bold title comes from og:title. The grey line under it comes from og:description. The address the app counts shares against comes from og:url.</title>
+          <rect width="640" height="300" fill="var(--paper)"/>
+          <rect x="20" y="20" width="300" height="260" rx="8" fill="none" stroke="var(--ink)"/>
+          <rect x="21" y="21" width="298" height="156" rx="7" fill="var(--paper-2)"/>
+          <text x="170" y="104" text-anchor="middle" fill="var(--faint)">picture</text>
+          <line x1="20" y1="177" x2="320" y2="177" stroke="var(--rule)"/>
+          <text x="36" y="200" fill="var(--faint)" font-size="11">yourshop.com</text>
+          <rect x="36" y="212" width="220" height="12" rx="2" fill="var(--ink)"/>
+          <rect x="36" y="234" width="250" height="9" rx="2" fill="var(--muted)"/>
+          <rect x="36" y="250" width="160" height="9" rx="2" fill="var(--muted)"/>
+          <line x1="320" y1="99" x2="380" y2="99" stroke="var(--ink)"/>
+          <text x="390" y="95" fill="var(--signal)">og:image</text>
+          <text x="390" y="113" fill="var(--muted)" font-size="11">full https:// address</text>
+          <line x1="262" y1="218" x2="380" y2="170" stroke="var(--ink)"/>
+          <text x="390" y="166" fill="var(--signal)">og:title</text>
+          <text x="390" y="184" fill="var(--muted)" font-size="11">2 lines at most</text>
+          <line x1="292" y1="245" x2="380" y2="232" stroke="var(--ink)"/>
+          <text x="390" y="228" fill="var(--signal)">og:description</text>
+          <text x="390" y="246" fill="var(--muted)" font-size="11">about 80 characters</text>
+          <text x="390" y="278" fill="var(--signal)">og:url</text>
+          <text x="455" y="278" fill="var(--muted)" font-size="11">not shown: the page's address</text>
+        </svg>
+      </figure>
+      <p>Here is what those tags look like in a page that previews well:</p>
+      <pre><code>&lt;head&gt;
+  &lt;meta property="og:title" content="Fresh sourdough, baked daily"&gt;
+  &lt;meta property="og:description" content="Order by 6 pm for next-morning pickup."&gt;
+  &lt;meta property="og:url" content="https://yourshop.com/bread/"&gt;
+  &lt;meta property="og:image" content="https://yourshop.com/img/bread-1200x630.jpg"&gt;
+  &lt;meta property="og:image:width" content="1200"&gt;
+  &lt;meta property="og:image:height" content="630"&gt;
+&lt;/head&gt;</code></pre>
+      <p>WhatsApp's own page says the title, description and url tags "must be inside the &lt;head&gt; tag" and "should not be empty" (<a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/link-previews/">source</a>). Without them, WhatsApp "will make the best attempt" by guessing from other parts of the page, but it adds that "this should not be relied on". That's why some pages preview fine one week and not the next.</p>
+      <p>LinkedIn lists the same four tags as ones that "must exist" (<a href="https://www.linkedin.com/help/linkedin/answer/a521928">source</a>). Facebook reads them too, and falls back to guessing without them.</p>
+
+      <h2>Step 1: test it the way WhatsApp does</h2>
+      <p>Open any chat on WhatsApp, paste the link into the message box, and don't send it. WhatsApp fetches the page and builds the preview above the box.</p>
+      <p>WhatsApp's page says what to read from this. No preview after 10 seconds: one of the tag requirements isn't met. A preview, but small: the image is the problem. A large picture: you're done.</p>
+
+      <h2>Step 2: look for the tags in your page's source</h2>
+      <p>Open the page in Chrome, Edge or Firefox on a computer. Press <code>Ctrl+U</code> (on a Mac, <code>Option+Command+U</code>) to see the HTML your server sends. Press <code>Ctrl+F</code> and search for <code>og:</code>.</p>
+      <ul>
+        <li><strong>No <code>og:image</code> at all.</strong> The most common case. Themes and page builders often fill in the title and description and leave the picture to you. Look in your site builder or SEO plugin for a "social image" or "share image" setting on that page. If you can't find it, search for your host's name plus "social share image".</li>
+        <li><strong>No <code>og:</code> lines at all, but you see them in your browser's developer tools.</strong> Something adds them with JavaScript after the page loads. Preview crawlers read the HTML the server sends, so they see nothing. The fix has to happen on the server side: a setting, a plugin, or a change in how the page is built.</li>
+        <li><strong>The tag says <code>name="og:image"</code>.</strong> The Open Graph standard uses <code>property="og:image"</code> (<a href="https://ogp.me/">source</a>). Some apps read <code>name</code> too. Don't count on it.</li>
+        <li><strong>An empty tag</strong>, like <code>content=""</code>. Usually a template field nobody filled in.</li>
+      </ul>
+
+      <h2>Step 3: check the image itself</h2>
+      <p>Copy the address inside <code>og:image</code> and open it in a private browser window.</p>
+      <ul>
+        <li><strong>It starts with <code>/</code> or <code>img/</code>, not <code>https://</code>.</strong> A browser understands that; WhatsApp's page asks for "an absolute URL", meaning the full address. Write it out in full.</li>
+        <li><strong>It says <code>localhost</code>, <code>staging</code> or a test domain.</strong> Left over from building the site. The apps can't reach it.</li>
+        <li><strong>It doesn't load in the private window.</strong> It sits behind a login, or it was deleted. The apps can't see it either.</li>
+        <li><strong>It loads, but it's large or the wrong shape.</strong> See the size rules below.</li>
+      </ul>
+      <p>Each app has its own rules. These are from their own pages:</p>
+      <ul>
+        <li><strong>WhatsApp:</strong> under 600 KB, at least 300 pixels wide, and no more than 4 times as wide as it is tall.</li>
+        <li><strong>Facebook:</strong> at least 200 × 200 pixels, at most 8 MB. It recommends 1200 × 630; anything under 600 × 315 still shows, but "much smaller" (<a href="https://developers.facebook.com/docs/sharing/webmasters/images">source</a>).</li>
+        <li><strong>LinkedIn:</strong> 1200 × 627 pixels, at most 5 MB. An image under 401 pixels wide shows as a small thumbnail beside the text.</li>
+      </ul>
+      <p>One image passes all three: <strong>1200 × 630 pixels, saved as a JPG under 600 KB</strong>. The 600 KB limit is WhatsApp's, and it's the one that catches people out, because a photo straight from a phone is often several megabytes. Most image editors have an "export for web" or quality slider; lower it until the file is under 600 KB.</p>
+      <p>Add the <code>og:image:width</code> and <code>og:image:height</code> lines from the example too. Facebook says the first person to share a page "won't see a rendered image", because its crawler has to download the picture once first. With the two size tags, it can show the image right away.</p>
+
+      <h2>Step 4: check that the tags are really in the head</h2>
+      <p>This one is hard to spot, because the tags look like they're in the right place.</p>
+      <p>A browser ends the <code>&lt;head&gt;</code> as soon as it meets something that belongs in the page's body, such as an <code>&lt;img&gt;</code> or <code>&lt;iframe&gt;</code>. Tracking snippets often include one inside <code>&lt;noscript&gt;</code>, as a fallback for visitors with JavaScript off. A crawler that doesn't run JavaScript reads it the same way. If a plugin pasted one above your Open Graph tags, everything after it now counts as body, and WhatsApp wants the tags inside the head.</p>
+      <p>In the page source, look at what sits above your <code>og:</code> lines. If you see an <code>&lt;img</code>, an <code>&lt;iframe</code> or a <code>&lt;noscript&gt;</code> that contains one, move the Open Graph tags above it.</p>
+      <p>Also look at how far down they are. WhatsApp wants the head within the first 300 KB of the page, and Facebook reads Open Graph tags only in the first 1 MB (<a href="https://developers.facebook.com/docs/sharing/webmasters/web-crawlers">source</a>). A page that inlines a lot of styles or scripts before its tags can push them past that. Putting the <code>og:</code> lines near the top of the head avoids it.</p>
+
+      <h2>Step 5: check the apps can reach your page</h2>
+      <p>If the tags and the image are right and the preview still doesn't come, the app is probably being turned away before it reads anything. A password on the page, a "bot protection" or firewall setting at your host, or a robots.txt rule that blocks <code>facebookexternalhit</code> will all do it.</p>
+      <p>Meta's crawler page gives a command to fetch your page the way Facebook's crawler does. On a Mac or Linux, in Terminal, with your own address:</p>
+      <pre><code>curl -sv --compressed -o /dev/null \
+  -A "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)" \
+  "https://yourshop.com/bread/"</code></pre>
+      <p>On Windows, in PowerShell (Windows 10 and later include <code>curl.exe</code>):</p>
+      <pre><code>curl.exe -sv --compressed -o NUL -A "facebookexternalhit/1.1" "https://yourshop.com/bread/"</code></pre>
+      <p>Look for the line starting with <code>&lt; HTTP/</code>. A <code>200</code> is good. A <code>403</code>, <code>429</code> or <code>503</code> means something is blocking the crawler; check your host's or CDN's bot and firewall settings. For WhatsApp, run it again with <code>-A "WhatsApp/2.22.20.72 A"</code>, one of the user-agents WhatsApp's page lists.</p>
+      <p>No terminal? Facebook's <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> shows the response code its crawler got and every tag it found, and LinkedIn's <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a> does the same for LinkedIn. Both need you to be logged in.</p>
+      <p>Meta also asks that your server answer "within a few seconds" and use gzip or deflate compression. Most hosts do both already.</p>
+
+      <h2>Step 6: make the apps forget the old card</h2>
+      <p>The apps keep what they fetched the first time. Fixing the tags doesn't change a card they already built.</p>
+      <ul>
+        <li><strong>Facebook, Messenger, Instagram:</strong> paste the address into the <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> and press "Scrape Again". Facebook caches images by their address, so a new picture needs a new file name: <code>bread-v2.jpg</code>, not the same name overwritten. Posts already shared keep their old card.</li>
+        <li><strong>LinkedIn:</strong> paste the address into <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a>. It fetches the page again.</li>
+        <li><strong>WhatsApp:</strong> its page doesn't say how long it keeps a preview, and I couldn't find anything official that does. To check a fix right away, paste the address with <code>?v=2</code> on the end. It's a different address, so there's no old preview to reuse. Once that one looks right, the fix works.</li>
+      </ul>
+
+      <h2>The checklist</h2>
+      <ol>
+        <li>Paste the link into WhatsApp without sending. Nothing after 10 seconds, or a small square: keep going.</li>
+        <li>View source and find <code>og:title</code>, <code>og:description</code>, <code>og:url</code> and <code>og:image</code>, written with <code>property=</code>, none empty.</li>
+        <li>The image address starts with <code>https://</code>, opens in a private window, and is 1200 × 630, JPG, under 600 KB.</li>
+        <li>Add <code>og:image:width</code> and <code>og:image:height</code>.</li>
+        <li>No <code>&lt;img&gt;</code> or <code>&lt;iframe&gt;</code> above the tags, and the tags near the top of the head.</li>
+        <li>The crawler gets a <code>200</code>, not a 403 or a challenge page.</li>
+        <li>Scrape Again in the Sharing Debugger, refresh in Post Inspector, and use a new file name for a new image.</li>
+      </ol>
+      <p>If you'd rather not read source code line by line, the free <a href="/link-preview-checker/">link preview checker</a> does steps 2 to 4 for you. Paste your page's source and it draws the likely card and names the tag that's missing, empty, relative or pushed out of the head. It runs in your browser and sends nothing you paste anywhere.</p>
