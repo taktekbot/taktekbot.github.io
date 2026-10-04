@@ -37,7 +37,8 @@ stand: Changing your domain name is safe if every old address points to its new 
         <li><strong>Internal links use the new domain.</strong> Menus, footers, buttons and links inside your text. Search the site's content for the old domain name.</li>
         <li><strong>Each page's canonical tag points to itself</strong> on the new domain, not to the old one. Copied sites keep the old canonical surprisingly often.</li>
         <li><strong>A new sitemap</strong> lists the new URLs.</li>
-        <li><strong>Both domains are verified in Search Console</strong>, with the same Google account. A Domain property covers http, https, www and non-www at once. If you verify with an HTML file, copy that file to the new site too.</li>
+        <li><strong>Both domains are verified in Search Console</strong>, with the same Google account, and you're an owner of both. A Domain property covers http, https, www and non-www at once. If you verify with an HTML file, copy that file to the new site too.</li>
+        <li><strong>Every version of the old domain has its own property too.</strong> The Change of Address tool in step 5 runs on one host at a time: <code>olddomain.com</code> does not include <code>www.olddomain.com</code>. Add a URL-prefix property for each one, such as <code>https://www.olddomain.com/</code>, even the one you never used.</li>
         <li><strong>The new domain is added in Bing Webmaster Tools.</strong> Bing can import sites you've already verified in Search Console, which saves a step.</li>
       </ul>
 
@@ -45,6 +46,7 @@ stand: Changing your domain name is safe if every old address points to its new 
       <p>Use server-side permanent redirects: 301 or 308. Not a JavaScript redirect, not a "this site has moved, click here" page. The redirect has to cover every version of the old domain: with and without <code>www</code>, <code>http</code> and <code>https</code>.</p>
       <p>If your paths stay the same, one rule moves the whole domain and keeps the path. On nginx:</p>
       <pre><code>server {
+    listen 80;
     listen 443 ssl;
     server_name olddomain.com www.olddomain.com;
     # keep a valid certificate for the old domain here
@@ -54,24 +56,40 @@ stand: Changing your domain name is safe if every old address points to its new 
       <pre><code>RewriteEngine On
 RewriteCond %{HTTP_HOST} ^(www\.)?olddomain\.com$ [NC]
 RewriteRule ^(.*)$ https://newdomain.com/$1 [R=301,L]</code></pre>
+      <p>Point the rule at the exact address your new site uses. If the new site lives on <code>www.newdomain.com</code>, write that, or every old link takes two hops instead of one.</p>
       <p>If some paths changed, put the page-by-page rules from your map first and the whole-domain rule last, so the specific ones win.</p>
       <p>One thing people miss: <strong>the old domain still needs a valid HTTPS certificate.</strong> Every old link starts with <code>https://olddomain.com</code>. If the certificate has lapsed, the browser shows a security warning before the redirect ever runs, and most visitors leave.</p>
 
       <h3>Test every row, not three</h3>
       <p>Save your map as a text file, one pair per line, old and new separated by a space. Then run this in a terminal (Mac and Linux have <code>curl</code> built in):</p>
-      <pre><code>while read old new; do
+      <pre><code>while read -r old new || [ -n "$old" ]; do
   got=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$old")
   [ "$got" = "301 $new" ] || echo "WRONG $old -> $got (want 301 $new)"
 done &lt; map.txt</code></pre>
-      <p>It prints nothing when every row is right. Each line it prints is a page to fix. Then check that the new addresses themselves load, without a second redirect:</p>
+      <p>It prints nothing when every row is right. Each line it prints is a page to fix. If you used 308 redirects, change <code>301</code> to <code>308</code> in the third line.</p>
+      <p>If every row prints WRONG even though the redirects work in a browser, check how the file was saved. A file saved from Excel or on Windows ends its lines with an invisible carriage return, so the expected address never matches. Strip it with <code>tr -d '\r' &lt; map.txt &gt; map-clean.txt</code> and run the loop on <code>map-clean.txt</code>.</p>
+      <p> Then check that the new addresses themselves load, without a second redirect:</p>
       <pre><code>while read old new; do
   code=$(curl -s -o /dev/null -w '%{http_code}' "$new")
   [ "$code" = "200" ] || echo "$code $new"
 done &lt; map.txt</code></pre>
+      <p>On Windows, open PowerShell. Windows 10 and 11 include <code>curl.exe</code>, so the same two checks are:</p>
+      <pre><code>Get-Content map.txt | ForEach-Object {
+  $old, $new = $_ -split ' '
+  $got = curl.exe -s -o NUL -w '%{http_code} %{redirect_url}' $old
+  if ($got -ne "301 $new") { "WRONG $old -> $got (want 301 $new)" }
+}
+
+Get-Content map.txt | ForEach-Object {
+  $old, $new = $_ -split ' '
+  $code = curl.exe -s -o NUL -w '%{http_code}' $new
+  if ($code -ne '200') { "$code $new" }
+}</code></pre>
       <p>For a single page, Search Console's URL Inspection tool does the same check from Google's side.</p>
 
       <h2>Step 5: tell Google and Bing</h2>
       <p>In Search Console, open the old domain's property, go to <em>Settings</em> → <em>Change of address</em>, and pick the new domain. The tool checks that you own both sites and that a few old pages return 301s, then asks Google to crawl the new site first and carry signals across. It works only for real domain or subdomain changes, not for moving from http to https or from www to non-www.</p>
+      <p>Run it once for every version of the old domain: from <code>olddomain.com</code>, then again from <code>www.olddomain.com</code>, both to the new domain. Google's guide says to do this for all variants, even the ones you don't use. One request covers both http and https of the same host.</p>
       <p>Then open the new domain's property and submit the new sitemap under <em>Indexing</em> → <em>Sitemaps</em>.</p>
       <p>Bing used to have a Site Move tool. It's gone from the current Bing Webmaster Tools, and Microsoft's answer is that 301 redirects are enough. Submit the new sitemap in Bing Webmaster Tools, and use <em>Submit URLs</em> (<a href="https://www.bing.com/webmasters/help/URL-Submission-62f2860b">Bing help</a>) for your ten most important pages so they're crawled first. Bing matters beyond Bing: Microsoft Copilot searches with it.</p>
 
@@ -140,10 +158,10 @@ done &lt; map.txt</code></pre>
         <li>List every old URL: sitemap, Search Console exports, analytics, files.</li>
         <li>Map each old URL to its closest new URL. No homepage dumps.</li>
         <li>Put the new site live: no noindex, new internal links, self canonicals, new sitemap.</li>
-        <li>Verify both domains in Search Console and add the new one to Bing.</li>
+        <li>Verify both domains in Search Console, plus a property for each old variant, and add the new one to Bing.</li>
         <li>Switch on 301s for every version of the old domain. Keep its certificate valid.</li>
         <li>Test every row of the map with <code>curl</code>.</li>
-        <li>Run Change of Address in Search Console. Submit the new sitemap to Google and Bing.</li>
+        <li>Run Change of Address in Search Console, once for each old variant (www and non-www). Submit the new sitemap to Google and Bing.</li>
         <li>Update your business profiles, social profiles, listings and print.</li>
         <li>Check the Pages and Performance reports weekly for a couple of months.</li>
         <li>Keep the redirects and the old domain for at least a year. Longer is better.</li>
