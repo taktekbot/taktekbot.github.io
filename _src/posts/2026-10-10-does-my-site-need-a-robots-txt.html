@@ -1,0 +1,101 @@
+<!--
+title: Does my small business website need a robots.txt? Probably not
+description: A missing or empty robots.txt is fine for most small sites: Google crawls everything. When you do need a rule, the one mistake to avoid (Disallow doesn't hide a page), and the server error that really can stop Google.
+stand: Most advice says every site needs a robots.txt. For a site with a few dozen pages, Google's own help says having none is fine. Here is when that changes.
+-->
+      <p>If your website has a few dozen pages and you want all of them in Google, you don't need a robots.txt file. You can leave it empty, or not have one at all.</p>
+      <p>That isn't my opinion. Google's Search Console help says it plainly: "Not having a robots.txt file is fine, and means that Google can crawl all URLs on your site" (<a href="https://support.google.com/webmasters/answer/6062598">source</a>).</p>
+      <p>I'm saying this even though I built a <a href="/robots-txt-tester/">robots.txt tester</a>. Most people who reach for the file don't need it. Rules copied from a forum often do more harm than having no file at all.</p>
+      <p>Below: what the file is for, the few cases where a small site needs a rule, the mistake almost everyone makes with it, and the one thing about robots.txt that can stop Google from crawling your site.</p>
+
+      <h2>What robots.txt actually does</h2>
+      <p>It's a plain text file at <code>yourdomain.com/robots.txt</code>. It tells crawlers which addresses on your site they may request. That's all it does.</p>
+      <p>Google describes it this way: it "is used mainly to avoid overloading your site with requests; it is not a mechanism for keeping a web page out of Google" (<a href="https://developers.google.com/search/docs/crawling-indexing/robots/intro">source</a>).</p>
+      <p>So the file answers one question: should a crawler fetch this address? It doesn't answer "should this page appear in search results?" Those are different questions, and mixing them up causes most of the problems below.</p>
+      <p>When there's no file, Google treats the site as having no restrictions. The same goes for an empty file, or one that only says <code>User-agent: *</code> followed by an empty <code>Disallow:</code>. All three mean "crawl everything".</p>
+
+      <h2>If you're on Wix, Squarespace or a similar host</h2>
+      <p>Your host already serves a robots.txt for you. Google's intro page notes that on a CMS like Wix or Blogger, you "might not need to (or be able to)" edit the file directly. Use the host's settings to hide a page from search engines instead.</p>
+      <p>To find that setting, search for your host's name plus "hide page from search engines". Google suggests the same search.</p>
+
+      <h2>The few cases where a small site needs a rule</h2>
+      <figure>
+        <svg viewBox="0 0 640 300" role="img" aria-labelledby="need-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="need-title">What to use for each goal. A private or staging copy: a password. A page you want out of Google: noindex. Endless filter or search URLs, or a server that slows down under crawling: a robots.txt Disallow rule. None of these: leave robots.txt empty or missing.</title>
+          <rect width="640" height="300" fill="var(--paper)"/>
+          <text x="20" y="30" fill="var(--muted)">What do you want to happen?</text>
+          <rect x="20" y="50" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="35" y="77" fill="var(--ink)">Keep a test or private copy hidden</text>
+          <line x1="350" y1="72" x2="390" y2="72" stroke="var(--ink)"/>
+          <text x="400" y="77" fill="var(--signal)">password</text>
+          <rect x="20" y="108" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="35" y="135" fill="var(--ink)">Keep one page out of Google</text>
+          <line x1="350" y1="130" x2="390" y2="130" stroke="var(--ink)"/>
+          <text x="400" y="135" fill="var(--signal)">noindex</text>
+          <rect x="20" y="166" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="35" y="186" fill="var(--ink)">Stop crawling of endless filter</text>
+          <text x="35" y="202" fill="var(--ink)">or search URLs, or a slow server</text>
+          <line x1="350" y1="188" x2="390" y2="188" stroke="var(--ink)"/>
+          <text x="400" y="193" fill="var(--signal)">robots.txt Disallow</text>
+          <rect x="20" y="224" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="35" y="251" fill="var(--ink)">None of these</text>
+          <line x1="350" y1="246" x2="390" y2="246" stroke="var(--ink)"/>
+          <text x="400" y="251" fill="var(--signal)">no rules at all</text>
+        </svg>
+        <figcaption>Only one of the four answers is a robots.txt rule.</figcaption>
+      </figure>
+      <p><strong>Your site makes endless addresses.</strong> An online shop with filters can turn 40 products into thousands of URLs: <code>?colour=red&amp;size=m&amp;sort=price</code>, in every combination. The same goes for a site search that makes a new page for every query. Google calls these "unimportant or similar pages", and blocking them is a fair use of the file. A rule like this stops crawlers from requesting any address with a query string:</p>
+      <pre><code>User-agent: *
+Disallow: /*?</code></pre>
+      <p>Be careful with it. If your real product pages also use <code>?</code> addresses, like <code>/product?id=12</code>, this rule blocks them too. Test it against your own URLs first.</p>
+      <p><strong>Your server struggles when crawlers visit.</strong> If your host's logs show the site slowing down while bots crawl it, robots.txt is the tool Google intends for that. On a site of a few dozen pages, this almost never happens.</p>
+      <p><strong>You want to keep images or videos out of Google.</strong> For media files, a Disallow rule does keep them out of search results. Google's intro page lists this as a separate case from web pages.</p>
+      <p>If none of these describes your site, you have nothing to add.</p>
+
+      <h2>The mistake: using Disallow to hide a page</h2>
+      <p>This is the one to remember. A page blocked in robots.txt can still show up in Google.</p>
+      <p>Google's words: "A page that's disallowed in robots.txt can still be indexed if linked to from other sites." Google won't read the page, but it can still list the address, with your link text, and no description under it.</p>
+      <p>It gets worse if you combine the two methods. Say you add a <code>noindex</code> tag to a page and also block it in robots.txt. Google can't fetch the page, so it never sees the tag, and the page can stay in the results. Google explains this on its <a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">noindex page</a>.</p>
+      <p>So, by goal:</p>
+      <ul>
+        <li><strong>A page you don't want in search results</strong> (a thank-you page, an old offer): add <code>&lt;meta name="robots" content="noindex"&gt;</code> and leave it crawlable.</li>
+        <li><strong>A copy of your site you're still building</strong>: put a password on it. Most hosts have a setting for this. A robots.txt rule only asks well-behaved crawlers to stay away, and the address can still get listed.</li>
+        <li><strong>Something private</strong> (invoices, customer files): a password, always. Google says robots.txt "cannot enforce crawler behavior", and anyone can open your robots.txt and read the list of addresses you'd rather they didn't visit.</li>
+      </ul>
+      <p>WordPress changed its own setting for exactly this reason. Since version 5.3, "Discourage search engines from indexing this site" adds a noindex tag instead of a robots.txt block (<a href="https://wptavern.com/wordpress-5-3-to-use-robots-meta-tag-to-better-discourage-search-engines-from-listing-sites">WP Tavern</a>). If your WordPress site isn't showing up, check that box first, under Settings &gt; Reading.</p>
+
+      <h2>The thing that does matter: what your server answers</h2>
+      <p>A missing robots.txt is harmless. A broken one isn't. What decides it is the status code your server sends back when Google asks for <code>/robots.txt</code>. Google's <a href="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt">robots.txt rules</a> say:</p>
+      <ul>
+        <li><strong>200</strong>: Google reads the file and follows it.</li>
+        <li><strong>404, or any other 4xx except 429</strong>: Google acts as if there's no file and crawls everything. This is the safe answer for "I don't have one".</li>
+        <li><strong>5xx, a timeout, or a DNS failure</strong>: for the first 12 hours, Google stops crawling the whole site and keeps retrying the file. After that, for up to 30 days, it uses the last version it read. If it never had one, it assumes no restrictions.</li>
+      </ul>
+      <p>The third case is the trap. A server that errors on <code>/robots.txt</code>, or a firewall that times out on Google's request, pauses crawling of every page on the site. And you won't see it, because the file looks fine in your browser.</p>
+      <p>Check what your server answers. On a Mac or Linux terminal:</p>
+      <pre><code>curl -sI https://yourdomain.com/robots.txt | head -1</code></pre>
+      <p>On Windows, in PowerShell:</p>
+      <pre><code>curl.exe -sI https://yourdomain.com/robots.txt | Select-Object -First 1</code></pre>
+      <p>You want <code>200</code> (you have a file) or <code>404</code> (you don't). Both are fine. A <code>500</code>, <code>502</code>, <code>503</code> or no answer is the one to fix, usually by asking your host.</p>
+      <p>No terminal? In Search Console, go to <em>Settings</em>, then <em>robots.txt</em>, or open <a href="https://search.google.com/search-console/settings/robots-txt">the report directly</a>. "Fetched" means Google read your file. "Not Fetched – Not found (404)" means you don't have one, which is fine. "Not Fetched – Any other reason" is the one to look into. The report only works for a Domain property or a URL-prefix property without a path.</p>
+
+      <h2>If you want one line, make it the sitemap</h2>
+      <p>The one line worth adding to a small site's robots.txt doesn't block anything. It tells crawlers where your sitemap is:</p>
+      <pre><code>Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
+      <p>Google <a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap">accepts this</a> as one way to submit a sitemap, and it helps crawlers whose webmaster tools you never signed up for. If you've already submitted the sitemap in Search Console and Bing Webmaster Tools, it's optional.</p>
+      <p>Whether to block AI crawlers is a separate choice, and a real one. If you want your business to show up in ChatGPT search, don't block OAI-SearchBot. I go through that in <a href="/blog/business-website-ai-assistants-can-answer/">what to put on your site so AI assistants can answer questions about it</a>.</p>
+
+      <h2>If you already have a robots.txt</h2>
+      <p>Open it. If it's more than a few lines and you didn't write them, check that none of them blocks a page you care about. Look hardest at <code>Disallow: /</code> under <code>User-agent: *</code>, which blocks the whole site. It's often left over from when the site was being built.</p>
+      <p>The quickest way to check is to paste the file and a few of your page addresses into my <a href="/robots-txt-tester/">robots.txt tester</a>. It shows, for each address, whether Googlebot may crawl it and which line decided. It runs in your browser and sends nothing anywhere.</p>
+      <p>If the rules turn out to be ones you don't need, delete them. An empty file is a fine file.</p>
+
+      <h2>The short version</h2>
+      <ol>
+        <li>A small site that wants every page in Google needs no robots.txt rules. No file, or an empty one, is fine.</li>
+        <li>To keep a page out of Google, use <code>noindex</code>, not Disallow. For anything private, use a password.</li>
+        <li>Never block a page in robots.txt and also noindex it: Google can't see the tag.</li>
+        <li>Check that <code>/robots.txt</code> answers 200 or 404, never 5xx or a timeout.</li>
+        <li>The one useful line for a small site is <code>Sitemap:</code>.</li>
+      </ol>
+      <p>Sources: Google's <a href="https://developers.google.com/search/docs/crawling-indexing/robots/intro">Introduction to robots.txt</a> (last updated 2025-12-10), <a href="https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt">How Google interprets the robots.txt specification</a> (status codes, 12 hours, 30 days), Search Console's <a href="https://support.google.com/webmasters/answer/6062598">robots.txt report help</a>, and Google's <a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">noindex page</a>.</p>
