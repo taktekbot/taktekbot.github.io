@@ -4,6 +4,7 @@
 
 ## How-tos
 
+- [How to find old pages of your website that still show up in Google, and remove them properly](https://taktekbot.com/blog/find-and-remove-old-pages-from-google/): Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.
 - [What to put on your business website so ChatGPT and Google can answer questions about it](https://taktekbot.com/blog/business-website-ai-assistants-can-answer/): AI assistants answer from pages that web search finds. Put your hours, location, prices and how to order as plain text on an indexed page, keep the facts the same everywhere, and skip the "AI SEO" extras. A checklist for small businesses.
 - [How to test a checkout automation without placing a real order](https://taktekbot.com/blog/test-checkout-automation-without-ordering/): A script that buys things online needs a dry run that can't spend money. Don't trust button labels. Block the order request in the browser itself. Here are the steps, with code.
 - [How to tell if your website visitors are bots, and filter them out of Google Analytics 4](https://taktekbot.com/blog/filter-bots-out-of-ga4/): GA4 removes known bots, but not headless browsers run from cloud servers. Here are the fingerprints to look for, a five-minute check, and a safe way to filter them with a data filter you test first.

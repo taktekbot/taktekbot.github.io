@@ -5,8 +5,125 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-04T00:00:00Z</updated>
+  <updated>2026-10-05T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>How to find old pages of your website that still show up in Google, and remove them properly</title>
+    <link href="https://taktekbot.com/blog/find-and-remove-old-pages-from-google/"/>
+    <id>https://taktekbot.com/blog/find-and-remove-old-pages-from-google/</id>
+    <updated>2026-10-05T00:00:00Z</updated>
+    <summary>Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.</summary>
+    <content type="html">&lt;p&gt;To find old pages that still show up in Google, search &lt;code&gt;site:yourdomain.com&lt;/code&gt; with words like &quot;price&quot;, &quot;hours&quot; or a past year, and export the indexed pages from Google Search Console. For each old page, update it, redirect it to the page that replaced it, or delete it so it returns a 404. Then use Google&#x27;s Removals tool to hide it while Google catches up.&lt;/p&gt;
+      &lt;p&gt;Old pages matter more than they used to. Search engines show them, and AI assistants that search the web read them and repeat what they say. If ChatGPT quotes your 2023 prices, there&#x27;s usually a 2023 page behind it. This post is the cleanup that follows checking what assistants say about you.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: find the old pages&lt;/h2&gt;
+      &lt;p&gt;Use more than one way. Each one finds pages the others miss.&lt;/p&gt;
+      &lt;h3&gt;Search Google with operators&lt;/h3&gt;
+      &lt;p&gt;Type these into Google, with your own domain:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;site:yourdomain.com price
+site:yourdomain.com hours
+site:yourdomain.com 2023
+site:yourdomain.com offer OR promotion OR holiday
+site:yourdomain.com before:2024&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;&lt;code&gt;before:&lt;/code&gt; finds pages last updated before a date, and takes a year or a full date like &lt;code&gt;before:2024-06-01&lt;/code&gt;. Google documents it on its &lt;a href=&quot;https://support.google.com/websearch/answer/2466433&quot;&gt;Refine searches&lt;/a&gt; page, along with &lt;code&gt;site:&lt;/code&gt;, &lt;code&gt;-&lt;/code&gt; and &lt;code&gt;after:&lt;/code&gt;. The date is Google&#x27;s idea of when the page changed, so treat it as a hint, not a fact.&lt;/p&gt;
+      &lt;p&gt;To look at one stretch of time, combine the two: &lt;code&gt;site:yourdomain.com after:2021-01-01 before:2023-01-01&lt;/code&gt; shows pages Google thinks were last updated in 2021 or 2022. That&#x27;s handy when you know roughly when the old prices or the old address were on the site.&lt;/p&gt;
+      &lt;p&gt;Search for the things that go out of date: prices, hours, addresses, branch names, staff pages, menus, events, job ads, and the names of products you no longer sell.&lt;/p&gt;
+
+      &lt;h3&gt;Export the list from Search Console&lt;/h3&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In &lt;a href=&quot;https://search.google.com/search-console&quot;&gt;Google Search Console&lt;/a&gt;, open &lt;em&gt;Indexing&lt;/em&gt; → &lt;em&gt;Pages&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Click &lt;em&gt;View data about indexed pages&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Click &lt;em&gt;Export&lt;/em&gt; and open the file in a spreadsheet.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;The table stops at 1,000 rows (&lt;a href=&quot;https://support.google.com/webmasters/answer/7440203&quot;&gt;source&lt;/a&gt;). Most small sites fit. Read the addresses top to bottom. Old pages give themselves away by their paths: &lt;code&gt;/2022-menu&lt;/code&gt;, &lt;code&gt;/summer-sale&lt;/code&gt;, &lt;code&gt;/branch-old-street&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Do the same in Bing Webmaster Tools. Bing feeds Microsoft Copilot, and its index is not a copy of Google&#x27;s.&lt;/p&gt;
+
+      &lt;h3&gt;Check what still gets visits&lt;/h3&gt;
+      &lt;p&gt;Before you delete anything, open Search Console&#x27;s &lt;em&gt;Performance&lt;/em&gt; report, click &lt;em&gt;Pages&lt;/em&gt;, and look up each old page. A page that still gets clicks has people arriving on it. It needs a redirect, not a dead end.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: decide what each page becomes&lt;/h2&gt;
+      &lt;p&gt;Every old page gets one of four outcomes. Write it in a new column next to the address.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 280&quot; role=&quot;img&quot; aria-labelledby=&quot;oldpage-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;oldpage-title&quot;&gt;Decide each old page: if its facts are still useful, update it. If a newer page replaced it, redirect it with a 301. If nothing replaced it, delete it so it returns 404 or 410. If people still need it but search shouldn&#x27;t show it, add noindex.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;280&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;110&quot; width=&quot;130&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;85&quot; y=&quot;145&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;an old page&lt;/text&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;140&quot; x2=&quot;230&quot; y2=&quot;40&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;140&quot; x2=&quot;230&quot; y2=&quot;107&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;140&quot; x2=&quot;230&quot; y2=&quot;174&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;140&quot; x2=&quot;230&quot; y2=&quot;241&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;240&quot; y=&quot;36&quot; fill=&quot;var(--muted)&quot;&gt;still useful?&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;54&quot; fill=&quot;var(--ink)&quot;&gt;update it&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;103&quot; fill=&quot;var(--muted)&quot;&gt;replaced by a newer page?&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;121&quot; fill=&quot;var(--signal)&quot;&gt;301 redirect to it&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;170&quot; fill=&quot;var(--muted)&quot;&gt;nothing replaced it?&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;188&quot; fill=&quot;var(--ink)&quot;&gt;delete: 404 or 410&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;237&quot; fill=&quot;var(--muted)&quot;&gt;people need it, search doesn&#x27;t?&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;255&quot; fill=&quot;var(--ink)&quot;&gt;noindex&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Update&lt;/strong&gt; when the page is still useful but some facts changed. Fix the facts, keep the address. This keeps any links pointing to it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Redirect&lt;/strong&gt; when a newer page does the same job: the 2023 price list becomes the current price list, the closed branch points to the nearest open one. Use a permanent redirect (301 or 308). Google treats it as a strong signal that the new page should take the old one&#x27;s place (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/http-network-errors&quot;&gt;source&lt;/a&gt;). With more than a handful, list them in two columns and paste them into the &lt;a href=&quot;/redirect-map-builder/&quot;&gt;redirect map builder&lt;/a&gt;: it writes the rules for Apache, nginx, Netlify, Cloudflare or Vercel and catches chains and loops.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Delete&lt;/strong&gt; when nothing replaced it: an expired offer, an event that happened, a product you&#x27;ll never sell again. The server must answer with a 404 or 410 status.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Noindex&lt;/strong&gt; when some people still need the page but searchers shouldn&#x27;t land on it, like an old terms-and-conditions page that existing customers signed. Add &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;noindex&quot;&amp;gt;&lt;/code&gt; to its &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;. Old price lists are often PDFs, which have no &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;. For those, the server sends the header &lt;code&gt;X-Robots-Tag: noindex&lt;/code&gt; instead (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;Google&lt;/a&gt; and Bing both read it). Or just delete the PDF.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;404 or 410 doesn&#x27;t matter much. Google says it treats all 4xx codes except 429 the same way: the page is dropped from the index if it was there (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/http-network-errors&quot;&gt;source&lt;/a&gt;). Pick whichever your website builder makes easy.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: check that it actually worked&lt;/h2&gt;
+      &lt;p&gt;Website builders get this wrong more often than you&#x27;d think. A &quot;deleted&quot; page can still answer with a 200 status and a friendly &quot;page not found&quot; message. Google calls that a soft 404, and it stays a problem (&lt;a href=&quot;https://support.google.com/webmasters/answer/7440203&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;Check each changed address. In a terminal, on Mac or Linux:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sI https://yourdomain.com/summer-sale | head -1
+# HTTP/2 404              deleted, good
+# HTTP/2 301              redirected, good
+# HTTP/2 200              still there: not done&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;For a redirect, also check where it goes:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sIL https://yourdomain.com/2023-prices | grep -i &#x27;^location&#x27;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, PowerShell has &lt;code&gt;curl.exe&lt;/code&gt; built in but no &lt;code&gt;head&lt;/code&gt; or &lt;code&gt;grep&lt;/code&gt;. Use these instead:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl.exe -sI https://yourdomain.com/summer-sale | Select-Object -First 1
+curl.exe -sIL https://yourdomain.com/2023-prices | Select-String &#x27;^location&#x27;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;No terminal? Use Search Console&#x27;s URL Inspection: paste the address in the bar at the top, then click &lt;em&gt;Test live URL&lt;/em&gt;. It shows what Google gets back right now.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: hide it now, while Google catches up&lt;/h2&gt;
+      &lt;p&gt;Google drops a deleted page only when it crawls that address again. That can take weeks for a page nobody links to. If the old page is doing harm, like quoting a wrong price, hide it in the meantime:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Google:&lt;/strong&gt; Search Console → &lt;em&gt;Indexing&lt;/em&gt; → &lt;em&gt;Removals&lt;/em&gt; → &lt;em&gt;New request&lt;/em&gt;. This hides the page from search for about six months. It does not delete it. Google&#x27;s own words: the tool &quot;provides only a temporary removal&quot; (&lt;a href=&quot;https://support.google.com/webmasters/answer/9689846&quot;&gt;source&lt;/a&gt;). The 404, redirect or noindex from step 2 is what makes it permanent.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Bing:&lt;/strong&gt; Bing Webmaster Tools&#x27; &lt;a href=&quot;https://www.bing.com/webmasters/help/block-urls-264e560b&quot;&gt;Block URLs&lt;/a&gt;. Also temporary; a block lasts 90 days unless you extend it. Bing&#x27;s page on &lt;a href=&quot;https://www.bing.com/webmasters/help/how-to-permanently-remove-a-url-or-page-from-bing-or-copilot-37c07477&quot;&gt;removing a page from Bing or Copilot for good&lt;/a&gt; lists the same permanent fixes: a 404 or 410, or noindex.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If you already use &lt;a href=&quot;https://www.indexnow.org/&quot;&gt;IndexNow&lt;/a&gt;, submit the changed and deleted addresses there too. It tells Bing and other engines that use it to look again.&lt;/p&gt;
+
+      &lt;h2&gt;When the old page isn&#x27;t yours&lt;/h2&gt;
+      &lt;p&gt;Sometimes the old fact sits on someone else&#x27;s site: a directory, a news article, a blog. If that page is gone or has already been fixed but the old version still shows in search, anyone can ask for a refresh:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Google: the &lt;a href=&quot;https://search.google.com/search-console/remove-outdated-content&quot;&gt;Refresh Outdated Content&lt;/a&gt; tool.&lt;/li&gt;
+        &lt;li&gt;Bing: the &lt;a href=&quot;https://www.bing.com/webmasters/tools/contentremoval&quot;&gt;Content Removal&lt;/a&gt; tool.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If the page is live and still wrong, these tools can&#x27;t help. Ask the site to update it. Most directories let owners claim and edit their listing.&lt;/p&gt;
+
+      &lt;h2&gt;Mistakes to skip&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Blocking old pages in robots.txt.&lt;/strong&gt; It feels like removal. It isn&#x27;t. If Google can&#x27;t fetch the page, it never sees the noindex, and &quot;the page can still appear in search results&quot; (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;source&lt;/a&gt;). Let the crawler in so it can read the 404 or the noindex. To see whether a line in your robots.txt still blocks a page, paste the file and the address into the &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Redirecting everything to the home page.&lt;/strong&gt; It&#x27;s one rule instead of twenty, and it helps nobody. Someone who clicked &quot;2023 price list&quot; wants prices, not your welcome banner. Redirect each page to its closest match, and delete the ones that have none.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Using a temporary redirect.&lt;/strong&gt; 302 and 307 tell Google the move might be undone, so it may keep showing the old address. Use 301 or 308 for pages that are gone for good.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Panicking at the 404 count.&lt;/strong&gt; After a cleanup, Search Console&#x27;s &lt;em&gt;Not found (404)&lt;/em&gt; list grows. For pages you deleted on purpose, that is the report doing its job, not an error to fix.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Forgetting the links.&lt;/strong&gt; Search your own site for links to the pages you removed and change them. Your menus and old blog posts are often the reason a dead page keeps getting crawled.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Search &lt;code&gt;site:yourdomain.com&lt;/code&gt; with &quot;price&quot;, &quot;hours&quot;, past years, and &lt;code&gt;before:&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Export indexed pages from Search Console (and Bing Webmaster Tools) into a spreadsheet.&lt;/li&gt;
+        &lt;li&gt;Look up each old page in the Performance report before you touch it.&lt;/li&gt;
+        &lt;li&gt;Mark each one: update, redirect (301), delete (404/410) or noindex.&lt;/li&gt;
+        &lt;li&gt;Make the change, then check the status code with &lt;code&gt;curl -sI&lt;/code&gt; or URL Inspection.&lt;/li&gt;
+        &lt;li&gt;Hide harmful pages with Google&#x27;s Removals tool and Bing&#x27;s Block URLs while you wait.&lt;/li&gt;
+        &lt;li&gt;Fix your own links to removed pages.&lt;/li&gt;
+        &lt;li&gt;Search &lt;code&gt;site:&lt;/code&gt; again in a few weeks, and repeat once a year.&lt;/li&gt;
+      &lt;/ol&gt;</content>
+  </entry>
   <entry>
     <title>What to put on your business website so ChatGPT and Google can answer questions about it</title>
     <link href="https://taktekbot.com/blog/business-website-ai-assistants-can-answer/"/>
