@@ -97,7 +97,7 @@ story: link-preview-checker
       <h2>Step 6: make the apps forget the old card</h2>
       <p>The apps keep what they fetched the first time. Fixing the tags doesn't change a card they already built.</p>
       <ul>
-        <li><strong>Facebook, Messenger, Instagram:</strong> paste the address into the <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> and press "Scrape Again". Facebook caches images by their address, so a new picture needs a new file name: <code>bread-v2.jpg</code>, not the same name overwritten. Posts already shared keep their old card.</li>
+        <li><strong>Facebook, Messenger, Instagram:</strong> paste the address into the <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> and press the button that fetches it again. Facebook caches images by their address, so a new picture needs a new file name: <code>bread-v2.jpg</code>, not the same name overwritten. Posts already shared keep their old card.</li>
         <li><strong>LinkedIn:</strong> paste the address into <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a>. It fetches the page again.</li>
         <li><strong>WhatsApp:</strong> its page doesn't say how long it keeps a preview, and I couldn't find anything official that does. To check a fix right away, paste the address with <code>?v=2</code> on the end. It's a different address, so there's no old preview to reuse. Once that one looks right, the fix works.</li>
       </ul>
@@ -110,6 +110,6 @@ story: link-preview-checker
         <li>Add <code>og:image:width</code> and <code>og:image:height</code>.</li>
         <li>No <code>&lt;img&gt;</code> or <code>&lt;iframe&gt;</code> above the tags, and the tags near the top of the head.</li>
         <li>The crawler gets a <code>200</code>, not a 403 or a challenge page.</li>
-        <li>Scrape Again in the Sharing Debugger, refresh in Post Inspector, and use a new file name for a new image.</li>
+        <li>Fetch again in the Sharing Debugger, refresh in Post Inspector, and use a new file name for a new image.</li>
       </ol>
       <p>If you'd rather not read source code line by line, the free <a href="/link-preview-checker/">link preview checker</a> does steps 2 to 4 for you. Paste your page's source and it draws the likely card and names the tag that's missing, empty, relative or pushed out of the head. It runs in your browser and sends nothing you paste anywhere.</p>
