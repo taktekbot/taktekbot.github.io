@@ -16,6 +16,7 @@ site:yourdomain.com 2023
 site:yourdomain.com offer OR promotion OR holiday
 site:yourdomain.com before:2024</code></pre>
       <p><code>before:</code> finds pages last updated before a date, and takes a year or a full date like <code>before:2024-06-01</code>. Google documents it on its <a href="https://support.google.com/websearch/answer/2466433">Refine searches</a> page, along with <code>site:</code>, <code>-</code> and <code>after:</code>. The date is Google's idea of when the page changed, so treat it as a hint, not a fact.</p>
+      <p>To look at one stretch of time, combine the two: <code>site:yourdomain.com after:2021 before:2023</code> shows pages Google thinks were last updated in 2021 or 2022. That's handy when you know roughly when the old prices or the old address were on the site.</p>
       <p>Search for the things that go out of date: prices, hours, addresses, branch names, staff pages, menus, events, job ads, and the names of products you no longer sell.</p>
 
       <h3>Export the list from Search Console</h3>
@@ -58,7 +59,7 @@ site:yourdomain.com before:2024</code></pre>
         <li><strong>Update</strong> when the page is still useful but some facts changed. Fix the facts, keep the address. This keeps any links pointing to it.</li>
         <li><strong>Redirect</strong> when a newer page does the same job: the 2023 price list becomes the current price list, the closed branch points to the nearest open one. Use a permanent redirect (301 or 308). Google treats it as a strong signal that the new page should take the old one's place (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>). With more than a handful, list them in two columns and paste them into the <a href="/redirect-map-builder/">redirect map builder</a>: it writes the rules for Apache, nginx, Netlify, Cloudflare or Vercel and catches chains and loops.</li>
         <li><strong>Delete</strong> when nothing replaced it: an expired offer, an event that happened, a product you'll never sell again. The server must answer with a 404 or 410 status.</li>
-        <li><strong>Noindex</strong> when some people still need the page but searchers shouldn't land on it, like an old terms-and-conditions page that existing customers signed. Add <code>&lt;meta name="robots" content="noindex"&gt;</code> to its <code>&lt;head&gt;</code>.</li>
+        <li><strong>Noindex</strong> when some people still need the page but searchers shouldn't land on it, like an old terms-and-conditions page that existing customers signed. Add <code>&lt;meta name="robots" content="noindex"&gt;</code> to its <code>&lt;head&gt;</code>. Old price lists are often PDFs, which have no <code>&lt;head&gt;</code>. For those, the server sends the header <code>X-Robots-Tag: noindex</code> instead (<a href="https://developers.google.com/search/docs/crawling-indexing/block-indexing">Google</a> and Bing both read it). Or just delete the PDF.</li>
       </ul>
       <p>404 or 410 doesn't matter much. Google says it treats all 4xx codes except 429 the same way: the page is dropped from the index if it was there (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>). Pick whichever your website builder makes easy.</p>
 
@@ -71,15 +72,18 @@ site:yourdomain.com before:2024</code></pre>
 # HTTP/2 200              still there: not done</code></pre>
       <p>For a redirect, also check where it goes:</p>
       <pre><code>curl -sIL https://yourdomain.com/2023-prices | grep -i '^location'</code></pre>
+      <p>On Windows, PowerShell has <code>curl.exe</code> built in but no <code>head</code> or <code>grep</code>. Use these instead:</p>
+      <pre><code>curl.exe -sI https://yourdomain.com/summer-sale | Select-Object -First 1
+curl.exe -sIL https://yourdomain.com/2023-prices | Select-String '^location'</code></pre>
       <p>No terminal? Use Search Console's URL Inspection: paste the address in the bar at the top, then click <em>Test live URL</em>. It shows what Google gets back right now.</p>
 
       <h2>Step 4: hide it now, while Google catches up</h2>
       <p>Google drops a deleted page only when it crawls that address again. That can take weeks for a page nobody links to. If the old page is doing harm, like quoting a wrong price, hide it in the meantime:</p>
       <ul>
         <li><strong>Google:</strong> Search Console → <em>Indexing</em> → <em>Removals</em> → <em>New request</em>. This hides the page from search for about six months. It does not delete it. Google's own words: the tool "provides only a temporary removal" (<a href="https://support.google.com/webmasters/answer/9689846">source</a>). The 404, redirect or noindex from step 2 is what makes it permanent.</li>
-        <li><strong>Bing:</strong> Bing Webmaster Tools' <a href="https://www.bing.com/webmasters/help/block-urls-264e560b">Block URLs</a>. Also temporary; a block lasts 90 days unless you extend it.</li>
+        <li><strong>Bing:</strong> Bing Webmaster Tools' <a href="https://www.bing.com/webmasters/help/block-urls-264e560b">Block URLs</a>. Also temporary; a block lasts 90 days unless you extend it. Bing's page on <a href="https://www.bing.com/webmasters/help/how-to-permanently-remove-a-url-or-page-from-bing-or-copilot-37c07477">removing a page from Bing or Copilot for good</a> lists the same permanent fixes: a 404 or 410, or noindex.</li>
       </ul>
-      <p>If you already use IndexNow, submit the changed and deleted addresses there too. It tells Bing and other engines that use it to look again.</p>
+      <p>If you already use <a href="https://www.indexnow.org/">IndexNow</a>, submit the changed and deleted addresses there too. It tells Bing and other engines that use it to look again.</p>
 
       <h2>When the old page isn't yours</h2>
       <p>Sometimes the old fact sits on someone else's site: a directory, a news article, a blog. If that page is gone or has already been fixed but the old version still shows in search, anyone can ask for a refresh:</p>
