@@ -1,0 +1,122 @@
+<!--
+title: "Page with redirect" in Search Console: what it means, and when to fix it
+description: The Search Console status in plain words. The address sends visitors on to another one, so Google indexes the other one instead. Usually that's fine. How to sort the list into "expected" and "needs a fix" in ten minutes, and what to change when it does.
+stand: A redirect address is never indexed, by design. The only question is whether you meant it to redirect, and whether your own site still points at it.
+story: page-with-redirect
+-->
+      <p>"Page with redirect" is a Search Console status. In plain words: when Google asked for this address, your site answered "this page lives somewhere else now" and sent it on to another address. Google followed, and indexed the other one. Google's help says it in one line: "Redirect URLs are not indexed, only the redirect target."</p>
+      <p>So most of the time, nothing is wrong. The old address of a page you moved, the <code>http://</code> version of your site, the <code>www.</code> version you don't use: these should redirect, and they should never be in Google. Search Console lists them under "not indexed" because they aren't, not because they're broken. Its help page says it plainly: "Remember that Not indexed is not necessarily bad."</p>
+      <p>It needs a fix in two cases: a page you want in Google redirects when it shouldn't, or your own sitemap and links still point at addresses that redirect. This guide shows how to tell which addresses are which, and what to change.</p>
+
+      <h2>The words, translated</h2>
+      <ul>
+        <li><strong>Redirect</strong>: the server's answer "go here instead", with the new address attached. The browser follows it so fast most people never notice.</li>
+        <li><strong>Permanent and temporary</strong>: a redirect comes with a number. 301 and 308 mean "moved for good". 302 and 307 mean "moved for now". Google treats a 301 as "a strong signal that the redirect target should be processed", and a 302 as "a weak signal". Its redirect guide puts the difference simply: permanent redirects show the new address in search results, temporary ones show the old one.</li>
+        <li><strong>Redirect target</strong>: the address the redirect sends you to. That's the one Google may index.</li>
+        <li><strong>Hop</strong>: one redirect. Address A sending you to B, which sends you to C, is two hops, also called a chain.</li>
+      </ul>
+
+      <figure>
+        <svg viewBox="0 0 640 240" role="img" aria-labelledby="pr-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="pr-title">Three addresses redirect to one page. The three are listed as Page with redirect and are not indexed. The page they point to is the one Google indexes.</title>
+          <rect width="640" height="240" fill="var(--paper)"/>
+          <text x="20" y="34" fill="var(--muted)">"Page with redirect" (not indexed)</text>
+          <rect x="20" y="50" width="250" height="34" rx="4" fill="none" stroke="var(--muted)"/>
+          <text x="34" y="72" fill="var(--ink)">http://example.com/shop</text>
+          <rect x="20" y="100" width="250" height="34" rx="4" fill="none" stroke="var(--muted)"/>
+          <text x="34" y="122" fill="var(--ink)">https://www.example.com/shop</text>
+          <rect x="20" y="150" width="250" height="34" rx="4" fill="none" stroke="var(--muted)"/>
+          <text x="34" y="172" fill="var(--ink)">https://example.com/old-shop</text>
+          <line x1="270" y1="67" x2="370" y2="117" stroke="var(--ink)"/>
+          <line x1="270" y1="117" x2="370" y2="117" stroke="var(--ink)"/>
+          <line x1="270" y1="167" x2="370" y2="117" stroke="var(--ink)"/>
+          <text x="296" y="108" fill="var(--muted)">301</text>
+          <rect x="370" y="98" width="250" height="38" rx="4" fill="none" stroke="var(--signal)" stroke-width="2"/>
+          <text x="384" y="122" fill="var(--signal)">https://example.com/shop/</text>
+          <text x="384" y="160" fill="var(--signal)">indexed</text>
+          <text x="20" y="220" fill="var(--muted)">Fine as long as nothing of yours still points at the left column.</text>
+        </svg>
+        <figcaption>The addresses on the left are listed as "Page with redirect". The one on the right is the page Google keeps.</figcaption>
+      </figure>
+
+      <h2>Step 1: open the list, then narrow it to your sitemap</h2>
+      <p>In Search Console, open <em>Indexing → Pages</em>. Scroll to "Why pages aren't indexed" and click the "Page with redirect" row. You get a graph and a table of example addresses.</p>
+      <p>Now use the filter at the top of the report. It defaults to <em>All known pages</em>, which Google's help describes as every address "known to Google, whether or not they are listed in a sitemap". Switch it to <em>All submitted pages</em>: only addresses listed in your sitemap.</p>
+      <p>Look at both views. They answer different questions:</p>
+      <ul>
+        <li><strong>All known pages</strong> shows every redirecting address Google has ever met, including ones other sites link to. Long is normal, especially after a redesign or a domain move.</li>
+        <li><strong>All submitted pages</strong> should show none. Your sitemap is the list of addresses you want in Google. Google's sitemap guide says to include the URLs "that you want to see in Google's search results", the canonical ones. An address that redirects is, by definition, not the one you want shown.</li>
+      </ul>
+
+      <h2>Step 2: sort every address into one of three piles</h2>
+      <ol>
+        <li><strong>Expected.</strong> Old addresses of pages you moved or merged, the <code>http://</code> and <code>www.</code> variants, addresses without the trailing slash, the old domain after a move. Leave them alone.</li>
+        <li><strong>Still used by you.</strong> The address is fine to redirect, but your sitemap lists it, or your own menu and pages link to it. Google still gets there, one hop later, and your sitemap says one thing while your server says another.</li>
+        <li><strong>Not supposed to redirect.</strong> A page you want in Google, and when you open it, you land somewhere else: the front page, a login page, a language version, a page you deleted months ago.</li>
+      </ol>
+      <p>For most small sites, pile 1 is nearly everything. Piles 2 and 3 are the work.</p>
+
+      <h2>Step 3: follow the redirect yourself</h2>
+      <p>To know which pile an address belongs to, you need to see where it goes, how many hops it takes, and whether each hop is permanent. This loop asks for each address and prints the answer without following it, so you see every hop:</p>
+      <pre><code>for u in http://taktekbot.com/ https://www.taktekbot.com/ \
+  http://www.taktekbot.com/ https://taktekbot.com/blog https://taktekbot.com/blog/; do
+  curl -s -o /dev/null -w "%{http_code} %{redirect_url}  &lt;- $u\n" "$u"
+done</code></pre>
+      <p>I ran it on my own site. Swap in your own addresses. This is what came back:</p>
+      <pre><code>301 https://taktekbot.com/  &lt;- http://taktekbot.com/
+301 https://taktekbot.com/  &lt;- https://www.taktekbot.com/
+301 https://taktekbot.com/  &lt;- http://www.taktekbot.com/
+301 https://taktekbot.com/blog/  &lt;- https://taktekbot.com/blog
+200   &lt;- https://taktekbot.com/blog/</code></pre>
+      <p>Four permanent redirects, all to the address I want, and the final address answers 200 (a normal page). That's pile 1.</p>
+      <p>To see a full chain, follow it with <code>curl -sIL</code> and keep only the status lines and the destinations:</p>
+      <pre><code>curl -sIL http://www.taktekbot.com/blog | grep -i "^HTTP\|^location"</code></pre>
+      <pre><code>HTTP/1.1 301 Moved Permanently
+Location: https://taktekbot.com/blog
+HTTP/2 301
+location: https://taktekbot.com/blog/
+HTTP/2 200</code></pre>
+      <p>That's a two-hop chain: the first hop fixes <code>http</code> and <code>www</code>, the second adds the slash. I didn't know it was there until I ran this. Two hops is within what Google asks for. Its site-move guide says Googlebot "can follow up to 10 hops", advises redirecting "to the final destination directly", and, if you can't, to keep chains "ideally no more than 3 and fewer than 5". Nobody links to that exact address, so I'm leaving it. If my sitemap or menu used it, I'd change them.</p>
+      <p>No terminal, or on Windows: open Chrome, press <code>F12</code> to open the developer tools, click the <em>Network</em> tab and tick <em>Preserve log</em>. Then paste the address into the address bar. The first rows of the list show each hop, with its status (301, 302 and so on) in the <em>Status</em> column.</p>
+      <p>One thing not to rely on here: Search Console's own URL Inspection. Google's status-code page says its inspection tools don't follow redirects, and its help says that when you inspect a redirecting address, "the results reflect the tested URL in the index, not the redirect target". To see the page the redirect lands on, click <em>Inspect</em> in the <em>Page indexing → Indexing</em> section, or inspect the target address directly.</p>
+
+      <h2>Step 4: fix piles 2 and 3</h2>
+      <h3>Pile 2: point your own site at the final address</h3>
+      <ul>
+        <li><strong>Sitemap.</strong> List only the final addresses: the right protocol, the right <code>www.</code> choice, the right slash. Most site builders and SEO plugins write the sitemap for you from the page settings, so if it lists redirecting addresses, the cause is usually an old page still published, or a site address setting that doesn't match the domain you use. After fixing, resubmit the sitemap in Search Console's <em>Sitemaps</em> report. If yours won't load there at all, see <a href="/blog/fix-sitemap-couldnt-fetch-search-console/">Sitemap "Couldn't fetch"</a>.</li>
+        <li><strong>Your own links.</strong> Menus, buttons and links in your posts that use the old address. Each one costs a visitor a hop. Google's site-move guide says it directly: "redirects are slow for users, so try to update your own links".</li>
+        <li><strong>The chain itself.</strong> If an old address goes through two or three hops, change the first redirect to point straight at the final address.</li>
+      </ul>
+
+      <h3>Pile 3: find out why the page redirects</h3>
+      <p>The common causes, in the order I'd check them:</p>
+      <ul>
+        <li><strong>A redirect rule that's too broad.</strong> A rule meant for one old page that catches a whole folder, or a leftover rule from a redesign that sends a live page to the front page. Look in your host's or site builder's redirects settings, or in your redirect plugin on WordPress. Delete or narrow the rule.</li>
+        <li><strong>The page needs a login.</strong> A members-only page answers Google with a redirect to the login page. If the page should be public, make it public. If it shouldn't, the status is correct.</li>
+        <li><strong>A language or country redirect.</strong> Some sites send visitors to a version based on their browser language or location. Google's guide on multilingual sites says to avoid this: such redirects "could prevent users (and search engines) from viewing all the versions of your site." Its crawler mostly comes from addresses that "appear to be based in the USA" and sends no language preference, so it may only ever see one version. Google suggests links to the other language versions instead.</li>
+        <li><strong>A temporary redirect left in place.</strong> A 302 set up "for now" during maintenance or a sale, still there months later. If the move is for good, make it a 301 or 308. If it really is temporary, remove it when it's over.</li>
+        <li><strong>A redirect made in the page instead of the server.</strong> Google reads these too. Its redirect guide says an instant meta refresh (<code>&lt;meta http-equiv="refresh" content="0; url=..."&gt;</code>) counts as permanent, a delayed one as temporary, and a JavaScript redirect is a last resort, because "Google might never see it if rendering of the content failed." If a theme, plugin or embed adds one you didn't ask for, remove it.</li>
+      </ul>
+      <p>When you've fixed it, open the address again with the loop above. It should answer 200 with no redirect. Then inspect it in Search Console and click <em>Request indexing</em>, once.</p>
+
+      <h2>What not to do</h2>
+      <ul>
+        <li><strong>Don't delete redirects to shrink the list.</strong> The old addresses will turn into "Not found (404)" instead, and anyone with an old link lands on an error. Google's site-move guide says to keep redirects "for as long as possible, generally at least 1 year", and from users' point of view, to "consider keeping redirects indefinitely". If you're <a href="/blog/move-website-to-new-domain/">moving to a new domain</a>, this list will grow for a while. That's the move working.</li>
+        <li><strong>Don't click <em>Validate fix</em> for pile 1.</strong> Validation asks Google to confirm the issue is gone. For an old address that's supposed to redirect, it never will be. Google's help says it "might not always make sense to fix and validate a specific issue on your website", and to "use your judgment".</li>
+        <li><strong>Don't request indexing for a redirecting address.</strong> Google will follow the redirect and process the target, which you can request directly.</li>
+        <li><strong>Don't confuse it with "Redirect error".</strong> That's a separate row in the same table, and it does need a fix. Google lists four causes: a chain that was too long, a loop, a redirect address that grew past the maximum length, and "a bad or empty URL in the redirect chain".</li>
+      </ul>
+      <p>A related status in the same table, "Alternate page with proper canonical tag", is the other way a site tells Google "the main copy is elsewhere": through a tag in the page instead of a redirect. It's usually fine for the same reason. When Google picks a main copy you didn't ask for, that's a different status: see <a href="/blog/google-chose-different-canonical/">"Duplicate, Google chose different canonical than user"</a>.</p>
+      <p>A note on my own numbers: my site checks every address in its sitemap with Search Console each morning, and none has shown "Page with redirect", which is what a sitemap of final addresses should give. I don't check the addresses outside the sitemap the same way, so I can't tell you how many of those Google lists.</p>
+
+      <h2>The short version</h2>
+      <ol>
+        <li>Open <em>Indexing → Pages → Page with redirect</em>. It's usually fine: redirecting addresses are never indexed, by design.</li>
+        <li>Switch the filter to <em>All submitted pages</em>. Anything there means your sitemap lists a redirecting address.</li>
+        <li>Sort the rest: expected, still used by you, or not supposed to redirect.</li>
+        <li>Follow each suspect with the <code>curl</code> loop or Chrome's Network tab: where it goes, how many hops, 301 or 302.</li>
+        <li>Point your sitemap and links at final addresses, shorten chains, and remove redirects that shouldn't exist.</li>
+        <li>Keep the redirects you meant. Don't validate them, and don't delete them to tidy the report.</li>
+      </ol>
+      <p>If you're planning a lot of redirects at once, after a redesign or a move, my free <a href="/redirect-map-builder/">redirect map builder</a> turns a pasted list of old and new addresses into 301 rules for WordPress, Shopify, Squarespace, Wix and other hosts, and flags chains and loops before you publish them.</p>
+      <p>Sources: Google's <a href="https://support.google.com/webmasters/answer/7440203">Page indexing report</a> help ("Redirect URLs are not indexed, only the redirect target", the All known / All submitted filter, validation, Redirect error), <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Redirects and Google Search</a> (updated 14 Apr 2026: permanent vs temporary, meta refresh, JavaScript redirects), <a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">How HTTP status codes affect Google's crawlers</a> (updated 4 Feb 2026: 10 hops, strong vs weak signal, inspection tools don't follow redirects), <a href="https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes">Site moves with URL changes</a> (updated 20 Aug 2026: chains, keeping redirects at least a year, updating your own links), <a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap">Build and submit a sitemap</a> (updated 8 Jul 2026: list the URLs you want in results) the <a href="https://support.google.com/webmasters/answer/9012289">URL Inspection tool</a> help (inspecting a redirected URL), and Google's <a href="https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites">multi-regional and multilingual sites</a> and <a href="https://developers.google.com/search/docs/specialty/international/locale-adaptive-pages">locale-adaptive pages</a> guides (language redirects, where Googlebot crawls from).</p>
