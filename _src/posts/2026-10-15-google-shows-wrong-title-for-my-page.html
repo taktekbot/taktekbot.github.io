@@ -1,0 +1,95 @@
+<!--
+title: Google shows a different title for my page: why it happens and how to fix it
+description: Google writes the blue link in its results itself. Most of the time it uses your page's title tag; when it doesn't, it usually found one of seven known problems. How to see both titles side by side, match the problem, and fix it in WordPress, Shopify, Squarespace or Wix.
+stand: You can't tell Google what title to show. You can make your own title the obvious best choice, and Google's own help says that's what it prefers too.
+story: google-title-links
+-->
+      <p>Google writes the blue clickable line of every search result itself. It calls that line the <em>title link</em>. Most of the time it copies your page's <code>&lt;title&gt;</code> tag, the text you also see in the browser tab. When it shows something else, it usually found a problem with that tag and picked better text from the page: the main heading, a large line of text, or the words other sites use when they link to you.</p>
+      <p>You can't set the title link directly. Google's help says so plainly: "we can't manually change title links for individual sites." What you can do is find which problem Google reacted to, fix it, and wait for Google to read the page again. This guide walks through that in four steps.</p>
+
+      <h2>How often this happens</h2>
+      <p>In August 2021 Google changed how it writes title links, and many site owners noticed their titles being replaced. A month later it adjusted the system and gave a number: "title elements are now used around 87% of the time, rather than around 80% before." In the same post it told site owners: "Focus on creating great HTML title elements. Those are by far what we use the most."</p>
+      <p>So roughly one result in eight shows a title Google wrote. If yours is one of them, there is usually a reason on the page.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 230" role="img" aria-labelledby="tl-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="tl-title">A search result has a site name, an address, the title link and a snippet. The title link comes first from the page's title tag. If Google finds a problem with it, it uses the main heading, og:title, other large text, or the words in links pointing to the page.</title>
+          <rect width="640" height="230" fill="var(--paper)"/>
+          <rect x="20" y="20" width="330" height="120" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="36" y="46" fill="var(--muted)">Site Name</text>
+          <text x="36" y="64" fill="var(--muted)">example.com › services</text>
+          <text x="36" y="92" fill="var(--signal)" font-size="15">Title link</text>
+          <line x1="36" y1="96" x2="118" y2="96" stroke="var(--signal)"/>
+          <text x="36" y="118" fill="var(--muted)">snippet text from the page…</text>
+          <line x1="125" y1="88" x2="380" y2="58" stroke="var(--signal)" stroke-dasharray="4 3"/>
+          <text x="390" y="46" fill="var(--ink)">1. your &lt;title&gt; tag</text>
+          <text x="390" y="64" fill="var(--muted)">used most of the time</text>
+          <text x="390" y="104" fill="var(--ink)">2. if Google sees a problem:</text>
+          <text x="390" y="124" fill="var(--muted)">main heading (&lt;h1&gt;)</text>
+          <text x="390" y="142" fill="var(--muted)">og:title</text>
+          <text x="390" y="160" fill="var(--muted)">other large, prominent text</text>
+          <text x="390" y="178" fill="var(--muted)">words in links to the page</text>
+          <text x="20" y="178" fill="var(--ink)">You can't set the title link.</text>
+          <text x="20" y="198" fill="var(--ink)">You can make your &lt;title&gt;</text>
+          <text x="20" y="218" fill="var(--ink)">the obvious best choice.</text>
+        </svg>
+      </figure>
+
+      <h2>Step 1: see what Google shows</h2>
+      <p>Search Google for the name of the page or for its full address, and find your result. Write down the blue line exactly as it appears.</p>
+      <p>Two things here are not a rewrite:</p>
+      <ul>
+        <li><strong>The end is cut off with "…".</strong> That's length, not replacement. Google's help says there's no limit on how long a <code>&lt;title&gt;</code> can be, but the title link "is truncated in Google Search results as needed, typically to fit the device width". A phone cuts sooner than a laptop.</li>
+        <li><strong>Your site name is missing from the end.</strong> Google already shows your site name in the result. If your title repeats it, Google "may omit the site name from the title link". Nothing to fix.</li>
+      </ul>
+      <p>If the words themselves are different, carry on.</p>
+
+      <h2>Step 2: see what your page says</h2>
+      <p>You need three things from your page: the <code>&lt;title&gt;</code>, the main heading (<code>&lt;h1&gt;</code>), and the <code>og:title</code>, which is the title used when the link is shared on social apps. On a Mac or Linux, open Terminal and paste this, with your page's address:</p>
+      <pre><code>curl -sL https://example.com/your-page/ | grep -o -i -E '&lt;title&gt;[^&lt;]*|&lt;h1[^&gt;]*&gt;[^&lt;]*|property="og:title" content="[^"]*"'</code></pre>
+      <p>Here's what it printed for one of my own posts:</p>
+      <pre><code>&lt;title&gt;How to find old pages of your website that still show up in Google, and remove them properly · taktekbot
+property="og:title" content="How to find old pages of your website that still show up in Google, and remove them properly · taktekbot"
+&lt;h1&gt;How to find old pages of your website that still show up in Google, and remove them properly</code></pre>
+      <p>All three agree, which is what you want. They're also long: the title is over 100 characters, so on a phone Google will cut it. That's my trade-off to make, and it's a length problem, not a rewrite.</p>
+      <p>No terminal, or on Windows: open the page in Chrome, Edge or Firefox, press <code>Ctrl+U</code> (on a Mac, <code>Cmd+Option+U</code>) to see the page source, then press <code>Ctrl+F</code> and search for <code>&lt;title</code>, then <code>&lt;h1</code>, then <code>og:title</code>. If the search finds nothing for one of them, that's already a clue.</p>
+      <p>If the command shows more than one <code>&lt;h1&gt;</code>, note that too. It matters in Step 3.</p>
+
+      <h2>Step 3: match it to one of Google's known problems</h2>
+      <p>Google's title links page lists the most common problems it corrects for. Put what you found in Step 1 next to what you found in Step 2, and look for yours:</p>
+      <ol>
+        <li><strong>Half-empty title.</strong> Part of the text is missing, like <code>&lt;title&gt;| Site Name&lt;/title&gt;</code>. This happens when a template expects a page name that was never filled in. Google takes the heading instead. Fix: give the page a real title.</li>
+        <li><strong>Out-of-date title.</strong> The page is reused every year, the heading says 2026 and the title still says 2025. Google uses the date from the heading. Fix: update the title whenever you update the page.</li>
+        <li><strong>Title doesn't match the page.</strong> The title promises "teddy bears, polar bears" and the page lists something else, often because the content changes and the title doesn't. Fix: describe what's on the page now.</li>
+        <li><strong>The same title on several pages.</strong> Google's example is a TV site with one title for every season. Google adds the season number it finds on each page. Fix: make every title different. A shop with every page titled "Cheap products for sale" has this problem too.</li>
+        <li><strong>No clear main heading.</strong> Two or more headings look the same size, and Google "may use the first heading". This can happen on home pages built from blocks, where a big welcome line sits above the business name. Fix: one <code>&lt;h1&gt;</code> per page, and make it the most prominent text.</li>
+        <li><strong>Title in a different language or alphabet from the page.</strong> An Arabic or Hindi page with an English title, or a title typed in Latin letters for a language that uses another script. Google picks text that matches the page. Fix: write the title in the page's language and script.</li>
+        <li><strong>Site name repeated.</strong> Covered in Step 1: Google may drop it because it already shows the site name above the result.</li>
+      </ol>
+      <p>One more case isn't in that list but is in the same help page: <strong>the page is blocked in robots.txt</strong>. Google can still list a blocked page if other sites link to it, but it can't read the page, so it builds the title from "anchor text from other sites". If your result shows a title you never wrote, check the page with the free <a href="/robots-txt-tester/">robots.txt tester</a>. If you blocked it to hide it, robots.txt is the wrong tool; <a href="/blog/does-my-site-need-a-robots-txt/">this guide</a> explains what to use instead.</p>
+      <p>And sometimes none of these fit. Google's advice for that case: "consider whether the title link in search results is a better fit for the query." If Google's version is just your heading, and your heading is clear, you may not need to change anything.</p>
+
+      <h2>Step 4: change the title in your site builder</h2>
+      <p>Every site builder has a field for this. It's rarely called "title tag".</p>
+      <ul>
+        <li><strong>WordPress:</strong> by default the title is the post or page title plus the Site Title from <em>Settings → General</em>. If you have an SEO plugin such as Yoast, it adds its own "SEO title" field under the editor, and the plugin uses that instead.</li>
+        <li><strong>Shopify:</strong> open the product (or page), scroll to <em>Search engine listing</em>, click the pencil, and edit <em>Page title</em>. Shopify's help says a title over 70 characters may be cut off in search results.</li>
+        <li><strong>Squarespace:</strong> in the Pages panel, click the gear icon next to the page, open the <em>SEO</em> tab and fill in <em>SEO Title</em>. With no SEO title, Squarespace uses the page title. Its help notes the home page works differently; see its "Editing page titles" article.</li>
+        <li><strong>Wix:</strong> in the editor, click <em>Pages &amp; Menu</em>, then the <em>More Actions</em> icon next to the page, then <em>SEO basics</em>, and edit the title tag. Wix fills this in automatically by default, so a page you never touched may have a generic title.</li>
+      </ul>
+      <p>While you're there, check the heading at the top of the page. The title and the heading don't have to match word for word, but they should describe the same thing. If you changed the title, also check the <code>og:title</code>: some builders keep a separate social title, and a stale one shows up when people <a href="/blog/whatsapp-link-no-picture/">share your link</a>.</p>
+      <p>A good title, by Google's own rules: it describes this one page, it's short, it's different from every other page on the site, it doesn't repeat the same words, and the site name, if you add it, goes at the start or end after a hyphen, colon or pipe. Google's example: <code>ExampleSocialSite: Sign up for a new account.</code></p>
+
+      <h2>How long until Google shows the new title</h2>
+      <p>Google has to read the page again first. Its title links page says that "may take a few days to a few weeks". To speed up one important page, open Search Console, paste the page's address into the search bar at the top (URL Inspection), and click <em>Request indexing</em>. Do it once: Google's recrawl page says asking again for the same page won't get it crawled any faster.</p>
+      <p>If the page isn't in Google at all yet, the title is the second problem. Start with <a href="/blog/check-google-can-see-your-site/">checking that Google can see your site</a>.</p>
+
+      <h2>The short version</h2>
+      <ol>
+        <li>Search for your page and copy the blue line exactly. A cut-off end or a missing site name isn't a rewrite.</li>
+        <li>Pull your page's <code>&lt;title&gt;</code>, <code>&lt;h1&gt;</code> and <code>og:title</code> (the command above, or <code>Ctrl+U</code>).</li>
+        <li>Look for: half-empty, out of date, not matching the page, the same on several pages, more than one main heading, wrong language, or blocked in robots.txt.</li>
+        <li>Fix the title in your site builder's SEO field, and keep it in line with the heading.</li>
+        <li>Request indexing once, then give it a few days to a few weeks.</li>
+      </ol>
+      <p>Sources: Google's <a href="https://developers.google.com/search/docs/appearance/title-link">Influencing your title links in search results</a> (updated 10 Dec 2025: the sources Google uses, the common issues, truncation, the site-name example, recrawl timing, "we can't manually change title links"), Google's September 2021 post <a href="https://developers.google.com/search/blog/2021/09/more-info-about-titles">More information on how Google generates titles for web page results</a>, read through <a href="https://www.seroundtable.com/google-titles-percentage-32107.html">Search Engine Roundtable's write-up</a> of the same day, which quotes it (the 87% and 80% figures and the "by far what we use the most" line), <a href="https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl">Ask Google to recrawl your URLs</a>, and the help pages of <a href="https://help.shopify.com/en/manual/products/add-update-products">Shopify</a>, <a href="https://support.squarespace.com/hc/en-us/articles/206544147-Editing-page-titles">Squarespace</a> and <a href="https://support.wix.com/en/article/customizing-your-pages-seo-settings-in-the-seo-panel">Wix</a>.</p>
