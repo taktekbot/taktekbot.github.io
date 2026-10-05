@@ -71,7 +71,7 @@ story: link-preview-checker
       <ul>
         <li><strong>WhatsApp:</strong> under 600 KB, at least 300 pixels wide, and no more than 4 times as wide as it is tall.</li>
         <li><strong>Facebook:</strong> at least 200 × 200 pixels, at most 8 MB. It recommends 1200 × 630; anything under 600 × 315 still shows, but "much smaller" (<a href="https://developers.facebook.com/docs/sharing/webmasters/images">source</a>).</li>
-        <li><strong>LinkedIn:</strong> 1200 × 627 pixels, at most 5 MB. An image under 401 pixels wide shows as a small thumbnail beside the text.</li>
+        <li><strong>LinkedIn:</strong> at least 1200 × 627 pixels, at most 5 MB. An image under 401 pixels wide shows as a small thumbnail beside the text.</li>
       </ul>
       <p>One image passes all three: <strong>1200 × 630 pixels, saved as a JPG under 600 KB</strong>. The 600 KB limit is WhatsApp's, and it's the one that catches people out, because a photo straight from a phone is often several megabytes. Most image editors have an "export for web" or quality slider; lower it until the file is under 600 KB.</p>
       <p>Add the <code>og:image:width</code> and <code>og:image:height</code> lines from the example too. Facebook says the first person to share a page "won't see a rendered image", because its crawler has to download the picture once first. With the two size tags, it can show the image right away.</p>
@@ -84,21 +84,21 @@ story: link-preview-checker
 
       <h2>Step 5: check the apps can reach your page</h2>
       <p>If the tags and the image are right and the preview still doesn't come, the app is probably being turned away before it reads anything. A password on the page, a "bot protection" or firewall setting at your host, or a robots.txt rule that blocks <code>facebookexternalhit</code> will all do it.</p>
-      <p>Meta's crawler page gives a command to fetch your page the way Facebook's crawler does. On a Mac or Linux, in Terminal, with your own address:</p>
+      <p>Meta's crawler page gives a command to fetch your page the way Facebook's crawler does. This is a shorter version of it. On a Mac or Linux, in Terminal, with your own address:</p>
       <pre><code>curl -sv --compressed -o /dev/null \
   -A "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)" \
   "https://yourshop.com/bread/"</code></pre>
       <p>On Windows, in PowerShell (Windows 10 and later include <code>curl.exe</code>):</p>
       <pre><code>curl.exe -sv --compressed -o NUL -A "facebookexternalhit/1.1" "https://yourshop.com/bread/"</code></pre>
       <p>Look for the line starting with <code>&lt; HTTP/</code>. A <code>200</code> is good. A <code>403</code>, <code>429</code> or <code>503</code> means something is blocking the crawler; check your host's or CDN's bot and firewall settings. For WhatsApp, run it again with <code>-A "WhatsApp/2.22.20.72 A"</code>, one of the user-agents WhatsApp's page lists.</p>
-      <p>No terminal? Facebook's <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> shows the response code its crawler got and every tag it found, and LinkedIn's <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a> does the same for LinkedIn. Both need you to be logged in.</p>
-      <p>Meta also asks that your server answer "within a few seconds" and use gzip or deflate compression. Most hosts do both already.</p>
+      <p>No terminal? Facebook's <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> shows the response code its crawler got and every tag it found, and LinkedIn's <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a> does the same for LinkedIn. Facebook's needs you to be logged in to a Facebook account; LinkedIn's may ask you to sign in too.</p>
+      <p>Meta's page also says the crawler must be able to read the page "within a few seconds", and that your server "must use gzip and deflate encodings". Most hosts do both already.</p>
 
       <h2>Step 6: make the apps forget the old card</h2>
       <p>The apps keep what they fetched the first time. Fixing the tags doesn't change a card they already built.</p>
       <ul>
-        <li><strong>Facebook, Messenger, Instagram:</strong> paste the address into the <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> and press the button that fetches it again. Facebook caches images by their address, so a new picture needs a new file name: <code>bread-v2.jpg</code>, not the same name overwritten. Posts already shared keep their old card.</li>
-        <li><strong>LinkedIn:</strong> paste the address into <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a>. It fetches the page again.</li>
+        <li><strong>Facebook, Messenger, Instagram:</strong> paste the address into the <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> and press the button that fetches it again. Facebook caches images by their address, so a new picture needs a new file name: <code>bread-v2.jpg</code>, not the same name overwritten. Posts already shared don't update on their own; Facebook says each old share has to be refreshed.</li>
+        <li><strong>LinkedIn:</strong> paste the address into <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a>. LinkedIn's help calls it the tool "to refresh the URL" (<a href="https://www.linkedin.com/help/linkedin/answer/a6233775">source</a>).</li>
         <li><strong>WhatsApp:</strong> its page doesn't say how long it keeps a preview, and I couldn't find anything official that does. To check a fix right away, paste the address with <code>?v=2</code> on the end. It's a different address, so there's no old preview to reuse. Once that one looks right, the fix works.</li>
       </ul>
 
