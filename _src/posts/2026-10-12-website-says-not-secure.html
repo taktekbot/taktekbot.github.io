@@ -23,7 +23,7 @@ story: not-secure-checker
           <text x="340" y="82" fill="var(--muted)" font-size="11">Fix: certificate + redirect</text>
           <rect x="20" y="114" width="290" height="56" fill="none" stroke="var(--ink)"/>
           <text x="40" y="138" fill="var(--signal)">Connection is not secure</text>
-          <text x="40" y="157" fill="var(--muted)" font-size="11">full page, "Continue to site"</text>
+          <text x="40" y="157" fill="var(--muted)" font-size="11">full page, asks before going on</text>
           <text x="340" y="136" fill="var(--ink)">Chrome tried https:// and</text>
           <text x="340" y="154" fill="var(--ink)">nothing answered on it</text>
           <text x="340" y="172" fill="var(--muted)" font-size="11">Fix: https on that exact address</text>
@@ -37,7 +37,7 @@ story: not-secure-checker
         <figcaption>The address bar label, the new ask-first page, and the certificate error. Only the first two are about http://.</figcaption>
       </figure>
       <p>Google's help page puts the first one plainly: "The site doesn't use a private connection. Someone may be able to view and change the information you send and get through this site. To resolve this issue, the site owner must secure the site and your data with HTTPS." (<a href="https://support.google.com/chrome/answer/95617">Chrome Help</a>)</p>
-      <p>The second is the new one. Chromium's <a href="https://chromium.googlesource.com/chromium/src/+/main/docs/security/ask-before-http/ask-before-http-adoption-guide.md">guide for site owners</a> says it appears when "Chrome was unable to connect to a site via HTTPS but believes that it may be able to connect over HTTP." A visitor who clicks through isn't asked again for 15 days, and the 15 days restart each time they come back. So your regulars may see it once. New visitors, the ones who found you on a flyer or a search, see it first thing.</p>
+      <p>The second is the new one. Chrome Help says that when "Always use secure connections" is on and a site doesn't support HTTPS, Chrome shows a "Connection is not secure" warning. Chromium's <a href="https://chromium.googlesource.com/chromium/src/+/main/docs/security/ask-before-http/ask-before-http-adoption-guide.md">guide for site owners</a> says it appears when "Chrome was unable to connect to a site via HTTPS but believes that it may be able to connect over HTTP." A visitor who clicks through isn't asked again for 15 days, and the 15 days restart each time they come back. So your regulars may see it once. New visitors, the ones who found you on a flyer or a search, see it first thing.</p>
       <p>The third is a certificate error. It isn't new, and the guide says Chrome 154 doesn't change it. If that's yours, skip to step 2.</p>
 
       <h2>Step 1: test the four addresses your site answers on</h2>
@@ -69,11 +69,11 @@ https://www.taktekbot.com -&gt; 301 https://taktekbot.com/</code></pre>
 
       <h2>Step 2: get a certificate that covers every name</h2>
       <p>A certificate is the file that lets your server answer on <code>https://</code>. It names the addresses it's valid for. A common gap is a certificate for <code>www.example.com</code> only, while the bare <code>example.com</code> redirects over plain http.</p>
-      <p>Chromium's guide uses exactly that case as its example. If your site lives on <code>https://www.example.com</code> and <code>http://example.com</code> redirects to it, but <code>https://example.com</code> doesn't work, "your users will see warnings when navigating to example.com." The page they end up on is fine. The step before it isn't.</p>
+      <p>Chromium's guide uses exactly that case as its example. If your site lives on <code>https://www.example.com</code>, <code>http://example.com</code> redirects to <code>http://www.example.com</code>, and <code>https://example.com</code> doesn't work, "your users will see warnings when navigating to example.com." The page they end up on is fine. The step before it isn't.</p>
       <p>Where to fix it depends on who runs the server:</p>
       <ul>
         <li><strong>Shared hosting or a website builder:</strong> look in the domain or security settings for SSL, HTTPS or certificate. It's usually a switch. Make sure both names are listed: the bare domain and <code>www</code>. If only one is, add the other as a domain on the same site. If you're stuck, ask your host's support: "Does my certificate cover both example.com and www.example.com?"</li>
-        <li><strong>Domain forwarding at your registrar:</strong> if the bare name only "forwards" to your site, that forwarding service has to answer on https too. Many older ones don't. The Chromium guide says to ask the provider. If the answer is no, point the bare name at your real host instead and redirect it there.</li>
+        <li><strong>Domain forwarding at your registrar:</strong> if the bare name only "forwards" to your site, that forwarding service has to answer on https too. Many older ones don't. The Chromium guide says to ask the provider. If the bare name is a CNAME pointing at the provider, the guide says the provider should be able to get the certificate for you. If the answer is no, point the bare name at your real host instead and redirect it there.</li>
         <li><strong>Your own server:</strong> <a href="https://letsencrypt.org/docs/faq/">Let's Encrypt</a> issues certificates free. They're valid for 90 days, so renewal has to be automatic. Apache, nginx and Caddy can now fetch and renew them themselves (the guide links each one). <a href="https://ssl-config.mozilla.org/">Mozilla's SSL Configuration Generator</a> writes the server settings for you.</li>
       </ul>
       <p>When the <code>https://</code> lines in step 1 stop showing <code>000</code>, this step is done.</p>
@@ -117,7 +117,7 @@ RewriteRule ^ https://www.example.com%{REQUEST_URI} [R=301,L]</code></pre>
 
       <h2>What you don't need to worry about</h2>
       <ul>
-        <li><strong>Your own setup at home or at the office.</strong> Chrome doesn't show the new warning for <code>localhost</code>, local IP addresses like <code>192.168.0.1</code>, or single-word names like <code>intranet/</code> (<a href="https://security.googleblog.com/2025/10/https-by-default.html">Google Security Blog</a>). A printer page or a router page won't start nagging staff.</li>
+        <li><strong>Your own setup at home or at the office.</strong> Chrome doesn't show the new warning for <code>localhost</code>, local IP addresses like <code>192.168.0.1</code>, or single-word names like <code>intranet/</code> (Chromium's guide and the <a href="https://security.googleblog.com/2025/10/https-by-default.html">Google Security Blog</a>). A printer page or a router page won't start nagging staff.</li>
         <li><strong>Other browsers.</strong> The guide says Safari, Firefox and Edge already try https first and have optional warnings of their own. A site that passes step 1 works in all of them.</li>
         <li><strong>Paying for a certificate.</strong> For a business website, a free one does the same job. The padlock looks the same.</li>
       </ul>
