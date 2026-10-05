@@ -85,10 +85,10 @@ story: discovered-not-indexed
         <li><strong>Average response time.</strong> Look for a climb that lines up with when pages started piling up in "Discovered".</li>
         <li><strong>By response.</strong> Any share of server errors (5xx) or 429s is worth chasing. The table counts requests, so a page that failed once and loaded once shows as 50% each.</li>
       </ol>
-      <p>Splitt said this usually only matters for sites with very large numbers of pages, "but server issues can happen with smaller sites too". On a small site, the usual suspects are cheap shared hosting that slows down under load, and security plugins or bot protection that answer Googlebot with errors or rate limits. If the numbers look bad, the fix is with your host: a faster plan, caching, or a rule that lets verified Googlebot through.</p>
+      <p>Splitt said this usually only matters for sites with very large numbers of pages, "say millions or more", "but server issues can happen with smaller sites too". On a small site, the usual suspects are cheap shared hosting that slows down under load, and security plugins or bot protection that answer Googlebot with errors or rate limits. If the numbers look bad, the fix is with your host: a faster plan, caching, or a rule that lets verified Googlebot through.</p>
 
       <h2>Check 5: does Google think the pages aren't worth it?</h2>
-      <p>This is the cause Splitt called "far more common". He said: "If Google Search detects a pattern in URLs with low-quality content on your site, it might skip these URLs altogether." Google can do this without crawling each page, because it judges the pattern, not the page.</p>
+      <p>This is the cause Splitt called "far more common". He said: "If Google Search detects a pattern in URLs with low-quality content on your site, it might skip these URLs altogether." So a page can stay in "Discovered" because of what Google saw on pages like it, before it has read the page itself.</p>
       <p>Patterns that tend to trigger it:</p>
       <ul>
         <li>hundreds of product pages with only a name, a price and the manufacturer's stock text;</li>
