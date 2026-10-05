@@ -1,0 +1,131 @@
+<!--
+title: "Discovered – currently not indexed": what it means in Search Console, and what to do
+description: Google knows the address but hasn't fetched the page yet. Usually it's a queue, sometimes a slow server, often a site-wide pattern of thin pages. How to tell which, five checks in order, and what doesn't help.
+stand: Google has the address on its list and hasn't visited yet. On a small site that's usually patience or a missing link. On a big one, it's the server or the pages themselves.
+story: discovered-not-indexed
+-->
+      <p>"Discovered – currently not indexed" in Search Console means Google knows the address of your page but hasn't fetched it yet. It found the address in a sitemap or a link, put it on its list, and hasn't got to it. That's why the "Last crawl" date is empty for these pages.</p>
+      <p>It isn't an error. Google's help page gives one typical cause: Google wanted to crawl the address, expected that to overload your site, and rescheduled. In a 2024 video, Martin Splitt from Google's Search team gave three: Google simply hasn't got to it yet, your server is slow for Googlebot, or Google has seen a pattern of low-quality pages on your site and is skipping ones that look like them. He called the quality reason "far more common".</p>
+      <p>Below: how to tell whether you need to do anything, five checks in order to find which cause is yours, and what doesn't help.</p>
+
+      <h2>Where this status sits</h2>
+      <p>A page goes through three steps on its way into Google: Google learns the address, fetches the page (crawls it), and then decides whether to keep it (indexes it). Each step that stalls has its own status in the Page indexing report.</p>
+      <figure>
+        <svg viewBox="0 0 640 220" role="img" aria-labelledby="disc-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="disc-title">Three steps: Google learns the address, fetches the page, then decides to index it. Stuck after step one: "Discovered – currently not indexed", with no crawl date. Stuck after step two: "Crawled – currently not indexed", with a crawl date. After step three: indexed.</title>
+          <rect width="640" height="220" fill="var(--paper)"/>
+          <rect x="20" y="40" width="170" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="105" y="66" text-anchor="middle" fill="var(--ink)">1. learns address</text>
+          <text x="105" y="86" text-anchor="middle" fill="var(--muted)">sitemap or link</text>
+          <line x1="190" y1="70" x2="235" y2="70" stroke="var(--ink)"/>
+          <rect x="235" y="40" width="170" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="320" y="66" text-anchor="middle" fill="var(--ink)">2. fetches page</text>
+          <text x="320" y="86" text-anchor="middle" fill="var(--muted)">crawl</text>
+          <line x1="405" y1="70" x2="450" y2="70" stroke="var(--ink)"/>
+          <rect x="450" y="40" width="170" height="60" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="535" y="66" text-anchor="middle" fill="var(--ink)">3. keeps it</text>
+          <text x="535" y="86" text-anchor="middle" fill="var(--muted)">index</text>
+          <line x1="212" y1="70" x2="212" y2="135" stroke="var(--signal)" stroke-dasharray="4 3"/>
+          <text x="20" y="155" fill="var(--signal)">stuck here:</text>
+          <text x="20" y="173" fill="var(--ink)">Discovered –</text>
+          <text x="20" y="191" fill="var(--ink)">currently not indexed</text>
+          <text x="20" y="209" fill="var(--muted)">Last crawl: empty</text>
+          <line x1="427" y1="70" x2="427" y2="135" stroke="var(--muted)" stroke-dasharray="4 3"/>
+          <text x="300" y="155" fill="var(--muted)">stuck here:</text>
+          <text x="300" y="173" fill="var(--ink)">Crawled –</text>
+          <text x="300" y="191" fill="var(--ink)">currently not indexed</text>
+          <text x="300" y="209" fill="var(--muted)">Last crawl: a date</text>
+        </svg>
+      </figure>
+      <p>The two "not indexed" statuses look alike and mean different things. With "Discovered", Google hasn't read your page at all, so nothing on the page can be the reason yet. With "Crawled", Google read it and chose not to keep it. If you're unsure which one you have, open one of the example addresses in the report: an empty "Last crawl" means Discovered.</p>
+
+      <h2>First: do you need to do anything?</h2>
+      <p>Often not. Splitt's own words: "Google will almost never index all content from a site. This isn't an error and not even necessarily a problem that needs looking into."</p>
+      <p>You can leave it alone if either of these is true:</p>
+      <ul>
+        <li><strong>The pages are new.</strong> Days old, not weeks. Google's recrawl page says crawling "can take anywhere from a few days to a few weeks". When I first checked my own site on 4 October, three of its twelve pages were in this state, including the tools index and one of the tools, all under a week old. Six more were "URL is unknown to Google", one step earlier. I log each page's status daily on a public <a href="/index-watch/">index-watch page</a>, so you can see how long it takes on a small, new site.</li>
+        <li><strong>The pages aren't ones anyone would search for.</strong> Tag and category archives, search results pages, sorted or filtered versions of the same list, print versions, feeds. Google not getting round to these is fine, and often what you'd want.</li>
+      </ul>
+      <p>It's worth acting when pages you care about (your services, your products, your articles) have sat in "Discovered" for more than a few weeks, or when the count keeps growing while the indexed count doesn't.</p>
+
+      <h2>Check 1: how many, and which ones</h2>
+      <p>In Search Console, open <em>Indexing → Pages</em>. Scroll to "Why pages aren't indexed" and click the "Discovered – currently not indexed" row. The details page has a graph of the count over time and a table of example addresses, capped at 1,000 rows.</p>
+      <p>Look for a pattern in the examples before you look at any one page:</p>
+      <ul>
+        <li><strong>A handful of recent pages.</strong> Most likely the queue. Go to check 3 (links), then wait.</li>
+        <li><strong>Hundreds or thousands of pages, added at once.</strong> A product import, a batch of location pages, a new language. Check 4 (server) and check 5 (quality) both apply.</li>
+        <li><strong>Addresses with <code>?</code>, <code>/tag/</code>, <code>/page/2</code>, sort or filter words in them.</strong> Google is spending its visits on copies. Go to check 5.</li>
+      </ul>
+      <p>If you submitted a sitemap, go back to the main Pages report and set the dropdown above the chart to "All submitted pages". That shows how many of the pages you asked for are waiting, without the noise of addresses Google found on its own.</p>
+
+      <h2>Check 2: inspect one page that matters</h2>
+      <p>Pick one stuck page you care about. Paste its address into the search bar at the top of Search Console (URL Inspection), then click <em>Test live URL</em>.</p>
+      <ul>
+        <li><strong>"Crawl allowed? No"</strong>: robots.txt is blocking it. That normally shows as a different status, but if you changed robots.txt recently, the report may be behind. Find the line with my <a href="/robots-txt-tester/">robots.txt tester</a>, and see the <a href="/blog/does-my-site-need-a-robots-txt/">robots.txt guide</a> for whether you need it at all.</li>
+        <li><strong>"Page fetch" failed</strong>: Google can't load it right now. Look at the error. A firewall or bot protection that challenges Googlebot belongs here.</li>
+        <li><strong>The test passes</strong>: Google can fetch the page, it just hasn't chosen to. Click <em>Request indexing</em> once.</li>
+      </ul>
+      <p>Once is the word. Google's recrawl page says "there's a quota for submitting individual URLs and requesting a recrawl multiple times for the same URL won't get it crawled any faster." Use it on your few most important pages, not on every address in the list.</p>
+
+      <h2>Check 3: is anything linking to it?</h2>
+      <p>On a small site, this is the first thing I'd check. A page that exists only in your sitemap, with no link to it from any other page, gives Google an address and no reason to think it matters.</p>
+      <p>Open your home page and a few of your most-visited pages. Can you click your way to the stuck page? If the only route is your sitemap, or a site search box, add a link. Good places:</p>
+      <ul>
+        <li>the menu or footer, for service and product category pages;</li>
+        <li>a "related" link from a page on the same subject that is already indexed;</li>
+        <li>your blog or news index, newest first, for articles.</li>
+      </ul>
+      <p>Splitt's advice for pages you care about was the same: make sure your internal linking "relates this content to other parts of your existing content". A link from a page Google already visits often (your home page, usually) is the shortest path.</p>
+
+      <h2>Check 4: is your server telling Google to slow down?</h2>
+      <p>This is the cause Google's help page names. Google gives every site a crawl capacity limit, which it calls hostload. If your server answers slowly, or answers with server errors (5xx) or "too many requests" (429), Google lowers the limit and crawls less. New addresses wait their turn.</p>
+      <p>To check, open <em>Settings → Crawl stats</em> in Search Console. It only exists for a Domain property or a root-level URL-prefix property, so a property for a subfolder won't have it. Look at three things:</p>
+      <ol>
+        <li><strong>Host status.</strong> Green is fine. Red means Google had trouble with robots.txt, DNS or connecting to your server; click it for the details.</li>
+        <li><strong>Average response time.</strong> Look for a climb that lines up with when pages started piling up in "Discovered".</li>
+        <li><strong>By response.</strong> Any share of server errors (5xx) or 429s is worth chasing. The table counts requests, so a page that failed once and loaded once shows as 50% each.</li>
+      </ol>
+      <p>Splitt said this usually only matters for sites with very large numbers of pages, "but server issues can happen with smaller sites too". On a small site, the usual suspects are cheap shared hosting that slows down under load, and security plugins or bot protection that answer Googlebot with errors or rate limits. If the numbers look bad, the fix is with your host: a faster plan, caching, or a rule that lets verified Googlebot through.</p>
+
+      <h2>Check 5: does Google think the pages aren't worth it?</h2>
+      <p>This is the cause Splitt called "far more common". He said: "If Google Search detects a pattern in URLs with low-quality content on your site, it might skip these URLs altogether." Google can do this without crawling each page, because it judges the pattern, not the page.</p>
+      <p>Patterns that tend to trigger it:</p>
+      <ul>
+        <li>hundreds of product pages with only a name, a price and the manufacturer's stock text;</li>
+        <li>location pages where only the town name changes;</li>
+        <li>tag pages with one post each;</li>
+        <li>batches of short pages written quickly, by hand or by a tool, that say little a reader couldn't find elsewhere;</li>
+        <li>the same list at many addresses: <code>?sort=price</code>, <code>?colour=red</code>, <code>/page/2</code>.</li>
+      </ul>
+      <p>The fix is fewer, better pages, not more requests. For each pattern, decide:</p>
+      <ul>
+        <li><strong>Improve</strong> the pages that answer something real: add what a customer would ask (sizes, delivery, what's included, real photos you took).</li>
+        <li><strong>Merge</strong> near-copies into one page and redirect the rest to it. My <a href="/blog/find-and-remove-old-pages-from-google/">old pages guide</a> walks through when to redirect and when to delete.</li>
+        <li><strong>Remove</strong> pages that don't need to exist, with a 404 or 410. Google's crawl budget page calls a 404 "a strong signal not to crawl that URL again".</li>
+        <li><strong>Block</strong> sort and filter addresses with robots.txt if you can't remove them. Google's crawl budget page recommends robots.txt here and advises against <code>noindex</code> for this job: with <code>noindex</code>, Google still has to fetch each page to see the tag, which uses up visits.</li>
+      </ul>
+      <p>Then take the copies out of your sitemap. The sitemap should list only the pages you want people to land on.</p>
+
+      <h2>What doesn't help</h2>
+      <ul>
+        <li><strong>Requesting indexing again and again.</strong> There's a quota, and repeats don't speed anything up.</li>
+        <li><strong>Resubmitting the sitemap every day.</strong> Google reads sitemaps regularly on its own. Resubmit when the file changes in a way that matters, like a new section. If the Sitemaps report says "Couldn't fetch", that's a different problem with <a href="/blog/fix-sitemap-couldnt-fetch-search-console/">its own fixes</a>.</li>
+        <li><strong>Google's Indexing API.</strong> Plugins sometimes offer it as a shortcut. Google's documentation says it "can only be used to crawl pages with either JobPosting or BroadcastEvent embedded in a VideoObject": job ads and livestreams. It isn't meant for anything else.</li>
+        <li><strong>Blocking pages in robots.txt to "save budget" for others.</strong> Google's crawl budget page says it won't move the freed visits to other pages unless your site is already hitting its crawl capacity limit. Block what you never want crawled, not what you want crawled later.</li>
+      </ul>
+
+      <h2>How long to wait after a fix</h2>
+      <p>There's no published number for this status. Google's recrawl page says crawling takes "a few days to a few weeks". If you used <em>Validate fix</em> on the row, the Page indexing help says validation "typically takes up to about two weeks", sometimes longer. Check the stuck pages' statuses weekly, not hourly. A page moving to "Crawled – currently not indexed" is progress: Google has now read it, and from there the question is whether the page is worth keeping.</p>
+
+      <h2>The short version</h2>
+      <ol>
+        <li>Empty "Last crawl" date: Google hasn't fetched the page yet. Not an error.</li>
+        <li>New pages, or pages nobody would search for: wait or ignore.</li>
+        <li>One important page: URL Inspection → Test live URL → Request indexing, once.</li>
+        <li>Link every page you care about from a page Google already indexed.</li>
+        <li><em>Settings → Crawl stats</em>: host status green, no climbing response time, no 5xx or 429.</li>
+        <li>Many look-alike pages: improve, merge, remove or block them, and keep the sitemap to the pages you want found.</li>
+        <li>Check weekly. Moving to "Crawled" is progress.</li>
+      </ol>
+      <p>If you're not sure Google can see your site at all, start one step earlier with <a href="/blog/check-google-can-see-your-site/">this check</a> or the free <a href="/is-my-site-indexed/">indexing checklist</a>.</p>
+      <p>Sources: Google's <a href="https://support.google.com/webmasters/answer/7440203">Page indexing report help</a> (the status definition, the 1,000-row example table, validation timing), <a href="https://developers.google.com/crawling/docs/crawl-budget">Crawl budget management</a> (hostload, 5xx and 429, robots.txt vs noindex, 404 as a signal), <a href="https://support.google.com/webmasters/answer/9679690">Crawl Stats report help</a>, <a href="https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl">Ask Google to recrawl your URLs</a> (the quota), the <a href="https://developers.google.com/search/apis/indexing-api/v3/quickstart">Indexing API quickstart</a>, and the transcript of Martin Splitt's "Discovered – currently not indexed" video, published by <a href="https://www.seroundtable.com/google-on-discovered-currently-not-indexed-37931.html">Search Engine Roundtable</a> (August 2024).</p>
