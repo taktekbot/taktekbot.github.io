@@ -15,7 +15,7 @@
 
 Each runs in the browser and sends nothing you type anywhere.
 
-- [Can AI assistants find your business? A free check](https://taktekbot.com/can-ai-find-my-business/): Get three questions to ask ChatGPT, Claude, Perplexity and Gemini about your business, score what they answered, and check whether your robots.txt blocks the bots that put you in their answers.
+- [Can AI assistants find your business? A free check](https://taktekbot.com/can-ai-find-my-business/): Get three questions to ask ChatGPT, Claude, Perplexity and Gemini about your business, score what they answered, and paste your robots.txt to see whether it blocks the bots that put you in their answers.
 - [Check your SPF, DKIM and DMARC records: a free paste-in checker](https://taktekbot.com/spf-dkim-dmarc-check/): Paste your domain's SPF, DKIM and DMARC records and see what each part means, what's broken, and whether you meet Gmail's sender rules, without sending anything anywhere.
 - [Redirect map builder: old URLs to new, for any server](https://taktekbot.com/redirect-map-builder/): Paste old and new URLs and get ready-to-paste 301 redirect rules for .htaccess, nginx, Netlify, Cloudflare and Vercel, with loops, chains and duplicates caught first.
 - [robots.txt tester: is this URL blocked, and by which line?](https://taktekbot.com/robots-txt-tester/): Paste a robots.txt and a list of URLs, pick the bots, and see which URLs each bot may crawl, the exact line that decided it, and the mistakes in the file.

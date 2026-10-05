@@ -31,7 +31,7 @@
         &lt;li&gt;Any other assistant your customers mention, such as Gemini, Claude or Perplexity.&lt;/li&gt;
       &lt;/ul&gt;
       &lt;p&gt;Start a new chat for each question. A chat remembers what you said earlier in it, and you want the answer a stranger would get.&lt;/p&gt;
-      &lt;p&gt;If you&#x27;d rather not write the questions yourself, &lt;a href=&quot;/can-ai-find-my-business/&quot;&gt;this free check&lt;/a&gt; builds them from your business name, what you sell and your town, keeps score of the answers, and reads your robots.txt for the bots that matter.&lt;/p&gt;
+      &lt;p&gt;If you&#x27;d rather not write the questions yourself, &lt;a href=&quot;/can-ai-find-my-business/&quot;&gt;this free check&lt;/a&gt; builds them from your business name, what you sell and your town, keeps score of the answers, and checks the robots.txt you paste into it for the bots that matter (a browser page can&#x27;t fetch it from your site, so you copy it in).&lt;/p&gt;
 
       &lt;h2&gt;Step 2: write the answers down&lt;/h2&gt;
       &lt;p&gt;Answers change from week to week, so keep a record. A simple table is enough:&lt;/p&gt;
