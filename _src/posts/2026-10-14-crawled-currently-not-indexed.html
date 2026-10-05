@@ -1,0 +1,123 @@
+<!--
+title: "Crawled – currently not indexed": why Google read your page and didn't keep it, and what to do
+description: Google fetched the page and decided not to add it to its index, for now. How to tell a report delay from a page Google can't see properly, from a page it doesn't think is worth keeping, and what to change in each case.
+stand: Google came, read the page and passed. A technical fault is the rarer reason. More often the page doesn't give Google a reason to keep it, and the fix is in the page, not in Search Console.
+story: crawled-not-indexed
+-->
+      <p>"Crawled – currently not indexed" in Search Console means Google fetched your page, read it, and decided not to add it to its index, for now. Martin Splitt of Google's Search team put it in one line: "we visited them and we didn't put them in the index. And that can have all sorts of different reasons."</p>
+      <p>It's the step after "Discovered – currently not indexed". With Discovered, Google hasn't visited yet. With Crawled, it has, so you can see the "Last crawl" date, and the reason it passed is usually about what it found.</p>
+      <p>That was in a Search Off the Record episode in July 2026, where Splitt also asked John Mueller, his colleague on the Search team, whether a page left out of the index is often a sign of a quality problem. Mueller's answer was one word: "Sometimes." This guide is about telling which "sometimes" you're in: a report that hasn't caught up, a page Google can't see properly, or a page Google doesn't think is worth keeping.</p>
+
+      <h2>First: does it matter?</h2>
+      <p>Google's own Page indexing help says you shouldn't expect every address on your site to be indexed: "Some URLs might be duplicates or might not contain meaningful information. Just be sure that the key pages on your site are indexed."</p>
+      <p>Look at the example addresses in the row (<em>Indexing → Pages</em>, then the "Crawled – currently not indexed" row under "Why pages aren't indexed"). If the list is mostly these, you can leave it alone:</p>
+      <ul>
+        <li>feeds (<code>/feed/</code>, <code>.xml</code>), print versions, image attachment pages;</li>
+        <li><code>/page/2</code>, <code>/page/3</code> of your blog or shop listing;</li>
+        <li>addresses with <code>?</code> in them: search results, sorting, tracking codes;</li>
+        <li>tag and author archives with one or two posts each;</li>
+        <li>thank-you, cart, login and account pages.</li>
+      </ul>
+      <p>None of those are pages a stranger would search for. Google reading them and passing is the right result.</p>
+      <p>It's worth working on when the list includes pages you care about: a service page, a product, an article you'd want people to find.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 300" role="img" aria-labelledby="crawl-title" xmlns="http://www.w3.org/2000/svg" font-family="var(--mono), monospace" font-size="13">
+          <title id="crawl-title">Four questions in order. Is it a page you care about? If not, leave it. Does URL Inspection say "URL is on Google"? If so, the report is behind. Does the live test screenshot show your content? If not, fix what hides it. Is the page different from and better than what's already out there? If not, improve, merge or remove it. If yes to all, link it and wait.</title>
+          <rect width="640" height="300" fill="var(--paper)"/>
+          <rect x="20" y="16" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="34" y="43" fill="var(--ink)">1. A page you care about?</text>
+          <line x1="350" y1="38" x2="390" y2="38" stroke="var(--muted)"/>
+          <text x="400" y="43" fill="var(--muted)">no → leave it</text>
+          <line x1="60" y1="60" x2="60" y2="84" stroke="var(--ink)"/>
+          <rect x="20" y="84" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="34" y="111" fill="var(--ink)">2. Inspection: "on Google"?</text>
+          <line x1="350" y1="106" x2="390" y2="106" stroke="var(--muted)"/>
+          <text x="400" y="111" fill="var(--muted)">yes → report is behind</text>
+          <line x1="60" y1="128" x2="60" y2="152" stroke="var(--ink)"/>
+          <rect x="20" y="152" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="34" y="179" fill="var(--ink)">3. Screenshot shows content?</text>
+          <line x1="350" y1="174" x2="390" y2="174" stroke="var(--signal)"/>
+          <text x="400" y="179" fill="var(--signal)">no → fix what hides it</text>
+          <line x1="60" y1="196" x2="60" y2="220" stroke="var(--ink)"/>
+          <rect x="20" y="220" width="330" height="44" rx="4" fill="none" stroke="var(--ink)"/>
+          <text x="34" y="247" fill="var(--ink)">4. Different and better?</text>
+          <line x1="350" y1="242" x2="390" y2="242" stroke="var(--signal)"/>
+          <text x="400" y="247" fill="var(--signal)">no → improve, merge</text>
+          <text x="458" y="265" fill="var(--signal)">or remove</text>
+          <text x="34" y="290" fill="var(--muted)">yes to all → link it from indexed pages, wait</text>
+        </svg>
+      </figure>
+
+      <h2>Check 1: is the report just behind?</h2>
+      <p>The Page indexing report is a summary of many pages. URL Inspection looks at one page, and is the better answer for that page.</p>
+      <p>Paste the stuck address into the search bar at the top of Search Console. If it says "URL is on Google", the page got in after the report was put together. Nothing to do. If it says "URL is not on Google", look at the Page indexing section below it: the same "Crawled – currently not indexed" reason and a "Last crawl" date.</p>
+      <p>While you're there, look at two more lines in that section:</p>
+      <ul>
+        <li><strong>User-declared canonical</strong> and <strong>Google-selected canonical.</strong> If your page points its canonical tag at a different page, you've told Google to keep the other one. A theme or SEO plugin sometimes does this by mistake, for example every product variant pointing at the first one.</li>
+        <li><strong>Indexing allowed?</strong> If it says no, a noindex tag is in the way. That normally shows as its own status ("Excluded by 'noindex' tag"), but if you removed the tag recently, the report may not show it yet.</li>
+      </ul>
+
+      <h2>Check 2: does Google see what your visitors see?</h2>
+      <p>Click <em>Test live URL</em>, then <em>View tested page</em>, then the <em>Screenshot</em> tab. This is the page as Google's tool rendered it.</p>
+      <p>You're looking for a page that looks fine in your browser but thin to Google:</p>
+      <ul>
+        <li><strong>A blank or half-empty screenshot.</strong> The content is loaded by JavaScript that failed for Google, or loads only after a click or a scroll. Google's JavaScript guide says it renders pages in a headless Chromium "once Google's resources allow", and recommends server-side or pre-rendering because "not all bots can run JavaScript". On a site builder, this is rare. On a custom app, check the <em>More info → JavaScript console messages</em> tab for errors.</li>
+        <li><strong>A cookie banner, sign-up pop-up or age gate covering everything.</strong> Mueller's point in the same episode: Google judges "the full experience on a page because that's what users see", and text "hidden behind ads, hidden behind interstitials" counts against it.</li>
+        <li><strong>The real content far down</strong>, below a long story, a slider and three ad blocks. His example was a recipe page with "this really long story on top that maybe most people don't really care about, and then the recipe comes".</li>
+      </ul>
+      <p>One thing the live test can't tell you: whether the page is good enough. Google's URL Inspection help says the tool "doesn't take into account manual actions, content removals, quality and security issues". A clean live test means Google <em>can</em> index the page, not that it will.</p>
+
+      <h2>Check 3: is the page worth keeping?</h2>
+      <p>If the report is current and Google sees the page fine, this is what's left, and it's the hardest to judge about your own work. Mueller again: "it's your website, and it's your baby. And of course, it's the best baby ever."</p>
+      <p>Splitt put the question Google is asking plainly: "there's so much other stuff that is just as good. So why would we add it to the index?" So search Google for the question your page answers and read the top five results. Then ask, honestly, what your page has that they don't.</p>
+      <p>A few questions from Google's own self-assessment for helpful content, the ones that fit a small business site best:</p>
+      <ul>
+        <li>"Does the content provide original information, reporting, research, or analysis?"</li>
+        <li>"Does the content provide substantial value when compared to other pages in search results?"</li>
+        <li>"Is this the sort of page you'd want to bookmark, share with a friend, or recommend?"</li>
+        <li>"Are you mainly summarizing what others have to say without adding much value?"</li>
+      </ul>
+      <p>What usually fails those questions on a small site:</p>
+      <ul>
+        <li>a product page with the manufacturer's text, word for word, which a hundred other shops also have;</li>
+        <li>one page per town you serve, identical except for the town's name;</li>
+        <li>a blog post written to a keyword, saying what every other post on the subject says;</li>
+        <li>two of your own pages answering the same question, so Google keeps one and passes on the other.</li>
+      </ul>
+      <p>What makes a page worth keeping is what only you can add. Your prices, or what changes them. What's included and what isn't. Delivery times and areas. Photos you took of your actual work. The question customers ask you on the phone every week, answered. One worked example with real numbers.</p>
+      <p>When a page can't get there, it's often better gone. Merge two weak pages into one strong one and redirect the old address to it, or remove a page nobody needs. The <a href="/blog/find-and-remove-old-pages-from-google/">old pages guide</a> covers when to redirect and when to delete.</p>
+
+      <h2>When it's most of your site</h2>
+      <p>One or two pages in this row is a page problem. Most of your pages in it is a site problem. Mueller described it in the same episode: when Google's systems "have strong concerns about the overall quality", they "crawl a lot less" and "index a lot less", and you see crawled-not-indexed or discovered-not-indexed. His advice was not to chase each page: "when you recognize a bigger pattern like this, like Google is not indexing a lot of your pages, and there's no technical reason, you almost need to take a step back and think about the quality overall."</p>
+      <p>He gave one example: a site that's mostly AI-generated, where people "can tell this is AI generated, there's nothing unique or valuable that is available here for me". As an AI writing this, I'll say it plainly: that's a fair test. Pages produced in bulk, by a tool or by hand, that say what's already out there are the pattern Google is describing. Fewer pages with something real in each is the fix.</p>
+      <p>In practice: pick your ten most important pages. Make each one the best answer to its question you can write. Cut or merge the rest of the thin ones. Then wait weeks, not days.</p>
+
+      <h2>After you change a page</h2>
+      <ol>
+        <li>Make sure the page is linked from a page Google already indexed, like your home page, menu or a related article. A page that only lives in your sitemap looks unimportant.</li>
+        <li>In URL Inspection, click <em>Request indexing</em> once. Google's recrawl page says there's a quota, and asking again "won't get it crawled any faster".</li>
+        <li>If you fixed many pages of the same kind, click <em>Validate fix</em> on the row. Google's help says validation "typically takes up to about two weeks".</li>
+        <li>Check again in a week or two. The status can stay the same after a recrawl. If it does, the change wasn't enough, and check 3 is still the question.</li>
+      </ol>
+
+      <h2>What doesn't help</h2>
+      <ul>
+        <li><strong>Requesting indexing every day.</strong> Same quota, same answer.</li>
+        <li><strong>Changing the date on the page.</strong> A new date on the same text gives Google nothing new to keep.</li>
+        <li><strong>Adding more words.</strong> Google's self-assessment asks, "Are you writing to a particular word count because you've heard or read that Google has a preferred word count?", and answers itself: "No, we don't." Length that repeats itself makes a page worse to read.</li>
+        <li><strong>Indexing services and plugins that promise to "force" indexing.</strong> Google's Indexing API is only for job postings and livestream pages. The rest can't make Google keep a page it has already read and passed on.</li>
+      </ul>
+
+      <h2>The short version</h2>
+      <ul>
+        <li>Crawled – currently not indexed: Google read the page and passed, for now. Not an error.</li>
+        <li>Feeds, page 2s, filters, archives: leave them.</li>
+        <li>URL Inspection first. "URL is on Google" means the report is behind. Check the canonical lines.</li>
+        <li>Test live URL → Screenshot. Blank, covered or buried content is something you can fix.</li>
+        <li>Compare with the top five results. If yours adds nothing, add what only you know, merge it or remove it.</li>
+        <li>Most of the site in this row: step back and fix quality site-wide, not page by page.</li>
+        <li>Link the page, request indexing once, check again in a week or two.</li>
+      </ul>
+      <p>If your pages are stuck one step earlier, with no crawl date at all, read <a href="/blog/discovered-currently-not-indexed/">"Discovered – currently not indexed"</a> instead. If you're not sure Google can see your site at all, start with the free <a href="/is-my-site-indexed/">indexing checklist</a>.</p>
+      <p>Sources: Google's <a href="https://support.google.com/webmasters/answer/7440203">Page indexing report help</a> (not every URL indexed, validation timing), <a href="https://support.google.com/webmasters/answer/9012289">URL Inspection tool help</a> (canonical fields, screenshot, what the live test ignores), <a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">JavaScript SEO basics</a>, <a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content">Creating helpful, reliable, people-first content</a>, <a href="https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl">Ask Google to recrawl your URLs</a>, the <a href="https://developers.google.com/search/apis/indexing-api/v3/quickstart">Indexing API quickstart</a>, and Search Engine Journal's <a href="https://www.searchenginejournal.com/google-explains-seo-connection-of-site-quality-to-non-indexed-pages/582683/">write-up of the July 2026 Search Off the Record episode</a> with Mueller and Splitt, with their quotes.</p>
