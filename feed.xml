@@ -5,8 +5,127 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-05T00:00:00Z</updated>
+  <updated>2026-10-06T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>How to check what ChatGPT and Google&#x27;s AI say about your business, and fix a wrong answer</title>
+    <link href="https://taktekbot.com/blog/check-what-ai-assistants-say-about-your-business/"/>
+    <id>https://taktekbot.com/blog/check-what-ai-assistants-say-about-your-business/</id>
+    <updated>2026-10-06T00:00:00Z</updated>
+    <summary>Ask the assistants the questions your customers ask, open the sources behind each answer, and fix the page the wrong fact came from. A 30-minute check for small businesses, with a table to fill in.</summary>
+    <content type="html">&lt;p&gt;To check what an AI assistant says about your business, ask it the questions your customers ask, in a new chat, and write down the answers. When one is wrong, open the sources the assistant shows under the answer. The wrong fact almost always sits on one of those pages. Fix that page, then check again in a week or two.&lt;/p&gt;
+      &lt;p&gt;It takes about 30 minutes. Here is how to do it step by step.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: ask what your customers ask&lt;/h2&gt;
+      &lt;p&gt;Use the list of questions people ask you on the phone and at the counter. If you don&#x27;t have one yet, &lt;a href=&quot;/blog/business-website-ai-assistants-can-answer/&quot;&gt;this post on what to put on your website&lt;/a&gt; starts with it.&lt;/p&gt;
+      &lt;p&gt;Ask each question two ways:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;By name:&lt;/strong&gt; &quot;Is Example Bakery open on Sunday?&quot; &quot;Does Example Bakery deliver?&quot; This shows what the assistant knows about you.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;By need:&lt;/strong&gt; &quot;Where can I order a birthday cake for delivery in [your city]?&quot; This shows whether you come up at all when someone doesn&#x27;t know your name yet.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Ask in more than one place. Your customers use different ones:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;ChatGPT&lt;/strong&gt;, with search turned on, so it reads the web instead of answering from memory. If it doesn&#x27;t search on its own, select &lt;strong&gt;View all tools&lt;/strong&gt;, then &lt;strong&gt;Search&lt;/strong&gt;, before you ask, or type &lt;code&gt;/&lt;/code&gt; in the message box and pick &lt;strong&gt;Search&lt;/strong&gt; (&lt;a href=&quot;https://help.openai.com/en/articles/9237897-chatgpt-search&quot;&gt;OpenAI help&lt;/a&gt;).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Google&lt;/strong&gt;: a normal search that shows an AI Overview, and AI Mode.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Microsoft Copilot&lt;/strong&gt;, which answers from Bing.&lt;/li&gt;
+        &lt;li&gt;Any other assistant your customers mention, such as Gemini, Claude or Perplexity.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Start a new chat for each question. A chat remembers what you said earlier in it, and you want the answer a stranger would get.&lt;/p&gt;
+      &lt;p&gt;If you&#x27;d rather not write the questions yourself, &lt;a href=&quot;/can-ai-find-my-business/&quot;&gt;this free check&lt;/a&gt; builds them from your business name, what you sell and your town, keeps score of the answers, and reads your robots.txt for the bots that matter.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: write the answers down&lt;/h2&gt;
+      &lt;p&gt;Answers change from week to week, so keep a record. A simple table is enough:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;Date   | Assistant | Question            | Answer said     | Right? | Source it showed
+------ | --------- | ------------------- | --------------- | ------ | ----------------
+10 Oct | ChatGPT   | Open on Sunday?     | &quot;Closed Sunday&quot; | Wrong  | old directory listing
+10 Oct | Google AI | Do you deliver?     | &quot;Yes, citywide&quot; | Right  | yourdomain.com/faq
+10 Oct | Copilot   | Birthday cake, city | not mentioned   | Missing| -&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Mark each answer one of four ways:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Right.&lt;/strong&gt; Nothing to do.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Wrong.&lt;/strong&gt; A fact that isn&#x27;t true: old hours, a closed branch, a price from two years ago.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Hedged.&lt;/strong&gt; &quot;Hours may vary, check their website.&quot; Usually the sources disagree, or none states the fact plainly.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Missing.&lt;/strong&gt; You don&#x27;t come up, or it says it can&#x27;t find you.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 3: trace each wrong answer to its source&lt;/h2&gt;
+      &lt;p&gt;This is the step most people skip. The assistant didn&#x27;t invent your old hours from nothing. It read them somewhere.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 200&quot; role=&quot;img&quot; aria-labelledby=&quot;trace-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;trace-title&quot;&gt;Trace a wrong answer backwards: from the answer, to the source link shown under it, to the page that holds the wrong fact. Fix that page, not the answer.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;200&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;60&quot; width=&quot;150&quot; height=&quot;70&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;95&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;wrong answer&lt;/text&gt;
+          &lt;text x=&quot;95&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;&quot;closed Sunday&quot;&lt;/text&gt;
+          &lt;line x1=&quot;170&quot; y1=&quot;95&quot; x2=&quot;230&quot; y2=&quot;95&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;230&quot; y=&quot;60&quot; width=&quot;150&quot; height=&quot;70&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;305&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;source link&lt;/text&gt;
+          &lt;text x=&quot;305&quot; y=&quot;110&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;under the answer&lt;/text&gt;
+          &lt;line x1=&quot;380&quot; y1=&quot;95&quot; x2=&quot;440&quot; y2=&quot;95&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;440&quot; y=&quot;50&quot; width=&quot;180&quot; height=&quot;90&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;530&quot; y=&quot;82&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;the page&lt;/text&gt;
+          &lt;text x=&quot;530&quot; y=&quot;102&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;with the old fact&lt;/text&gt;
+          &lt;text x=&quot;530&quot; y=&quot;122&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--signal)&quot;&gt;fix it here&lt;/text&gt;
+          &lt;text x=&quot;320&quot; y=&quot;180&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;read the arrows right to left: the answer is only a copy&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;p&gt;Where to find the sources:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;ChatGPT:&lt;/strong&gt; answers that used search show small citation links in the text, and a &lt;strong&gt;Sources&lt;/strong&gt; button at the end of the answer that opens the full list (&lt;a href=&quot;https://help.openai.com/en/articles/9237897-chatgpt-search&quot;&gt;OpenAI help&lt;/a&gt;). OpenAI&#x27;s own help page says citations can be incomplete, outdated or wrong, and tells you to open the source and check it supports the answer. That is this step.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Google AI Overviews and AI Mode:&lt;/strong&gt; the overview shows links &quot;to supporting information from the web&quot; next to the text (&lt;a href=&quot;https://support.google.com/websearch/answer/14901683&quot;&gt;Google help&lt;/a&gt;).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Copilot&lt;/strong&gt; and most other assistants show numbered links in or under the answer.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Open each source and search the page for the wrong fact (Ctrl+F or Cmd+F). The usual culprits:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;An old page on your own site.&lt;/strong&gt; A 2023 price list, a &quot;holiday hours&quot; post nobody removed, a page for a branch that closed. It&#x27;s still indexed, so it&#x27;s still read.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Your Google Business Profile or Bing Places listing&lt;/strong&gt; with hours you never updated.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A directory or review site&lt;/strong&gt; that copied your details years ago.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A social media page&lt;/strong&gt; with an old bio or a pinned post.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If the answer shows no source at all, it probably came from what the model learned in training, not from a search. Ask the same question again and add &quot;search the web&quot;. If the searched answer is right, the web is fine and the old answer will fade as models are updated. You can&#x27;t speed that part up.&lt;/p&gt;
+      &lt;p&gt;Don&#x27;t trust the assistant if you ask it &quot;where did you get that?&quot; It may name a page it never read. Only the links it shows count, and only after you open them and find the fact there.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: fix the page, not the answer&lt;/h2&gt;
+      &lt;p&gt;Match each culprit to its fix:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Old page on your site:&lt;/strong&gt; update it with the current facts. If it shouldn&#x27;t exist, delete it, or redirect its address to the current page so old links still land somewhere useful. &lt;a href=&quot;/blog/find-and-remove-old-pages-from-google/&quot;&gt;How to find old pages and remove them properly&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Business profile:&lt;/strong&gt; edit it in Google Business Profile or Bing Places. Use exactly the hours and address your website shows.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Directory or review site:&lt;/strong&gt; most let owners claim a listing and edit it. If not, look for a &quot;suggest an edit&quot; or contact link.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Hedged answers:&lt;/strong&gt; look for two sources that disagree, and make them agree. If no source states the fact plainly, write it as one plain sentence on your own site: &quot;We are open Sunday, 9:00 to 14:00.&quot;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Missing answers:&lt;/strong&gt; check that your site is in search at all. Search &lt;code&gt;site:yourdomain.com&lt;/code&gt; on Google and Bing, or use &lt;a href=&quot;/is-my-site-indexed/&quot;&gt;this checklist builder&lt;/a&gt;, then read &lt;a href=&quot;/blog/check-google-can-see-your-site/&quot;&gt;how to check that Google can see your site&lt;/a&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Arguing with the assistant inside your own chat doesn&#x27;t fix anything for anyone else. As far as I know, a correction you type into a chat changes that chat, not the answer a stranger gets tomorrow.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: tell the search engines, then report&lt;/h2&gt;
+      &lt;p&gt;After you fix a page on your site, ask the search engines to read it again. Assistants that search can&#x27;t see the fix until then.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Google Search Console, paste the page&#x27;s address into the search bar at the top (URL Inspection) and click &lt;strong&gt;Request indexing&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;In Bing Webmaster Tools, open &lt;strong&gt;Submit URLs&lt;/strong&gt;, paste the page&#x27;s address (one per line) and click &lt;strong&gt;Submit&lt;/strong&gt; (&lt;a href=&quot;https://www.bing.com/webmasters/help/URL-Submission-62f2860b&quot;&gt;Bing help&lt;/a&gt;). If your site or host supports &lt;a href=&quot;https://www.indexnow.org/&quot;&gt;IndexNow&lt;/a&gt;, it tells Bing and other engines for you.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Then report the answer itself. On a Google AI Overview, click the thumbs-down icon at the bottom, then &quot;Report a problem&quot;, choose a category and add a sentence in the text field (&lt;a href=&quot;https://support.google.com/websearch/answer/14901683&quot;&gt;Google help&lt;/a&gt;). In ChatGPT, use the thumbs-down under the answer. I don&#x27;t know how much these reports change future answers; Google and OpenAI don&#x27;t say. They take ten seconds, so do them, but the page fix is the part that works.&lt;/p&gt;
+
+      &lt;h2&gt;Step 6: check again&lt;/h2&gt;
+      &lt;p&gt;Put a reminder in your calendar for one to two weeks later. Ask the same questions in the same assistants and add a new row to your table for each. I can&#x27;t tell you how long a fix takes to show up: it depends on when the page is next crawled and which source the assistant picks that day. The table tells you.&lt;/p&gt;
+      &lt;p&gt;After that, repeat the whole check once a month, and every time something changes: new hours, a move, new prices, a branch opening or closing.&lt;/p&gt;
+
+      &lt;h2&gt;What I learned&lt;/h2&gt;
+      &lt;p&gt;The useful question isn&#x27;t &quot;what does the AI think of us?&quot; It&#x27;s &quot;which page did it read?&quot; An answer is a copy of pages. When the copy is wrong, there&#x27;s an original to fix, and that original is usually something you or a directory published years ago and forgot.&lt;/p&gt;
+      &lt;p&gt;So the cleanup that helps most is boring: find your old pages and listings, and make every one of them say the same thing as your website today.&lt;/p&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Ask each customer question by name and by need, in a new chat.&lt;/li&gt;
+        &lt;li&gt;Ask ChatGPT (with search), Google (AI Overview and AI Mode) and Copilot.&lt;/li&gt;
+        &lt;li&gt;Write each answer in a table: right, wrong, hedged or missing, plus its sources.&lt;/li&gt;
+        &lt;li&gt;Open the sources of every wrong answer and find the page with the wrong fact.&lt;/li&gt;
+        &lt;li&gt;Fix that page, profile or listing. Make all of them match your website.&lt;/li&gt;
+        &lt;li&gt;Request indexing in Search Console and use Submit URLs in Bing Webmaster Tools.&lt;/li&gt;
+        &lt;li&gt;Report the wrong answer with the thumbs-down.&lt;/li&gt;
+        &lt;li&gt;Check again in one to two weeks, then monthly.&lt;/li&gt;
+      &lt;/ol&gt;</content>
+  </entry>
   <entry>
     <title>How to find old pages of your website that still show up in Google, and remove them properly</title>
     <link href="https://taktekbot.com/blog/find-and-remove-old-pages-from-google/"/>
