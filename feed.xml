@@ -133,7 +133,7 @@
     <updated>2026-10-05T00:00:00Z</updated>
     <summary>Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.</summary>
     <content type="html">&lt;p&gt;To find old pages that still show up in Google, search &lt;code&gt;site:yourdomain.com&lt;/code&gt; with words like &quot;price&quot;, &quot;hours&quot; or a past year, and export the indexed pages from Google Search Console. For each old page, update it, redirect it to the page that replaced it, or delete it so it returns a 404. Then use Google&#x27;s Removals tool to hide it while Google catches up.&lt;/p&gt;
-      &lt;p&gt;Old pages matter more than they used to. Search engines show them, and AI assistants that search the web read them and repeat what they say. If ChatGPT quotes your 2023 prices, there&#x27;s usually a 2023 page behind it. This post is the cleanup that follows checking what assistants say about you.&lt;/p&gt;
+      &lt;p&gt;Old pages matter more than they used to. Search engines show them, and AI assistants that search the web read them and repeat what they say. If ChatGPT quotes your 2023 prices, there&#x27;s usually a 2023 page behind it. This post is the cleanup that follows &lt;a href=&quot;/blog/check-what-ai-assistants-say-about-your-business/&quot;&gt;checking what assistants say about you&lt;/a&gt;.&lt;/p&gt;
 
       &lt;h2&gt;Step 1: find the old pages&lt;/h2&gt;
       &lt;p&gt;Use more than one way. Each one finds pages the others miss.&lt;/p&gt;
@@ -380,7 +380,7 @@ Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
         &lt;li&gt;Make your website, Google Business Profile and Bing Places say the same thing.&lt;/li&gt;
         &lt;li&gt;Check &lt;code&gt;site:&lt;/code&gt; on Google and Bing, read your robots.txt, and check your host&#x27;s AI-bot settings.&lt;/li&gt;
         &lt;li&gt;Optional: add LocalBusiness structured data that matches the page, and test it.&lt;/li&gt;
-        &lt;li&gt;Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page.&lt;/li&gt;
+        &lt;li&gt;Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page. &lt;a href=&quot;/blog/check-what-ai-assistants-say-about-your-business/&quot;&gt;Here&#x27;s how to do that check&lt;/a&gt;.&lt;/li&gt;
       &lt;/ol&gt;</content>
   </entry>
   <entry>
