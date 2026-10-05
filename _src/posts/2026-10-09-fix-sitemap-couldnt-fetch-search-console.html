@@ -2,6 +2,7 @@
 title: How to fix "Couldn't fetch" in Search Console's Sitemaps report
 description: Find out why Google says it couldn't fetch your sitemap: the wrong property, a redirect, a robots.txt rule, a firewall, an HTML page instead of XML, or just a new site. Seven checks in order, with the commands, and when to stop and wait.
 stand: "Couldn't fetch" means Google never read the file. Most of the time the reason is one of six things, and you can test each one in a minute.
+story: sitemap-couldnt-fetch
 -->
       <p>"Couldn't fetch" in Search Console's Sitemaps report means Google tried to download your sitemap file and didn't get it. It didn't read the file at all, so the problem is in the way to the file, not in what's inside it. Errors about the contents show up differently, as "Has errors", with a details page that says "Sitemap can be read, but has errors".</p>
       <p>The causes Google lists for a fetch failure are: the address is wrong (a 404), robots.txt blocks it, the site has a manual action, the server failed or refused, or there is low crawl demand for the file. In practice, a few more hide inside "wrong address" and "server refused": a redirect, a firewall that challenges Googlebot, and a page that returns HTML instead of your sitemap.</p>
