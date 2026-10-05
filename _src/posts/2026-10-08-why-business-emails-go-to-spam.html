@@ -60,7 +60,7 @@ nslookup -type=TXT google._domainkey.yourshop.com</code></pre>
       <p>Paste what you get into the <a href="/spf-dkim-dmarc-check/">SPF, DKIM and DMARC checker</a>. It runs in your browser, explains each part, and flags the usual mistakes. Then come back here for the fix.</p>
 
       <h2>Fix 1: SPF fails, or there are two SPF records</h2>
-      <p>SPF is one TXT record on your domain that starts with <code>v=spf1</code> and lists who may send for you. The most common mistake is having two of them. Every email service's setup page says "add this TXT record", so after a few years a domain collects one per service. With two <code>v=spf1</code> records, SPF fails for everything (<a href="https://www.rfc-editor.org/rfc/rfc7208.html#section-4.5">RFC 7208, section 4.5</a>).</p>
+      <p>SPF is one TXT record on your domain that starts with <code>v=spf1</code> and lists who may send for you. The most common mistake is having two of them. Every email service's setup page says "add this TXT record", so after a few years a domain collects one per service. With two <code>v=spf1</code> records, SPF returns an error ("permerror") for every message, and DMARC counts that as no SPF pass (<a href="https://www.rfc-editor.org/rfc/rfc7208.html#section-4.5">RFC 7208, section 4.5</a>).</p>
       <p>The fix is one record with every service in it:</p>
       <pre><code>v=spf1 include:_spf.google.com include:spf.your-newsletter-service.example ~all</code></pre>
       <ul>
@@ -69,7 +69,7 @@ nslookup -type=TXT google._domainkey.yourshop.com</code></pre>
         <li>Each other service names its own include on its setup page. Copy only the <code>include:</code> part into your existing line.</li>
         <li>End with <code>~all</code> (soft fail for everyone else) or <code>-all</code> (hard fail). Never <code>+all</code>: that lets anyone send as you.</li>
       </ul>
-      <p>One limit to know: SPF allows 10 DNS lookups in total, and each <code>include:</code> can use several of its own. Past 10, SPF returns an error instead of a pass. If you have more than four or five services, check the count before you add another one.</p>
+      <p>One limit to know: SPF allows 10 DNS lookups in total, and each <code>include:</code> can use several of its own. Past 10, SPF returns the same error instead of a pass (<a href="https://www.rfc-editor.org/rfc/rfc7208.html#section-4.6.4">section 4.6.4</a>). If you have more than four or five services, check the count before you add another one.</p>
 
       <h2>Fix 2: DKIM is missing, or signs for the wrong domain</h2>
       <p>DKIM needs two things: a public key in your DNS and the sending service switched on to sign with it. Adding the record alone signs nothing.</p>
