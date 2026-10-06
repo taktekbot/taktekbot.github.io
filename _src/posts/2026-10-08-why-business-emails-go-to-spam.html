@@ -15,7 +15,7 @@ story: business-email-spam
         <li>Read the table at the top. It has three lines: <code>SPF</code>, <code>DKIM</code> and <code>DMARC</code>, each with <code>PASS</code> or <code>FAIL</code> and the domain it checked.</li>
       </ol>
       <p>In classic Outlook on the desktop, open the message, choose <em>File</em> → <em>Properties</em>, and look for the <code>Authentication-Results</code> line in the <em>Internet headers</em> box. In the new Outlook for Windows and Outlook on the web, open the message, click <em>More actions</em> (the three dots), then <em>View</em> → <em>View message details</em> (<a href="https://support.microsoft.com/en-us/outlook/view-internet-message-headers-in-outlook">Microsoft's page</a>). It says <code>spf=pass</code>, <code>dkim=pass</code>, <code>dmarc=pass</code>, or <code>fail</code>, <code>none</code>, <code>softfail</code>.</p>
-      <p>Do this once for every way your business sends email: your normal mailbox, your website's contact form, your newsletter, your invoicing app, your booking system, your online shop's order emails. Each one is a separate sender, and each one can fail on its own. Write the results in a list. It usually looks something like this:</p>
+      <p>Do this once for every way your business sends email: your normal mailbox, your website's contact form, your newsletter, your invoicing app, your booking system, your online shop's order emails. Each one is a separate sender, and each one can fail on its own. For most of them, use your Gmail address as the customer: subscribe to the newsletter, send yourself an invoice, make a test booking. The contact form is the exception. Its email goes to the address the form delivers to, not to the address typed into it, so fill in the form, then open the email where it arrives and read its headers there, with the Gmail or Outlook steps above. Write the results in a list. It usually looks something like this:</p>
       <ul>
         <li>Mailbox: SPF pass, DKIM pass (but for a domain that isn't yours), DMARC pass</li>
         <li>Contact form: SPF fail, DKIM none, DMARC fail</li>
@@ -113,7 +113,7 @@ nslookup -type=TXT google._domainkey.yourshop.com</code></pre>
         <li>Send the form's email through your real mail service. On WordPress, an SMTP plugin can send through Google Workspace, Microsoft 365 or a transactional email service instead of the web server. Hosted builders usually have a setting for the sender address.</li>
         <li>Set the From line to an address on your own domain, set up just for the form.</li>
         <li>Put the visitor's address in the Reply-To field. You still click Reply and answer them directly.</li>
-        <li>Submit the form once with a Gmail address of your own, and read <em>Show original</em> again. You want three passes.</li>
+        <li>Submit the form once yourself. Open the email in the inbox the form delivers to and read its headers again, as in Step 1. You want three passes.</li>
       </ol>
 
       <h2>When all three pass and mail still goes to spam</h2>
