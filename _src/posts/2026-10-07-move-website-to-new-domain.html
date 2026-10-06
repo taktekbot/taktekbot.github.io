@@ -51,14 +51,20 @@ story: domain-move
     listen 443 ssl;
     server_name olddomain.com www.olddomain.com;
     # keep a valid certificate for the old domain here
-    return 301 https://newdomain.com$request_uri;
+    location / {
+        return 301 https://newdomain.com$request_uri;
+    }
 }</code></pre>
       <p>On Apache, in the old site's <code>.htaccess</code>:</p>
       <pre><code>RewriteEngine On
 RewriteCond %{HTTP_HOST} ^(www\.)?olddomain\.com$ [NC]
 RewriteRule ^(.*)$ https://newdomain.com/$1 [R=301,L]</code></pre>
       <p>Point the rule at the exact address your new site uses. If the new site lives on <code>www.newdomain.com</code>, write that, or every old link takes two hops instead of one.</p>
-      <p>If some paths changed, put the page-by-page rules from your map first and the whole-domain rule last, so the specific ones win.</p>
+      <p>If some paths changed, you need the page-by-page rules from your map as well, and they have to win over the whole-domain rule:</p>
+      <ul>
+        <li><strong>nginx:</strong> add them as <code>location = /old-path</code> blocks in the same <code>server</code> block. An exact match beats <code>location /</code> wherever it sits. That's why the example wraps its <code>return</code> in <code>location /</code>: a <code>return</code> written directly in the <code>server</code> block runs before nginx looks at any location, so the page rules would never fire (<a href="https://nginx.org/en/docs/http/ngx_http_rewrite_module.html">nginx's rewrite module docs</a> give the order).</li>
+        <li><strong>Apache:</strong> put them above the whole-domain rule. <code>RewriteRule</code> lines run top to bottom. <code>Redirect</code> and <code>RedirectMatch</code> lines in <code>.htaccess</code> run before any <code>RewriteRule</code>, wherever they sit (<a href="https://httpd.apache.org/docs/current/rewrite/avoid.html">Apache's docs</a>), so those win too.</li>
+      </ul>
       <p>One thing people miss: <strong>the old domain still needs a valid HTTPS certificate.</strong> Every old link starts with <code>https://olddomain.com</code>. If the certificate has lapsed, the browser shows a security warning before the redirect ever runs, and most visitors leave.</p>
 
       <h3>Test every row, not three</h3>
