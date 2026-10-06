@@ -49,13 +49,14 @@ story: sitemap-couldnt-fetch
 
       <h2>Check 1: is the sitemap in the right property?</h2>
       <p>Search Console treats <code>http://example.com</code>, <code>https://example.com</code> and <code>https://www.example.com</code> as different sites unless you set up a Domain property, which covers all of them. A sitemap submitted to one doesn't appear in the others, and Google's help page names this mix-up as the first thing to check when a sitemap seems to be missing.</p>
-      <p>Look at the property name in the top-left of Search Console. Then look at the address your site actually uses: open it in a browser and read the address bar after it loads. They should match, including <code>https</code> and <code>www</code>.</p>
+      <p>Look at the property name in the top-left of Search Console. Then look at the address your site actually uses: open it in a browser and read the address bar after it loads. They should match, including <code>https</code> and <code>www</code>. A Domain property shows the bare name, like <code>example.com</code>, with no <code>https://</code>, and covers every version, so it always matches.</p>
 
       <h2>Check 2: open the exact address you submitted</h2>
       <p>Click the sitemap's row in the report and copy the URL from the details page. Paste it into a private browser window, where you aren't logged in to your site.</p>
       <ul>
         <li>If you get a 404 or your site's "page not found" page, the address is wrong. Common ones: <code>/sitemap.xml</code> on a WordPress site, where core WordPress uses <code>/wp-sitemap.xml</code> and SEO plugins often use <code>/sitemap_index.xml</code>. Your <code>robots.txt</code> file often has a <code>Sitemap:</code> line that names the real one.</li>
         <li>If the address bar changes after it loads, you submitted an address that redirects. The report records the exact URL you typed and, in Google's words, "redirects are not followed". Remove that sitemap and submit the final address instead.</li>
+        <li>If you see a neat table of links instead of code, that's fine. SEO plugins add a stylesheet line (<code>&lt;?xml-stylesheet</code>) so the file reads well in a browser. Check 3 shows what the server really sends.</li>
         <li>If you see a login screen, Google sees it too. Google's help page is plain about this: the sitemap "must not be blocked by any login requirements".</li>
       </ul>
 
@@ -65,13 +66,14 @@ story: sitemap-couldnt-fetch
       <p>Read three lines:</p>
       <ul>
         <li><strong>The first line.</strong> You want <code>200</code>. A <code>301</code> or <code>302</code> is the redirect from Check 2. A <code>403</code> means the server refused. A <code>5xx</code> means the server failed.</li>
-        <li><strong>content-type.</strong> A sitemap is normally <code>application/xml</code> or <code>text/xml</code>. If it says <code>text/html</code>, you are very likely getting a web page, not your sitemap. Sites built as single-page apps often answer every unknown address with the home page and a 200, so the "sitemap" is really the home page.</li>
+        <li><strong>content-type.</strong> A sitemap is normally <code>application/xml</code> or <code>text/xml</code>, or <code>text/plain</code> for a text sitemap. If it says <code>text/html</code>, you are very likely getting a web page, not your sitemap. Sites built as single-page apps often answer every unknown address with the home page and a 200, so the "sitemap" is really the home page.</li>
         <li><strong>location.</strong> Only there on a redirect. It tells you the address to submit instead.</li>
       </ul>
+      <p><code>-I</code> sends a HEAD request, and a few servers answer it differently from a normal one. Googlebot makes a normal request. So if <code>-I</code> gives a <code>404</code> or <code>405</code> but the file opens in your browser, ask the normal way and print only the headers: <code>curl -s -o /dev/null -D - https://example.com/sitemap.xml</code> (on Windows: <code>curl.exe -s -o NUL -D - https://example.com/sitemap.xml</code>).</p>
       <p>To see the first lines of the body as well:</p>
       <pre><code>curl -s https://example.com/sitemap.xml | head -5</code></pre>
       <p>Windows has no <code>head</code>. In PowerShell, use <code>curl.exe -s https://example.com/sitemap.xml | Select-Object -First 5</code>.</p>
-      <p>A real sitemap starts with <code>&lt;?xml</code> and has <code>&lt;urlset</code> or <code>&lt;sitemapindex</code> near the top. If you see <code>&lt;!DOCTYPE html&gt;</code>, that's the problem. Fix the route on your server or in your framework so the file is served as it is.</p>
+      <p>A real XML sitemap has <code>&lt;urlset</code> or <code>&lt;sitemapindex</code> near the top, usually after a <code>&lt;?xml</code> line and sometimes a <code>&lt;?xml-stylesheet</code> line. A text sitemap is only full addresses, one per line, and Google accepts that too. If you see <code>&lt;!DOCTYPE html&gt;</code>, that's the problem. Fix the route on your server or in your framework so the file is served as it is.</p>
 
       <h2>Check 4: make sure robots.txt doesn't block it</h2>
       <p>Google respects robots.txt when it fetches a sitemap. A rule like <code>Disallow: /*.xml</code>, or a folder rule that happens to cover where your sitemap lives, stops the fetch. Open <code>https://example.com/robots.txt</code> and read every <code>Disallow</code> line under <code>User-agent: *</code> and <code>User-agent: Googlebot</code>.</p>
@@ -93,11 +95,11 @@ story: sitemap-couldnt-fetch
       <h2>Check 7: if everything passes, resubmit once and wait</h2>
       <p>If the live test says Successful and the report still says "Couldn't fetch", the file is fine and Google just hasn't come back for it. Google lists "low crawl demand for the sitemap" as one of the reasons, and ties crawl demand to the quality of the site's content. It also says some failures "can be transient": wait a bit and see if the error comes back.</p>
       <ol>
-        <li>Type the same address into <em>Add a new sitemap</em> at the top of the report and click <em>Submit</em>. You don't need to remove the old entry first.</li>
+        <li>Paste the full sitemap address into <em>Add a new sitemap</em> at the top of the report and click <em>Submit</em>. Google calls this resubmitting with a new request. The button needs owner permission on the property. If you aren't an owner, ask one, or put a <code>Sitemap:</code> line with the full address in your robots.txt, which Google's help page gives as the alternative.</li>
         <li>Leave it for a few days. Don't resubmit every day.</li>
       </ol>
       <p>Two facts from Google's help page help here. First, after a failure Google keeps retrying "for a few days" and then stops, so if you fix something, resubmit; don't wait for it to notice. Second, a failed fetch doesn't make Google forget what it read before, and pages can still be found through links. While you wait, use URL Inspection's <em>Request indexing</em> on your home page and your most important pages.</p>
-      <p>For a second opinion, submit the same sitemap in Bing Webmaster Tools. If Bing fetches it and Google doesn't, the file is reachable from the outside, and the problem is specific to Google, which points back at your firewall, robots.txt groups or Check 7.</p>
+      <p>For a second opinion, if your site is already in Bing Webmaster Tools, submit the same sitemap there. If Bing fetches it and Google doesn't, the file is reachable from the outside, and the problem is specific to Google, which points back at your firewall, robots.txt groups or Check 7.</p>
 
       <h2>Once it says Success: check what's inside</h2>
       <p>A fetched sitemap can still have errors in its contents. Before you submit, or when the status changes to "Has errors", look for the usual problems: an unescaped <code>&amp;</code> in a URL, which breaks the XML; relative addresses like <code>/about</code> instead of full ones; addresses on <code>http</code> or a different <code>www</code> than the sitemap itself; and dates that aren't in W3C Datetime format, like <code>2026-10-09</code> or <code>2026-10-09T08:00:00+00:00</code> (the time part is optional). My <a href="/sitemap-checker/">sitemap checker</a> flags all of these in your browser, without uploading the file anywhere.</p>
@@ -107,7 +109,7 @@ story: sitemap-couldnt-fetch
       <ol>
         <li>Confirm the sitemap and the property use the same <code>https</code> and <code>www</code>.</li>
         <li>Open the submitted URL in a private window: no 404, no redirect, no login.</li>
-        <li><code>curl -sI</code> it: 200 and an XML content type, not <code>text/html</code>.</li>
+        <li><code>curl -sI</code> it: 200 and an XML content type (plain text for a text sitemap), not <code>text/html</code>.</li>
         <li>Make sure no robots.txt line covers it.</li>
         <li>URL Inspection → Test live URL: Crawl allowed Yes, Page fetch Successful.</li>
         <li>Rule out a manual action.</li>
