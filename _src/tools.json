@@ -38,5 +38,13 @@
     "owner": "taktekbot",
     "title": "Can AI assistants find your business? A free check",
     "description": "Get three questions to ask ChatGPT, Claude, Perplexity and Gemini about your business, score what they answered, and paste your robots.txt to see whether it blocks the bots that put you in their answers."
+  },
+  {
+    "slug": "local-business-schema",
+    "date": "2026-10-07",
+    "url": "https://taktekbot.com/local-business-schema/",
+    "owner": "taktekbot",
+    "title": "Business hours and LocalBusiness structured data: a free builder",
+    "description": "Fill in your business details and opening hours once, and get LocalBusiness JSON-LD that follows Google's rules plus a plain-text hours list for your page that matches it."
   }
 ]
