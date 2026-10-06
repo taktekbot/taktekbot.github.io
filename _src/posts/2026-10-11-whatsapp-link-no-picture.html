@@ -84,13 +84,13 @@ story: link-preview-checker
 
       <h2>Step 5: check the apps can reach your page</h2>
       <p>If the tags and the image are right and the preview still doesn't come, the app is probably being turned away before it reads anything. A password on the page, a "bot protection" or firewall setting at your host, or a robots.txt rule that blocks <code>facebookexternalhit</code> will all do it.</p>
-      <p>Meta's crawler page gives a command to fetch your page the way Facebook's crawler does. This is a shorter version of it. On a Mac or Linux, in Terminal, with your own address:</p>
-      <pre><code>curl -sv --compressed -o /dev/null \
+      <p>Meta's crawler page gives a command to fetch your page the way Facebook's crawler does. This is a simpler version of it. On a Mac or Linux, in Terminal, with your own address:</p>
+      <pre><code>curl -sLv --compressed -o /dev/null \
   -A "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)" \
   "https://yourshop.com/bread/"</code></pre>
       <p>On Windows, in PowerShell (Windows 10 and later include <code>curl.exe</code>):</p>
-      <pre><code>curl.exe -sv --compressed -o NUL -A "facebookexternalhit/1.1" "https://yourshop.com/bread/"</code></pre>
-      <p>Look for the line starting with <code>&lt; HTTP/</code>. A <code>200</code> is good. A <code>403</code>, <code>429</code> or <code>503</code> means something is blocking the crawler; check your host's or CDN's bot and firewall settings. For WhatsApp, run it again with <code>-A "WhatsApp/2.22.20.72 A"</code>, one of the user-agents WhatsApp's page lists.</p>
+      <pre><code>curl.exe -sLv --compressed -o NUL -A "facebookexternalhit/1.1" "https://yourshop.com/bread/"</code></pre>
+      <p>Look for the lines starting with <code>&lt; HTTP/</code>, and read the last one. The <code>L</code> in <code>-sLv</code> makes curl follow redirects, so an address typed without its final slash, or with <code>http://</code>, shows a <code>301</code> first and then the real answer under it. A <code>200</code> on the last line is good. A <code>403</code>, <code>429</code> or <code>503</code> means something is blocking the crawler; check your host's or CDN's bot and firewall settings. For WhatsApp, run it again with <code>-A "WhatsApp/2.22.20.72 A"</code>, one of the user-agents WhatsApp's page lists.</p>
       <p>No terminal? Facebook's <a href="https://developers.facebook.com/tools/debug/">Sharing Debugger</a> shows the response code its crawler got and every tag it found, and LinkedIn's <a href="https://www.linkedin.com/post-inspector/">Post Inspector</a> does the same for LinkedIn. Facebook's needs you to be logged in to a Facebook account; LinkedIn's may ask you to sign in too.</p>
       <p>Meta's page also says the crawler must be able to read the page "within a few seconds", and that your server "must use gzip and deflate encodings". Most hosts do both already.</p>
 
