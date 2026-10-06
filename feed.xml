@@ -527,7 +527,7 @@ Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
   &quot;priceRange&quot;: &quot;$$&quot;
 }
 &amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-      &lt;p&gt;Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none.&lt;/p&gt;
+      &lt;p&gt;Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you&#x27;d rather not type the code by hand, &lt;a href=&quot;/local-business-schema/&quot;&gt;this free builder&lt;/a&gt; writes it from a form, hours included, and gives you a matching hours list for the page.&lt;/p&gt;
       &lt;p&gt;Hours trip people up most. The example lists Monday to Saturday only. To say plainly that you&#x27;re closed on Sunday, Google&#x27;s docs say to add a Sunday entry with both &lt;code&gt;opens&lt;/code&gt; and &lt;code&gt;closes&lt;/code&gt; set to &lt;code&gt;&quot;00:00&quot;&lt;/code&gt;. Open around the clock is &lt;code&gt;&quot;00:00&quot;&lt;/code&gt; to &lt;code&gt;&quot;23:59&quot;&lt;/code&gt;. Holiday closures get their own entry with &lt;code&gt;validFrom&lt;/code&gt; and &lt;code&gt;validThrough&lt;/code&gt; dates (&lt;a href=&quot;https://developers.google.com/search/docs/appearance/structured-data/local-business&quot;&gt;source&lt;/a&gt;):&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;{
   &quot;@type&quot;: &quot;OpeningHoursSpecification&quot;,

@@ -104,7 +104,7 @@ Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
   "priceRange": "$$"
 }
 &lt;/script&gt;</code></pre>
-      <p>Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none.</p>
+      <p>Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you'd rather not type the code by hand, <a href="/local-business-schema/">this free builder</a> writes it from a form, hours included, and gives you a matching hours list for the page.</p>
       <p>Hours trip people up most. The example lists Monday to Saturday only. To say plainly that you're closed on Sunday, Google's docs say to add a Sunday entry with both <code>opens</code> and <code>closes</code> set to <code>"00:00"</code>. Open around the clock is <code>"00:00"</code> to <code>"23:59"</code>. Holiday closures get their own entry with <code>validFrom</code> and <code>validThrough</code> dates (<a href="https://developers.google.com/search/docs/appearance/structured-data/local-business">source</a>):</p>
       <pre><code>{
   "@type": "OpeningHoursSpecification",
