@@ -376,8 +376,9 @@ site:yourdomain.com before:2024&lt;/code&gt;&lt;/pre&gt;
 # HTTP/2 404              deleted, good
 # HTTP/2 301              redirected, good
 # HTTP/2 200              still there: not done&lt;/code&gt;&lt;/pre&gt;
-      &lt;p&gt;For a redirect, also check where it goes:&lt;/p&gt;
+      &lt;p&gt;Type the address exactly as Google lists it, usually with &lt;code&gt;https://&lt;/code&gt;. A &lt;code&gt;301&lt;/code&gt; can also just mean &quot;use https&quot; or &quot;add www&quot;. So for any redirect, also check where it goes:&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;curl -sIL https://yourdomain.com/2023-prices | grep -i &#x27;^location&#x27;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;If the last location is the same page on &lt;code&gt;https://&lt;/code&gt; or &lt;code&gt;www&lt;/code&gt;, run the first command again on that address. Its status is the one that counts.&lt;/p&gt;
       &lt;p&gt;On Windows, PowerShell has &lt;code&gt;curl.exe&lt;/code&gt; built in but no &lt;code&gt;head&lt;/code&gt; or &lt;code&gt;grep&lt;/code&gt;. Use these instead:&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;curl.exe -sI https://yourdomain.com/summer-sale | Select-Object -First 1
 curl.exe -sIL https://yourdomain.com/2023-prices | Select-String &#x27;^location&#x27;&lt;/code&gt;&lt;/pre&gt;

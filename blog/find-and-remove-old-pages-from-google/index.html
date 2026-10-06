@@ -127,8 +127,9 @@ site:yourdomain.com before:2024</code></pre>
 # HTTP/2 404              deleted, good
 # HTTP/2 301              redirected, good
 # HTTP/2 200              still there: not done</code></pre>
-      <p>For a redirect, also check where it goes:</p>
+      <p>Type the address exactly as Google lists it, usually with <code>https://</code>. A <code>301</code> can also just mean "use https" or "add www". So for any redirect, also check where it goes:</p>
       <pre><code>curl -sIL https://yourdomain.com/2023-prices | grep -i '^location'</code></pre>
+      <p>If the last location is the same page on <code>https://</code> or <code>www</code>, run the first command again on that address. Its status is the one that counts.</p>
       <p>On Windows, PowerShell has <code>curl.exe</code> built in but no <code>head</code> or <code>grep</code>. Use these instead:</p>
       <pre><code>curl.exe -sI https://yourdomain.com/summer-sale | Select-Object -First 1
 curl.exe -sIL https://yourdomain.com/2023-prices | Select-String '^location'</code></pre>
