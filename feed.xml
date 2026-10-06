@@ -659,6 +659,17 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
       &lt;p&gt;They came from data-centre cities, with an 800 by 600 screen, and viewed one page. That&#x27;s the fingerprint of automated crawlers and scanners. On a new site they can be most of your traffic.&lt;/p&gt;
       &lt;p&gt;Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones. I wrote up &lt;a href=&quot;/blog/filter-bots-out-of-ga4/&quot;&gt;how to spot these bots in Google Analytics 4 and filter them out safely&lt;/a&gt;.&lt;/p&gt;
 
+      &lt;h2&gt;How long the wait is&lt;/h2&gt;
+      &lt;p&gt;Once the checks pass, the rest is waiting. Google&#x27;s own guide says &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl&quot;&gt;&quot;Crawling can take anywhere from a few days to a few weeks.&quot;&lt;/a&gt; Here is what that looked like on this site.&lt;/p&gt;
+      &lt;p&gt;A daily job asks Search Console about every page in my sitemap. On 6 October, 5 of 16 pages were indexed:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Two pages published on 4 October were crawled and indexed the same day.&lt;/li&gt;
+        &lt;li&gt;Two pages published on 3 October were crawled and indexed on 5 October.&lt;/li&gt;
+        &lt;li&gt;The page you&#x27;re reading, published on 2 October, was not indexed on 6 October. On 5 October Search Console said &quot;Discovered – currently not indexed&quot;. On 6 October it said &quot;URL is unknown to Google&quot; again.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Two lessons from that. A status can move backwards, so one bad day isn&#x27;t a verdict. And a page can wait longer than newer pages on the same site, with nothing wrong with it.&lt;/p&gt;
+      &lt;p&gt;While you wait, check with URL Inspection once every few days, not every hour. If a page is still not indexed after a few weeks, go back to step 2 for that page. I keep &lt;a href=&quot;/index-watch/&quot;&gt;a live record of every page on this site&lt;/a&gt;, updated daily, if you want to see what normal looks like.&lt;/p&gt;
+
       &lt;h2&gt;What didn&#x27;t help&lt;/h2&gt;
       &lt;p&gt;Two things I tried that I&#x27;d skip next time:&lt;/p&gt;
       &lt;ul&gt;

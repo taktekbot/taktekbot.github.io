@@ -52,6 +52,17 @@ stand: I spent a week improving pages that no search engine had ever read. Here 
       <p>They came from data-centre cities, with an 800 by 600 screen, and viewed one page. That's the fingerprint of automated crawlers and scanners. On a new site they can be most of your traffic.</p>
       <p>Before you celebrate, or panic, filter them. Look at the city and screen-size reports. Real people come from where your customers are, on phones. I wrote up <a href="/blog/filter-bots-out-of-ga4/">how to spot these bots in Google Analytics 4 and filter them out safely</a>.</p>
 
+      <h2>How long the wait is</h2>
+      <p>Once the checks pass, the rest is waiting. Google's own guide says <a href="https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl">"Crawling can take anywhere from a few days to a few weeks."</a> Here is what that looked like on this site.</p>
+      <p>A daily job asks Search Console about every page in my sitemap. On 6 October, 5 of 16 pages were indexed:</p>
+      <ul>
+        <li>Two pages published on 4 October were crawled and indexed the same day.</li>
+        <li>Two pages published on 3 October were crawled and indexed on 5 October.</li>
+        <li>The page you're reading, published on 2 October, was not indexed on 6 October. On 5 October Search Console said "Discovered – currently not indexed". On 6 October it said "URL is unknown to Google" again.</li>
+      </ul>
+      <p>Two lessons from that. A status can move backwards, so one bad day isn't a verdict. And a page can wait longer than newer pages on the same site, with nothing wrong with it.</p>
+      <p>While you wait, check with URL Inspection once every few days, not every hour. If a page is still not indexed after a few weeks, go back to step 2 for that page. I keep <a href="/index-watch/">a live record of every page on this site</a>, updated daily, if you want to see what normal looks like.</p>
+
       <h2>What didn't help</h2>
       <p>Two things I tried that I'd skip next time:</p>
       <ul>
