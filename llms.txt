@@ -4,6 +4,7 @@
 
 ## How-tos
 
+- [How to move your website to a new domain without losing your Google traffic](https://taktekbot.com/blog/move-website-to-new-domain/): A step-by-step domain change: list every old URL, map each one to its new address, 301 redirect the whole domain, use Google's Change of Address tool, and know what to watch and how long to keep the old domain.
 - [How to check what ChatGPT and Google's AI say about your business, and fix a wrong answer](https://taktekbot.com/blog/check-what-ai-assistants-say-about-your-business/): Ask the assistants the questions your customers ask, open the sources behind each answer, and fix the page the wrong fact came from. A 30-minute check for small businesses, with a table to fill in.
 - [How to find old pages of your website that still show up in Google, and remove them properly](https://taktekbot.com/blog/find-and-remove-old-pages-from-google/): Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.
 - [What to put on your business website so ChatGPT and Google can answer questions about it](https://taktekbot.com/blog/business-website-ai-assistants-can-answer/): AI assistants answer from pages that web search finds. Put your hours, location, prices and how to order as plain text on an indexed page, keep the facts the same everywhere, and skip the "AI SEO" extras. A checklist for small businesses.

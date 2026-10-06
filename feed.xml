@@ -5,8 +5,185 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-06T00:00:00Z</updated>
+  <updated>2026-10-07T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>How to move your website to a new domain without losing your Google traffic</title>
+    <link href="https://taktekbot.com/blog/move-website-to-new-domain/"/>
+    <id>https://taktekbot.com/blog/move-website-to-new-domain/</id>
+    <updated>2026-10-07T00:00:00Z</updated>
+    <summary>A step-by-step domain change: list every old URL, map each one to its new address, 301 redirect the whole domain, use Google&#x27;s Change of Address tool, and know what to watch and how long to keep the old domain.</summary>
+    <content type="html">&lt;p&gt;To move a website to a new domain without losing Google traffic, redirect every old URL to its matching new URL with a permanent (301) redirect, then tell Google with the Change of Address tool in Search Console. Keep the redirects for at least a year, keep paying for the old domain, and expect rankings to wobble for a few weeks while Google catches up.&lt;/p&gt;
+      &lt;p&gt;Most traffic lost in a domain move is lost to one of three things: old pages that redirect to the homepage, old pages that redirect nowhere, or an old domain that expires. All three can be avoided. Below is the order to do it in, with what each step looks like in practice.&lt;/p&gt;
+
+      &lt;h2&gt;Before you start: change one thing&lt;/h2&gt;
+      &lt;p&gt;Google&#x27;s own advice is to change one thing at a time. If you want a new domain, a new website builder and a new design, do them one after another, not in the same week. When traffic drops after three changes, you can&#x27;t tell which one caused it.&lt;/p&gt;
+      &lt;p&gt;Two more decisions to make first:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Pick a quiet week.&lt;/strong&gt; Not the week before your busiest season.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Check your email.&lt;/strong&gt; If your email addresses end in the old domain, they keep working only as long as the old domain&#x27;s mail records do. Leave email where it is during the move. Move it later, as its own change.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 1: list every old URL&lt;/h2&gt;
+      &lt;p&gt;You can only redirect pages you know about. Build one list from several sources, because each one misses something:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;Your sitemap.&lt;/strong&gt; Open &lt;code&gt;olddomain.com/sitemap.xml&lt;/code&gt; and copy the addresses.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Search Console.&lt;/strong&gt; Open &lt;em&gt;Indexing&lt;/em&gt; → &lt;em&gt;Pages&lt;/em&gt;, then &lt;em&gt;View data about indexed pages&lt;/em&gt;, and export. This is what Google actually has.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Search Console Performance.&lt;/strong&gt; Open &lt;em&gt;Performance&lt;/em&gt;, choose the &lt;em&gt;Pages&lt;/em&gt; tab, set the date range to 12 months and export. These are the pages that bring visitors, so they matter most.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Your analytics.&lt;/strong&gt; The landing pages report shows pages people arrive on from links, ads and old emails.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Files.&lt;/strong&gt; PDFs, menus, price lists and images that other sites link to directly.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Paste everything into one spreadsheet column and remove duplicates.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: map each old URL to one new URL&lt;/h2&gt;
+      &lt;p&gt;Next to each old address, write the new address that does the same job. If the paths don&#x27;t change, this is easy: &lt;code&gt;olddomain.com/menu&lt;/code&gt; becomes &lt;code&gt;newdomain.com/menu&lt;/code&gt;. If some pages were renamed or merged, write those out one by one.&lt;/p&gt;
+      &lt;p&gt;The rule: each old page goes to the closest matching new page. Not to the homepage. Google treats a pile of old pages redirected to one unrelated page as &quot;soft 404s&quot;, which means it treats them as missing, and the traffic those pages had goes with them. If an old page has no equivalent at all, let it return 404.&lt;/p&gt;
+      &lt;p&gt;When the map is done, paste it into the &lt;a href=&quot;/redirect-map-builder/&quot;&gt;redirect map builder&lt;/a&gt;. It turns the pairs into rules for Apache, nginx, Netlify, Cloudflare and Vercel, and warns you about chains (A to B to C), loops and homepage dumps before they go live. It runs in your browser and sends nothing anywhere.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: get the new site ready&lt;/h2&gt;
+      &lt;p&gt;Put the full site live on the new domain before you add any redirects, and check these:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Nothing blocks search engines.&lt;/strong&gt; Staging sites often carry a &lt;code&gt;noindex&lt;/code&gt; tag or a &lt;code&gt;Disallow: /&lt;/code&gt; line in &lt;code&gt;robots.txt&lt;/code&gt;. Open &lt;code&gt;newdomain.com/robots.txt&lt;/code&gt; and view the source of a few pages.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Internal links use the new domain.&lt;/strong&gt; Menus, footers, buttons and links inside your text. Search the site&#x27;s content for the old domain name.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Each page&#x27;s canonical tag points to itself&lt;/strong&gt; on the new domain, not to the old one. Copied sites keep the old canonical surprisingly often.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A new sitemap&lt;/strong&gt; lists the new URLs.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Both domains are verified in Search Console&lt;/strong&gt;, with the same Google account, and you&#x27;re an owner of both. A Domain property covers http, https, www and non-www at once. If you verify with an HTML file, copy that file to the new site too.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Every version of the old domain has its own property too.&lt;/strong&gt; The Change of Address tool in step 5 runs on one host at a time: &lt;code&gt;olddomain.com&lt;/code&gt; does not include &lt;code&gt;www.olddomain.com&lt;/code&gt;. Add a URL-prefix property for each one, such as &lt;code&gt;https://www.olddomain.com/&lt;/code&gt;, even the one you never used.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The new domain is added in Bing Webmaster Tools.&lt;/strong&gt; Bing can import sites you&#x27;ve already verified in Search Console, which saves a step.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 4: switch on the redirects&lt;/h2&gt;
+      &lt;p&gt;Use server-side permanent redirects: 301 or 308. Not a JavaScript redirect, not a &quot;this site has moved, click here&quot; page. The redirect has to cover every version of the old domain: with and without &lt;code&gt;www&lt;/code&gt;, &lt;code&gt;http&lt;/code&gt; and &lt;code&gt;https&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;If your paths stay the same, one rule moves the whole domain and keeps the path. On nginx:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;server {
+    listen 80;
+    listen 443 ssl;
+    server_name olddomain.com www.olddomain.com;
+    # keep a valid certificate for the old domain here
+    location / {
+        return 301 https://newdomain.com$request_uri;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Apache, in the old site&#x27;s &lt;code&gt;.htaccess&lt;/code&gt;:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;RewriteEngine On
+RewriteCond %{HTTP_HOST} ^(www\.)?olddomain\.com$ [NC]
+RewriteRule ^(.*)$ https://newdomain.com/$1 [R=301,L]&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Point the rule at the exact address your new site uses. If the new site lives on &lt;code&gt;www.newdomain.com&lt;/code&gt;, write that, or every old link takes two hops instead of one.&lt;/p&gt;
+      &lt;p&gt;If some paths changed, you need the page-by-page rules from your map as well, and they have to win over the whole-domain rule:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;nginx:&lt;/strong&gt; add them as &lt;code&gt;location = /old-path&lt;/code&gt; blocks in the same &lt;code&gt;server&lt;/code&gt; block. An exact match beats &lt;code&gt;location /&lt;/code&gt; wherever it sits. That&#x27;s why the example wraps its &lt;code&gt;return&lt;/code&gt; in &lt;code&gt;location /&lt;/code&gt;: a &lt;code&gt;return&lt;/code&gt; written directly in the &lt;code&gt;server&lt;/code&gt; block runs before nginx looks at any location, so the page rules would never fire (&lt;a href=&quot;https://nginx.org/en/docs/http/ngx_http_rewrite_module.html&quot;&gt;nginx&#x27;s rewrite module docs&lt;/a&gt; give the order).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Apache:&lt;/strong&gt; put them above the whole-domain rule. &lt;code&gt;RewriteRule&lt;/code&gt; lines run top to bottom. &lt;code&gt;Redirect&lt;/code&gt; and &lt;code&gt;RedirectMatch&lt;/code&gt; lines in &lt;code&gt;.htaccess&lt;/code&gt; run before any &lt;code&gt;RewriteRule&lt;/code&gt;, wherever they sit (&lt;a href=&quot;https://httpd.apache.org/docs/current/rewrite/avoid.html&quot;&gt;Apache&#x27;s docs&lt;/a&gt;), so those win too.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;One thing people miss: &lt;strong&gt;the old domain still needs a valid HTTPS certificate.&lt;/strong&gt; Every old link starts with &lt;code&gt;https://olddomain.com&lt;/code&gt;. If the certificate has lapsed, the browser shows a security warning before the redirect ever runs, and most visitors leave.&lt;/p&gt;
+
+      &lt;h3&gt;Test every row, not three&lt;/h3&gt;
+      &lt;p&gt;Save your map as a text file, one pair per line, old and new separated by a space. Then run this in a terminal (Mac and Linux have &lt;code&gt;curl&lt;/code&gt; built in):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;while read -r old new || [ -n &quot;$old&quot; ]; do
+  got=$(curl -s -o /dev/null -w &#x27;%{http_code} %{redirect_url}&#x27; &quot;$old&quot;)
+  [ &quot;$got&quot; = &quot;301 $new&quot; ] || echo &quot;WRONG $old -&gt; $got (want 301 $new)&quot;
+done &amp;lt; map.txt&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;It prints nothing when every row is right. Each line it prints is a page to fix. If you used 308 redirects, change &lt;code&gt;301&lt;/code&gt; to &lt;code&gt;308&lt;/code&gt; in the third line.&lt;/p&gt;
+      &lt;p&gt;If every row prints WRONG even though the redirects work in a browser, check how the file was saved. A file saved from Excel or on Windows ends its lines with an invisible carriage return, so the expected address never matches. Strip it with &lt;code&gt;tr -d &#x27;\r&#x27; &amp;lt; map.txt &amp;gt; map-clean.txt&lt;/code&gt; and run the loop on &lt;code&gt;map-clean.txt&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Then check that the new addresses themselves load, without a second redirect:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;while read -r old new || [ -n &quot;$old&quot; ]; do
+  code=$(curl -s -o /dev/null -w &#x27;%{http_code}&#x27; &quot;$new&quot;)
+  [ &quot;$code&quot; = &quot;200&quot; ] || echo &quot;$code $new&quot;
+done &amp;lt; map.txt&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, open PowerShell. Windows 10 and 11 include &lt;code&gt;curl.exe&lt;/code&gt;, so the same two checks are:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;Get-Content map.txt | ForEach-Object {
+  $old, $new = $_ -split &#x27; &#x27;
+  $got = curl.exe -s -o NUL -w &#x27;%{http_code} %{redirect_url}&#x27; $old
+  if ($got -ne &quot;301 $new&quot;) { &quot;WRONG $old -&gt; $got (want 301 $new)&quot; }
+}
+
+Get-Content map.txt | ForEach-Object {
+  $old, $new = $_ -split &#x27; &#x27;
+  $code = curl.exe -s -o NUL -w &#x27;%{http_code}&#x27; $new
+  if ($code -ne &#x27;200&#x27;) { &quot;$code $new&quot; }
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;For a single page, Search Console&#x27;s URL Inspection tool does the same check from Google&#x27;s side.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: tell Google and Bing&lt;/h2&gt;
+      &lt;p&gt;In Search Console, open the old domain&#x27;s property, go to &lt;em&gt;Settings&lt;/em&gt; → &lt;em&gt;Change of address&lt;/em&gt;, and pick the new domain. The tool checks that you own both sites and that a few old pages return 301s, then asks Google to crawl the new site first and carry signals across. It works only for real domain or subdomain changes, not for moving from http to https or from www to non-www.&lt;/p&gt;
+      &lt;p&gt;Run it once for every version of the old domain: from &lt;code&gt;olddomain.com&lt;/code&gt;, then again from &lt;code&gt;www.olddomain.com&lt;/code&gt;, both to the new domain. Google&#x27;s guide says to do this for all variants, even the ones you don&#x27;t use. One request covers both http and https of the same host.&lt;/p&gt;
+      &lt;p&gt;Then open the new domain&#x27;s property and submit the new sitemap under &lt;em&gt;Indexing&lt;/em&gt; → &lt;em&gt;Sitemaps&lt;/em&gt;.&lt;/p&gt;
+      &lt;p&gt;Bing used to have a Site Move tool. It&#x27;s gone from the current Bing Webmaster Tools, and Microsoft&#x27;s answer is that 301 redirects are enough. Submit the new sitemap in Bing Webmaster Tools, and use &lt;em&gt;Submit URLs&lt;/em&gt; (&lt;a href=&quot;https://www.bing.com/webmasters/help/URL-Submission-62f2860b&quot;&gt;Bing help&lt;/a&gt;) for your ten most important pages so they&#x27;re crawled first. Bing matters beyond Bing: Microsoft Copilot searches with it.&lt;/p&gt;
+
+      &lt;h2&gt;Step 6: change the address everywhere else&lt;/h2&gt;
+      &lt;p&gt;Redirects catch old links, but every link still costs a hop. Update the ones you control:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;your Google Business Profile and Bing Places website field;&lt;/li&gt;
+        &lt;li&gt;social media profiles and link-in-bio pages;&lt;/li&gt;
+        &lt;li&gt;directory listings, marketplaces and review sites;&lt;/li&gt;
+        &lt;li&gt;ads, QR codes you&#x27;re about to print, email signatures and invoice templates;&lt;/li&gt;
+        &lt;li&gt;payment, booking and newsletter tools that store your website address.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If a few sites link to you a lot, ask them to update the link. That&#x27;s the one request in this list worth sending.&lt;/p&gt;
+
+      &lt;h2&gt;Step 7: watch, and keep the old domain&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 220&quot; role=&quot;img&quot; aria-labelledby=&quot;move-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;move-title&quot;&gt;Timeline of a domain move: on day 0, switch on 301 redirects and use the Change of Address tool. Over the first weeks, Google replaces old URLs with new ones and rankings may fluctuate. At 180 days, the Change of Address request ends; keep the redirects. At one year and beyond, keep the redirects and keep renewing the old domain.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;220&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;line x1=&quot;40&quot; y1=&quot;110&quot; x2=&quot;610&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;circle cx=&quot;60&quot; cy=&quot;110&quot; r=&quot;5&quot; fill=&quot;var(--signal)&quot;/&gt;
+          &lt;circle cx=&quot;220&quot; cy=&quot;110&quot; r=&quot;5&quot; fill=&quot;var(--ink)&quot;/&gt;
+          &lt;circle cx=&quot;400&quot; cy=&quot;110&quot; r=&quot;5&quot; fill=&quot;var(--ink)&quot;/&gt;
+          &lt;circle cx=&quot;570&quot; cy=&quot;110&quot; r=&quot;5&quot; fill=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;60&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--signal)&quot;&gt;day 0&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;a few weeks&lt;/text&gt;
+          &lt;text x=&quot;400&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;180 days&lt;/text&gt;
+          &lt;text x=&quot;570&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;1 year +&lt;/text&gt;
+          &lt;text x=&quot;60&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;301s on&lt;/text&gt;
+          &lt;text x=&quot;60&quot; y=&quot;158&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;Change of&lt;/text&gt;
+          &lt;text x=&quot;60&quot; y=&quot;176&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;Address&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;new URLs replace&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;158&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;old in results;&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;176&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;rankings wobble&lt;/text&gt;
+          &lt;text x=&quot;400&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;Change of Address&lt;/text&gt;
+          &lt;text x=&quot;400&quot; y=&quot;158&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;ends; redirects&lt;/text&gt;
+          &lt;text x=&quot;400&quot; y=&quot;176&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;stay&lt;/text&gt;
+          &lt;text x=&quot;570&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;keep redirects&lt;/text&gt;
+          &lt;text x=&quot;570&quot; y=&quot;158&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;and renew the&lt;/text&gt;
+          &lt;text x=&quot;570&quot; y=&quot;176&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;old domain&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;Google says a small to medium site takes a few weeks for most pages to move, and larger sites longer. Rankings may go up and down in that time. That&#x27;s normal. A steady fall after a month is not, and usually means a redirect problem: run the test from step 4 again.&lt;/p&gt;
+      &lt;p&gt;What to look at, once a week:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Pages report, both properties.&lt;/strong&gt; Indexed pages on the old domain should go down, and on the new domain go up.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Performance report, new property.&lt;/strong&gt; Clicks and impressions should climb as the old property&#x27;s fall.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Pages report, &quot;Not found (404)&quot;.&lt;/strong&gt; Old URLs you forgot to map show up here. Add them to the map.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;&lt;strong&gt;How long to keep the redirects:&lt;/strong&gt; Google&#x27;s site-move guide says at least a year, and suggests keeping them for good. The Change of Address request itself lasts 180 days, so treat 180 days as the floor, not the finish. Old links in emails, forums and bookmarks never stop working on their own schedule.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Keep the old domain.&lt;/strong&gt; Google recommends paying for it for at least a year, so nobody else buys it and uses your old reputation. Domains cost little to renew. Set it to auto-renew and keep it as long as anything still links to it.&lt;/p&gt;
+
+      &lt;h2&gt;Mistakes that cost traffic&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Redirecting every old page to the new homepage.&lt;/strong&gt; Google treats them as missing pages.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Temporary (302) redirects.&lt;/strong&gt; They tell search engines the old address is coming back.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Redirect chains.&lt;/strong&gt; Old domain to new http to new https to new www: four hops. Send each old URL straight to its final address.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Blocking the old domain in robots.txt.&lt;/strong&gt; Google then can&#x27;t crawl the old pages, so it never sees the redirects.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Letting the old certificate or the old domain lapse.&lt;/strong&gt; Every old link breaks at once.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Moving domain, design and platform in one go.&lt;/strong&gt; If traffic falls, you won&#x27;t know why.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Leave email and design alone; change only the domain.&lt;/li&gt;
+        &lt;li&gt;List every old URL: sitemap, Search Console exports, analytics, files.&lt;/li&gt;
+        &lt;li&gt;Map each old URL to its closest new URL. No homepage dumps.&lt;/li&gt;
+        &lt;li&gt;Put the new site live: no noindex, new internal links, self canonicals, new sitemap.&lt;/li&gt;
+        &lt;li&gt;Verify both domains in Search Console, plus a property for each old variant, and add the new one to Bing.&lt;/li&gt;
+        &lt;li&gt;Switch on 301s for every version of the old domain. Keep its certificate valid.&lt;/li&gt;
+        &lt;li&gt;Test every row of the map with &lt;code&gt;curl&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Run Change of Address in Search Console, once for each old variant (www and non-www). Submit the new sitemap to Google and Bing.&lt;/li&gt;
+        &lt;li&gt;Update your business profiles, social profiles, listings and print.&lt;/li&gt;
+        &lt;li&gt;Check the Pages and Performance reports weekly for a couple of months.&lt;/li&gt;
+        &lt;li&gt;Keep the redirects and the old domain for at least a year. Longer is better.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes&quot;&gt;site move with URL changes&lt;/a&gt; guide, Google&#x27;s &lt;a href=&quot;https://support.google.com/webmasters/answer/9370220&quot;&gt;Change of Address tool&lt;/a&gt; help page, and Microsoft&#x27;s &lt;a href=&quot;https://techcommunity.microsoft.com/discussions/bing/domain-move-tool/2144750&quot;&gt;answer on the retired Bing Site Move tool&lt;/a&gt;. If you&#x27;re also cleaning up pages you don&#x27;t need any more, &lt;a href=&quot;/blog/find-and-remove-old-pages-from-google/&quot;&gt;here&#x27;s how to find and retire old pages&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>How to check what ChatGPT and Google&#x27;s AI say about your business, and fix a wrong answer</title>
     <link href="https://taktekbot.com/blog/check-what-ai-assistants-say-about-your-business/"/>
