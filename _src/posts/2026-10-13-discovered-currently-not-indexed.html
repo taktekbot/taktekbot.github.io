@@ -37,7 +37,7 @@ story: discovered-not-indexed
           <text x="300" y="209" fill="var(--muted)">Last crawl: a date</text>
         </svg>
       </figure>
-      <p>The two "not indexed" statuses look alike and mean different things. With "Discovered", Google hasn't read your page at all, so nothing on the page can be the reason yet. With "Crawled", Google read it and chose not to keep it. If you're unsure which one you have, open one of the example addresses in the report: an empty "Last crawl" means Discovered.</p>
+      <p>The two "not indexed" statuses look alike and mean different things. With "Discovered", Google hasn't read your page at all, so nothing on the page can be the reason yet. With "Crawled", Google read it and chose not to keep it. If you're unsure which one you have, click the inspect icon next to one of the example addresses in the report. That opens URL Inspection for the address: no date under "Last crawl" means Discovered.</p>
 
       <h2>First: do you need to do anything?</h2>
       <p>Often not. Splitt's own words: "Google will almost never index all content from a site. This isn't an error and not even necessarily a problem that needs looking into."</p>
@@ -79,9 +79,9 @@ story: discovered-not-indexed
 
       <h2>Check 4: is your server telling Google to slow down?</h2>
       <p>This is the cause Google's help page names. Google gives every site a crawl capacity limit, which it calls hostload. If your server answers slowly, or answers with server errors (5xx) or "too many requests" (429), Google lowers the limit and crawls less. New addresses wait their turn.</p>
-      <p>To check, open <em>Settings → Crawl stats</em> in Search Console. It only exists for a Domain property or a root-level URL-prefix property, so a property for a subfolder won't have it. Look at three things:</p>
+      <p>To check, open <em>Settings</em> in Search Console's left menu, find <em>Crawl stats</em> and open the report (or go straight to <a href="https://search.google.com/search-console/settings/crawl-stats">search.google.com/search-console/settings/crawl-stats</a> and pick your property). It only exists for a Domain property or a root-level URL-prefix property, so a property for a subfolder won't have it. Look at three things:</p>
       <ol>
-        <li><strong>Host status.</strong> Green is fine. Red means Google had trouble with robots.txt, DNS or connecting to your server; click it for the details.</li>
+        <li><strong>Host status.</strong> It has three states. No problems in the past 90 days: fine. A problem in the past 90 days but more than a week ago: look at the response table (point 3) to see whether it still happens. A problem in the last week: click it for the details on robots.txt, DNS and connecting to your server.</li>
         <li><strong>Average response time.</strong> Look for a climb that lines up with when pages started piling up in "Discovered".</li>
         <li><strong>By response.</strong> Any share of server errors (5xx) or 429s is worth chasing. The table counts requests, so a page that failed once and loaded once shows as 50% each.</li>
       </ol>
