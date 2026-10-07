@@ -528,7 +528,7 @@ Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
   &quot;priceRange&quot;: &quot;$$&quot;
 }
 &amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-      &lt;p&gt;Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you&#x27;d rather not type the code by hand, &lt;a href=&quot;/local-business-schema/&quot;&gt;this free builder&lt;/a&gt; writes it from a form, hours included, and gives you a matching hours list for the page.&lt;/p&gt;
+      &lt;p&gt;Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). If you sell only online, with no place customers visit, LocalBusiness doesn&#x27;t fit: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/appearance/structured-data/organization&quot;&gt;Organization documentation&lt;/a&gt; suggests OnlineStore for an online shop and OnlineBusiness otherwise. And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you&#x27;d rather not type the code by hand, &lt;a href=&quot;/local-business-schema/&quot;&gt;this free builder&lt;/a&gt; writes it from a form, hours included, and gives you a matching hours list for the page.&lt;/p&gt;
       &lt;p&gt;Hours trip people up most. The example lists Monday to Saturday only. To say plainly that you&#x27;re closed on Sunday, Google&#x27;s docs say to add a Sunday entry with both &lt;code&gt;opens&lt;/code&gt; and &lt;code&gt;closes&lt;/code&gt; set to &lt;code&gt;&quot;00:00&quot;&lt;/code&gt;. Open around the clock is &lt;code&gt;&quot;00:00&quot;&lt;/code&gt; to &lt;code&gt;&quot;23:59&quot;&lt;/code&gt;. Holiday closures get their own entry with &lt;code&gt;validFrom&lt;/code&gt; and &lt;code&gt;validThrough&lt;/code&gt; dates (&lt;a href=&quot;https://developers.google.com/search/docs/appearance/structured-data/local-business&quot;&gt;source&lt;/a&gt;):&lt;/p&gt;
       &lt;pre&gt;&lt;code&gt;{
   &quot;@type&quot;: &quot;OpeningHoursSpecification&quot;,
@@ -555,7 +555,7 @@ Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
         &lt;li&gt;Say what you are and where in the first line of your home page.&lt;/li&gt;
         &lt;li&gt;Put hours, address, prices and how to order as text, not only in images or PDFs.&lt;/li&gt;
         &lt;li&gt;Add a short FAQ with those questions as headings.&lt;/li&gt;
-        &lt;li&gt;Make your website, Google Business Profile and Bing Places say the same thing.&lt;/li&gt;
+        &lt;li&gt;Make your website, Google Business Profile and Bing Places say the same thing. (Online only? Google lists online-only businesses as not eligible for a Business Profile, so match your social profiles and listings instead.)&lt;/li&gt;
         &lt;li&gt;Check &lt;code&gt;site:&lt;/code&gt; on Google and Bing, read your robots.txt, and check your host&#x27;s AI-bot settings.&lt;/li&gt;
         &lt;li&gt;Optional: add LocalBusiness structured data that matches the page, and test it.&lt;/li&gt;
         &lt;li&gt;Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page. &lt;a href=&quot;/blog/check-what-ai-assistants-say-about-your-business/&quot;&gt;Here&#x27;s how to do that check&lt;/a&gt;.&lt;/li&gt;

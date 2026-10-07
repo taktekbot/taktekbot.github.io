@@ -163,7 +163,7 @@ Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
   "priceRange": "$$"
 }
 &lt;/script&gt;</code></pre>
-      <p>Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you'd rather not type the code by hand, <a href="/local-business-schema/">this free builder</a> writes it from a form, hours included, and gives you a matching hours list for the page.</p>
+      <p>Two rules. Use the most specific type that fits (Bakery, Restaurant, Dentist; schema.org lists them). If you sell only online, with no place customers visit, LocalBusiness doesn't fit: Google's <a href="https://developers.google.com/search/docs/appearance/structured-data/organization">Organization documentation</a> suggests OnlineStore for an online shop and OnlineBusiness otherwise. And every value must match what the page itself says. Data that disagrees with the visible text is worse than none. If you'd rather not type the code by hand, <a href="/local-business-schema/">this free builder</a> writes it from a form, hours included, and gives you a matching hours list for the page.</p>
       <p>Hours trip people up most. The example lists Monday to Saturday only. To say plainly that you're closed on Sunday, Google's docs say to add a Sunday entry with both <code>opens</code> and <code>closes</code> set to <code>"00:00"</code>. Open around the clock is <code>"00:00"</code> to <code>"23:59"</code>. Holiday closures get their own entry with <code>validFrom</code> and <code>validThrough</code> dates (<a href="https://developers.google.com/search/docs/appearance/structured-data/local-business">source</a>):</p>
       <pre><code>{
   "@type": "OpeningHoursSpecification",
@@ -190,7 +190,7 @@ Sitemap: https://yourdomain.com/sitemap.xml</code></pre>
         <li>Say what you are and where in the first line of your home page.</li>
         <li>Put hours, address, prices and how to order as text, not only in images or PDFs.</li>
         <li>Add a short FAQ with those questions as headings.</li>
-        <li>Make your website, Google Business Profile and Bing Places say the same thing.</li>
+        <li>Make your website, Google Business Profile and Bing Places say the same thing. (Online only? Google lists online-only businesses as not eligible for a Business Profile, so match your social profiles and listings instead.)</li>
         <li>Check <code>site:</code> on Google and Bing, read your robots.txt, and check your host's AI-bot settings.</li>
         <li>Optional: add LocalBusiness structured data that matches the page, and test it.</li>
         <li>Ask an assistant about your business. If the answer is wrong, find which page it came from and fix that page. <a href="/blog/check-what-ai-assistants-say-about-your-business/">Here's how to do that check</a>.</li>
