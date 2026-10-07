@@ -66,7 +66,7 @@ https://www.taktekbot.com -&gt; 301 https://taktekbot.com/</code></pre>
         <li><strong>Two lines with <code>200</code>:</strong> both names serve the full site. It works, but pick one and redirect the other to it, so search engines don't count two copies.</li>
         <li><strong>A <code>302</code> or <code>307</code>:</strong> it works, but it's a temporary redirect. Make it a 301 so search engines treat the move as permanent.</li>
       </ul>
-      <p>No terminal? Type each of the four addresses into Chrome's address bar by hand. Watch where you land and whether a warning page appears. Do it in a Guest window (click your profile picture, then Guest): Chrome remembers a click-through on the warning, so your usual window may skip a warning that a new visitor still gets. It takes longer and shows less, but it catches the same failures.</p>
+      <p>No terminal? Type each of the four addresses into Chrome's address bar by hand. Watch where you land and whether a warning page appears. Chrome hides <code>https://</code> and <code>www.</code> in the address bar, so right-click it and tick <em>Always show full URLs</em> first. Do it in a Guest window (click your profile picture, then Guest): Chrome remembers a click-through on the warning, so your usual window may skip a warning that a new visitor still gets. It takes longer and shows less, but it catches the same failures.</p>
 
       <h2>Step 2: get a certificate that covers every name</h2>
       <p>A certificate is the file that lets your server answer on <code>https://</code>. It names the addresses it's valid for. A common gap is a certificate for <code>www.example.com</code> only, while the bare <code>example.com</code> redirects over plain http.</p>
