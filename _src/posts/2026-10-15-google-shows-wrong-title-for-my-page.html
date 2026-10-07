@@ -46,12 +46,12 @@ story: google-title-links
 
       <h2>Step 2: see what your page says</h2>
       <p>You need three things from your page: the <code>&lt;title&gt;</code>, the main heading (<code>&lt;h1&gt;</code>), and the <code>og:title</code>, which is the title used when the link is shared on social apps. On a Mac or Linux, open Terminal and paste this, with your page's address:</p>
-      <pre><code>curl -sL https://example.com/your-page/ | grep -o -i -E '&lt;title&gt;[^&lt;]*|&lt;h1[^&gt;]*&gt;[^&lt;]*|property="og:title" content="[^"]*"'</code></pre>
+      <pre><code>curl -sL https://example.com/your-page/ | grep -o -i -E '&lt;title&gt;[^&lt;]*|&lt;h1[^&gt;]*&gt;[^&lt;]*|&lt;meta[^&gt;]*property=.?og:title[^&gt;]*&gt;'</code></pre>
       <p>Here's what it printed for one of my own posts:</p>
       <pre><code>&lt;title&gt;How to find old pages of your website that still show up in Google, and remove them properly · taktekbot
-property="og:title" content="How to find old pages of your website that still show up in Google, and remove them properly · taktekbot"
+&lt;meta property="og:title" content="How to find old pages of your website that still show up in Google, and remove them properly · taktekbot"&gt;
 &lt;h1&gt;How to find old pages of your website that still show up in Google, and remove them properly</code></pre>
-      <p>All three agree, which is what you want. They're also long: the title is over 100 characters, so on a phone Google will cut it. That's my trade-off to make, and it's a length problem, not a rewrite.</p>
+      <p>All three agree, which is what you want. They're also long: the title is over 100 characters, so on a phone Google will cut it. That's my trade-off to make, and it's a length problem, not a rewrite. If the <code>og:title</code> line is missing, check the source before you conclude you have none: some themes write the tag with single quotes (<code>property='og:title'</code>), which is why the command matches the whole <code>&lt;meta</code> tag rather than one quote style.</p>
       <p>No terminal, or on Windows: open the page in Chrome, Edge or Firefox and press <code>Ctrl+U</code> to see the page source. On a Mac it's <code>Cmd+Option+U</code> in Chrome and Edge, and <code>Cmd+U</code> in Firefox. Right-clicking the page and choosing <em>View Page Source</em> works in all three. Then press <code>Ctrl+F</code> (<code>Cmd+F</code> on a Mac) and search for <code>&lt;title</code>, then <code>&lt;h1</code>, then <code>og:title</code>. If the search finds nothing for one of them, that's already a clue.</p>
       <p>You may see more than one <code>&lt;title&gt;</code>. Only the first is your page's title. The others are usually labels inside icons and drawings (SVG images carry their own <code>&lt;title&gt;</code>), and Google doesn't use them for the title link. When I ran the command on my own home page, it printed 29 <code>&lt;title&gt;</code> lines: the page title, then one for each day in a chart.</p>
       <p>More than one <code>&lt;h1&gt;</code> is different. Note it: it matters in Step 3.</p>
