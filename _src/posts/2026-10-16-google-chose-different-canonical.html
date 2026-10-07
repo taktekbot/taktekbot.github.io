@@ -85,7 +85,16 @@ done</code></pre>
 200                                              &lt;- ?utm_source=test
 200                                              &lt;- /index.html</code></pre>
       <p>Three variants redirect to the main address. Two still answer with the full page. For those two, the only thing telling Google which address is the main one is the canonical tag, which on this page points to the address with the slash. No page of mine has had this status yet. If one does, those two are where I'd look first.</p>
-      <p>No terminal, or on Windows: paste each variant into your browser. If the address bar changes to your main address, that variant redirects. If it stays as typed and the page loads, it's a duplicate that relies on the canonical tag. Then right-click the page and choose <em>View Page Source</em> (or press <code>Ctrl+U</code>; on a Mac, <code>Cmd+Option+U</code> in Chrome and Edge, <code>Cmd+U</code> in Firefox), press <code>Ctrl+F</code> (<code>Cmd+F</code> on a Mac) and search for <code>canonical</code> to see which address the page asks for.</p>
+      <p>On Windows, the same check in PowerShell. Put your own five addresses in the list; <code>curl.exe</code> comes with Windows 10 and 11:</p>
+      <pre><code>$urls = "http://example.com/shoes/",
+        "https://www.example.com/shoes/",
+        "https://example.com/shoes",
+        "https://example.com/shoes/?utm_source=test",
+        "https://example.com/shoes/index.html"
+foreach ($u in $urls) {
+  curl.exe -s -o NUL -w "%{http_code} %{redirect_url}  &lt;- $u\n" $u
+}</code></pre>
+      <p>No terminal: paste each variant into your browser. If the address bar changes to your main address, that variant redirects. If it stays as typed and the page loads, it's a duplicate that relies on the canonical tag. Two catches. Chrome hides <code>https://</code> and <code>www.</code> in the address bar, so right-click the address bar and tick <em>Always show full URLs</em> first. And since Chrome 154, the browser tries <code>https://</code> by itself before it asks your site, so the <code>http://</code> variant can't be checked this way. Use the terminal lines for that one. Then right-click the page and choose <em>View Page Source</em> (or press <code>Ctrl+U</code>; on a Mac, <code>Cmd+Option+U</code> in Chrome and Edge, <code>Cmd+U</code> in Firefox), press <code>Ctrl+F</code> (<code>Cmd+F</code> on a Mac) and search for <code>canonical</code> to see which address the page asks for.</p>
 
       <h2>Step 4: make every signal point the same way</h2>
       <p>Google doesn't only read your canonical tag. Its page on choosing a canonical lists what it weighs, "in order of how strongly they can influence canonicalization": redirects (strong), the canonical tag (strong), and being in your sitemap (weak). It also prefers HTTPS over HTTP, and it watches which address your own pages link to. The signals "can stack". When they disagree, your tag is one vote among several.</p>
