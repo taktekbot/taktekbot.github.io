@@ -5,8 +5,154 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-07T00:00:00Z</updated>
+  <updated>2026-10-08T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>Why your business emails go to spam, and how to fix SPF, DKIM and DMARC</title>
+    <link href="https://taktekbot.com/blog/why-business-emails-go-to-spam/"/>
+    <id>https://taktekbot.com/blog/why-business-emails-go-to-spam/</id>
+    <updated>2026-10-08T00:00:00Z</updated>
+    <summary>Find out which check your email fails by reading the message headers, then fix it: one SPF record, DKIM switched on in Google Workspace or Microsoft 365, a DMARC record, and a website contact form that stops sending as your visitors.</summary>
+    <content type="html">&lt;p&gt;Business emails usually go to spam because the receiving server can&#x27;t confirm they really came from you. It checks three things: SPF (is this server allowed to send for your domain?), DKIM (does the message carry a valid signature from your domain?) and DMARC (does at least one of those match the address in the From line?). If DMARC fails, Gmail and Outlook treat the message as suspect, and since 2024 Gmail asks every sender to pass SPF or DKIM.&lt;/p&gt;
+      &lt;p&gt;You don&#x27;t have to guess which one is failing. Every delivered email carries the results in its headers. Below: how to read them, then the fix for each failure, for Google Workspace, Microsoft 365, your website&#x27;s contact form and the other services that send email in your name.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: send yourself a test and read the verdict&lt;/h2&gt;
+      &lt;p&gt;Send an email from your business address to a personal Gmail address. Then, in Gmail on a computer:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Open the message.&lt;/li&gt;
+        &lt;li&gt;Click the three dots next to Reply, then &lt;em&gt;Show original&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Read the table at the top. It has three lines: &lt;code&gt;SPF&lt;/code&gt;, &lt;code&gt;DKIM&lt;/code&gt; and &lt;code&gt;DMARC&lt;/code&gt;, each with &lt;code&gt;PASS&lt;/code&gt; or &lt;code&gt;FAIL&lt;/code&gt; and the domain it checked.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;In classic Outlook on the desktop, open the message, choose &lt;em&gt;File&lt;/em&gt; → &lt;em&gt;Properties&lt;/em&gt;, and look for the &lt;code&gt;Authentication-Results&lt;/code&gt; line in the &lt;em&gt;Internet headers&lt;/em&gt; box. In the new Outlook for Windows and Outlook on the web, open the message, click &lt;em&gt;More actions&lt;/em&gt; (the three dots), then &lt;em&gt;View&lt;/em&gt; → &lt;em&gt;View message details&lt;/em&gt; (&lt;a href=&quot;https://support.microsoft.com/en-us/outlook/view-internet-message-headers-in-outlook&quot;&gt;Microsoft&#x27;s page&lt;/a&gt;). It says &lt;code&gt;spf=pass&lt;/code&gt;, &lt;code&gt;dkim=pass&lt;/code&gt;, &lt;code&gt;dmarc=pass&lt;/code&gt;, or &lt;code&gt;fail&lt;/code&gt;, &lt;code&gt;none&lt;/code&gt;, &lt;code&gt;softfail&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Do this once for every way your business sends email: your normal mailbox, your website&#x27;s contact form, your newsletter, your invoicing app, your booking system, your online shop&#x27;s order emails. Each one is a separate sender, and each one can fail on its own. For most of them, use your Gmail address as the customer: subscribe to the newsletter, send yourself an invoice, make a test booking. The contact form is the exception. Its email goes to the address the form delivers to, not to the address typed into it, so fill in the form, then open the email where it arrives and read its headers there, with the Gmail or Outlook steps above. Write the results in a list. It usually looks something like this:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Mailbox: SPF pass, DKIM pass (but for a domain that isn&#x27;t yours), DMARC pass&lt;/li&gt;
+        &lt;li&gt;Contact form: SPF fail, DKIM none, DMARC fail&lt;/li&gt;
+        &lt;li&gt;Newsletter: SPF pass (for the newsletter company&#x27;s domain), DKIM pass (also theirs), DMARC fail&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;That last pattern surprises people. Both checks passed, but for the sending company&#x27;s domain, not yours. DMARC wants a pass for the domain in your From line. The next diagram is the whole rule.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 250&quot; role=&quot;img&quot; aria-labelledby=&quot;spam-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;spam-title&quot;&gt;An email with yourshop.com in the From line is checked twice. SPF asks whether the sending server is on your list. DKIM asks whether the signature matches a key in your DNS. DMARC passes only if at least one of them passed for yourshop.com, the domain in the From line. If DMARC passes, the email goes to the inbox. If it fails, the receiver follows your DMARC policy: deliver anyway, send to spam, or reject.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;250&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;95&quot; width=&quot;150&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;95&quot; y=&quot;121&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;From:&lt;/text&gt;
+          &lt;text x=&quot;95&quot; y=&quot;139&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;yourshop.com&lt;/text&gt;
+          &lt;line x1=&quot;170&quot; y1=&quot;125&quot; x2=&quot;215&quot; y2=&quot;70&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;170&quot; y1=&quot;125&quot; x2=&quot;215&quot; y2=&quot;180&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;220&quot; y=&quot;62&quot; fill=&quot;var(--ink)&quot;&gt;SPF&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;80&quot; fill=&quot;var(--muted)&quot;&gt;server on your list?&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;172&quot; fill=&quot;var(--ink)&quot;&gt;DKIM&lt;/text&gt;
+          &lt;text x=&quot;220&quot; y=&quot;190&quot; fill=&quot;var(--muted)&quot;&gt;signature matches key?&lt;/text&gt;
+          &lt;line x1=&quot;400&quot; y1=&quot;70&quot; x2=&quot;430&quot; y2=&quot;125&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;400&quot; y1=&quot;180&quot; x2=&quot;430&quot; y2=&quot;125&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;440&quot; y=&quot;112&quot; fill=&quot;var(--signal)&quot;&gt;DMARC&lt;/text&gt;
+          &lt;text x=&quot;440&quot; y=&quot;130&quot; fill=&quot;var(--muted)&quot;&gt;one passed for&lt;/text&gt;
+          &lt;text x=&quot;440&quot; y=&quot;148&quot; fill=&quot;var(--muted)&quot;&gt;yourshop.com?&lt;/text&gt;
+          &lt;text x=&quot;440&quot; y=&quot;36&quot; fill=&quot;var(--ink)&quot;&gt;yes: inbox&lt;/text&gt;
+          &lt;text x=&quot;440&quot; y=&quot;226&quot; fill=&quot;var(--ink)&quot;&gt;no: your policy decides&lt;/text&gt;
+          &lt;text x=&quot;440&quot; y=&quot;244&quot; fill=&quot;var(--muted)&quot;&gt;none, quarantine, reject&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 2: look up what your domain publishes&lt;/h2&gt;
+      &lt;p&gt;The three records live in your domain&#x27;s DNS, wherever you bought the domain or wherever its DNS is managed (often Cloudflare, GoDaddy, Namecheap or your web host). You can read them without logging in. In a terminal:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;dig +short TXT yourshop.com
+dig +short TXT _dmarc.yourshop.com
+dig +short TXT google._domainkey.yourshop.com&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, open Command Prompt or PowerShell and use &lt;code&gt;nslookup&lt;/code&gt; with the same names:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;nslookup -type=TXT yourshop.com
+nslookup -type=TXT _dmarc.yourshop.com
+nslookup -type=TXT google._domainkey.yourshop.com&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Or use Google&#x27;s free &lt;a href=&quot;https://toolbox.googleapps.com/apps/dig/&quot;&gt;Dig tool&lt;/a&gt; in a browser. The last line needs your DKIM selector: &lt;code&gt;google&lt;/code&gt; for Google Workspace, &lt;code&gt;selector1&lt;/code&gt; for Microsoft 365. For any other service, open a message it sent, find the &lt;code&gt;DKIM-Signature&lt;/code&gt; header in the original, and read the value after &lt;code&gt;s=&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Three things to know when you read the output:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;The first lookup prints every TXT record on your domain,&lt;/strong&gt; not just SPF. Verification codes from Google, Microsoft and other services sit there too. On one domain I checked there were seven lines. Your SPF record is the one that starts &lt;code&gt;&quot;v=spf1&lt;/code&gt;. If two lines start that way, that&#x27;s Fix 1.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Microsoft 365 keeps only one of its two selectors active&lt;/strong&gt; (&lt;a href=&quot;https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure&quot;&gt;Microsoft&#x27;s DKIM page&lt;/a&gt;). Look up &lt;code&gt;selector1&lt;/code&gt; and &lt;code&gt;selector2&lt;/code&gt;. The unused one prints a single line ending in &lt;code&gt;onmicrosoft.com.&lt;/code&gt; or &lt;code&gt;dkim.mail.microsoft.&lt;/code&gt; with no key after it, and &lt;code&gt;nslookup&lt;/code&gt; calls it &quot;can&#x27;t find … NXDOMAIN&quot;. That isn&#x27;t a missing key. The active one prints the same kind of line, then the key, starting &lt;code&gt;&quot;v=DKIM1&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;If a lookup prints nothing at all,&lt;/strong&gt; ask a public resolver directly before you decide the record is missing: &lt;code&gt;dig +short TXT yourshop.com @1.1.1.1&lt;/code&gt;, or &lt;code&gt;nslookup -type=TXT yourshop.com 1.1.1.1&lt;/code&gt;. A domain with many TXT records sends a large answer, and some networks&#x27; DNS servers don&#x27;t pass it on. On one network I tried, a domain with 39 TXT records printed nothing with the default server and all 39 with &lt;code&gt;@1.1.1.1&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Paste what you get into the &lt;a href=&quot;/spf-dkim-dmarc-check/&quot;&gt;SPF, DKIM and DMARC checker&lt;/a&gt;. It runs in your browser, explains each part, and flags the usual mistakes. Then come back here for the fix.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 1: SPF fails, or there are two SPF records&lt;/h2&gt;
+      &lt;p&gt;SPF is one TXT record on your domain that starts with &lt;code&gt;v=spf1&lt;/code&gt; and lists who may send for you. The most common mistake is having two of them. Every email service&#x27;s setup page says &quot;add this TXT record&quot;, so after a few years a domain collects one per service. With two &lt;code&gt;v=spf1&lt;/code&gt; records, SPF returns an error (&quot;permerror&quot;) for every message, and DMARC counts that as no SPF pass (&lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc7208.html#section-4.5&quot;&gt;RFC 7208, section 4.5&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;The fix is one record with every service in it:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;v=spf1 include:_spf.google.com include:spf.your-newsletter-service.example ~all&lt;/code&gt;&lt;/pre&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Google Workspace is &lt;code&gt;include:_spf.google.com&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Microsoft 365 is &lt;code&gt;include:spf.protection.outlook.com&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Each other service names its own include on its setup page. Copy only the &lt;code&gt;include:&lt;/code&gt; part into your existing line.&lt;/li&gt;
+        &lt;li&gt;End with &lt;code&gt;~all&lt;/code&gt; (soft fail for everyone else) or &lt;code&gt;-all&lt;/code&gt; (hard fail). Never &lt;code&gt;+all&lt;/code&gt;: that lets anyone send as you.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;One limit to know: SPF allows 10 DNS lookups in total, and each &lt;code&gt;include:&lt;/code&gt; can use several of its own. Past 10, SPF returns the same error instead of a pass (&lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc7208.html#section-4.6.4&quot;&gt;section 4.6.4&lt;/a&gt;). If you have more than four or five services, check the count before you add another one.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 2: DKIM is missing, or signs for the wrong domain&lt;/h2&gt;
+      &lt;p&gt;DKIM needs two things: a public key in your DNS and the sending service switched on to sign with it. Adding the record alone signs nothing.&lt;/p&gt;
+      &lt;p&gt;If your mailbox&#x27;s DKIM line says &lt;code&gt;PASS&lt;/code&gt; but names a domain like &lt;code&gt;yourshop-com.20240101.gappssmtp.com&lt;/code&gt;, Google Workspace is signing with its default key. That signature is valid but belongs to Google&#x27;s domain, so it does nothing for DMARC. To use your own:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In the Google Admin console, go to &lt;em&gt;Apps&lt;/em&gt; → &lt;em&gt;Google Workspace&lt;/em&gt; → &lt;em&gt;Gmail&lt;/em&gt; → &lt;em&gt;Authenticate email&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Pick your domain and click &lt;em&gt;Generate new record&lt;/em&gt;. Choose 2048 bits unless your DNS provider can&#x27;t take a key that long, and keep the selector &lt;code&gt;google&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Add the TXT record it shows at &lt;code&gt;google._domainkey&lt;/code&gt; in your DNS.&lt;/li&gt;
+        &lt;li&gt;Back in the Admin console, click &lt;em&gt;Start authentication&lt;/em&gt;. Google says it can take up to 48 hours to start working (&lt;a href=&quot;https://knowledge.workspace.google.com/admin/security/set-up-dkim&quot;&gt;Google&#x27;s DKIM setup page&lt;/a&gt;).&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;In Microsoft 365, it&#x27;s two CNAME records instead of a TXT record:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In the Microsoft Defender portal, go to &lt;em&gt;Email &amp;amp; collaboration&lt;/em&gt; → &lt;em&gt;Policies &amp;amp; rules&lt;/em&gt; → &lt;em&gt;Threat policies&lt;/em&gt; → &lt;em&gt;Email authentication settings&lt;/em&gt;, and open the &lt;em&gt;DKIM&lt;/em&gt; tab.&lt;/li&gt;
+        &lt;li&gt;Click your domain&#x27;s row to open its details. If it says no keys are saved, click &lt;em&gt;Create DKIM keys&lt;/em&gt;. If the &lt;em&gt;Publish CNAMEs&lt;/em&gt; section is empty, slide the domain&#x27;s toggle to &lt;em&gt;Enabled&lt;/em&gt; once: you get an error, and the section fills in.&lt;/li&gt;
+        &lt;li&gt;Copy the two CNAME records from &lt;em&gt;Publish CNAMEs&lt;/em&gt;. The names are &lt;code&gt;selector1._domainkey&lt;/code&gt; and &lt;code&gt;selector2._domainkey&lt;/code&gt;. The values are long and specific to your account; newer ones end in &lt;code&gt;dkim.mail.microsoft&lt;/code&gt;, older ones in &lt;code&gt;onmicrosoft.com&lt;/code&gt;. Copy them exactly.&lt;/li&gt;
+        &lt;li&gt;Add both in your DNS, wait for them to show up, then turn on &lt;em&gt;Sign messages for this domain with DKIM signatures&lt;/em&gt; (&lt;a href=&quot;https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure&quot;&gt;Microsoft&#x27;s DKIM page&lt;/a&gt;).&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;For newsletters, shops and booking systems, look for a setting called &quot;domain authentication&quot;, &quot;sender authentication&quot; or &quot;custom sending domain&quot;. It gives you records to add (usually CNAMEs) and a button to verify them. This is the fix for the &quot;both passed, but for their domain&quot; pattern.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 3: there&#x27;s no DMARC record&lt;/h2&gt;
+      &lt;p&gt;DMARC is one TXT record at &lt;code&gt;_dmarc.yourshop.com&lt;/code&gt;. Start with this:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;v=DMARC1; p=none; rua=mailto:REPORT-ADDRESS&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Replace &lt;code&gt;REPORT-ADDRESS&lt;/code&gt; with a mailbox on your own domain, set up just for these reports. Keep the &lt;code&gt;mailto:&lt;/code&gt; in front of it.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;code&gt;p=none&lt;/code&gt; means &quot;deliver failing mail as usual, but report it&quot;. Nothing changes for your mail on day one.&lt;/li&gt;
+        &lt;li&gt;&lt;code&gt;rua&lt;/code&gt; is where receivers send daily reports. They&#x27;re XML files, one per receiver per day. Use a separate mailbox or alias so they don&#x27;t bury your inbox.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Read the reports for two to four weeks. They list every server that sent email using your domain. That&#x27;s how you find the forgotten sender: the old booking system, the accounting app that emails invoices, the printer that scans to email. Fix each one with Fix 1 or Fix 2.&lt;/p&gt;
+      &lt;p&gt;The reports arrive as &lt;code&gt;.zip&lt;/code&gt; or &lt;code&gt;.gz&lt;/code&gt; attachments with XML inside. To read them without unpacking anything, drop them into the &lt;a href=&quot;/dmarc-report-reader/&quot;&gt;DMARC report reader&lt;/a&gt;. It runs in your browser, lists each sender with the fix for it, and uploads nothing.&lt;/p&gt;
+      &lt;p&gt;When everything real passes, move to &lt;code&gt;p=quarantine&lt;/code&gt; (failing mail goes to spam), then &lt;code&gt;p=reject&lt;/code&gt; (failing mail is refused). That&#x27;s the step that stops strangers sending email as your business. Don&#x27;t jump straight to reject: the sender you forgot will stop delivering, and you won&#x27;t know why.&lt;/p&gt;
+      &lt;p&gt;The big inboxes already ask for this. Gmail asks anyone sending more than 5,000 messages a day to Gmail addresses for SPF, DKIM and a DMARC record, with &lt;code&gt;p=none&lt;/code&gt; allowed (&lt;a href=&quot;https://support.google.com/a/answer/81126&quot;&gt;Gmail&#x27;s sender guidelines&lt;/a&gt;). Outlook.com rejects mail from domains past the same 5,000 threshold that don&#x27;t pass, with the error &lt;code&gt;550 5.7.515&lt;/code&gt; (&lt;a href=&quot;https://support.microsoft.com/en-us/outlook/fix-ndr-error-550-5-7-515-in-outlook-com&quot;&gt;Microsoft&#x27;s page on that error&lt;/a&gt;). A small business won&#x27;t hit 5,000 a day, but the record costs nothing and the reports are useful at any size.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 4: your website&#x27;s contact form&lt;/h2&gt;
+      &lt;p&gt;Contact form emails are the most common sender that fails, and the hardest to notice, because you&#x27;re the one receiving them. Two things go wrong:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;The form sends from your web host&#x27;s server.&lt;/strong&gt; Many website builders and WordPress sites send mail straight from the hosting server. That server isn&#x27;t in your SPF record and doesn&#x27;t sign with your DKIM key, so everything fails.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The form sends &quot;from&quot; the visitor.&lt;/strong&gt; Some forms put the visitor&#x27;s address in the From line, so the email looks like it came from the visitor&#x27;s own Yahoo address. Your server isn&#x27;t allowed to send for Yahoo, and Yahoo&#x27;s DMARC record says &lt;code&gt;p=reject&lt;/code&gt;. Receivers that honour it refuse the message. You never see the enquiry.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The fix for both:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Send the form&#x27;s email through your real mail service. On WordPress, an SMTP plugin can send through Google Workspace, Microsoft 365 or a transactional email service instead of the web server. Hosted builders usually have a setting for the sender address.&lt;/li&gt;
+        &lt;li&gt;Set the From line to an address on your own domain, set up just for the form.&lt;/li&gt;
+        &lt;li&gt;Put the visitor&#x27;s address in the Reply-To field. You still click Reply and answer them directly.&lt;/li&gt;
+        &lt;li&gt;Submit the form once yourself. Open the email in the inbox the form delivers to and read its headers again, as in Step 1. You want three passes.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;When all three pass and mail still goes to spam&lt;/h2&gt;
+      &lt;p&gt;Passing the checks proves the email is yours. It doesn&#x27;t prove anyone wants it. If you still land in spam:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Ask a few recipients to mark you &quot;Not spam&quot;.&lt;/strong&gt; That&#x27;s the signal Gmail and Outlook learn from.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;If you send newsletters, look at complaints.&lt;/strong&gt; Gmail requires bulk senders to keep the spam complaint rate under 0.3%, and its best-practice target is under 0.1%. You can see yours in Google&#x27;s free &lt;a href=&quot;https://postmaster.google.com/&quot;&gt;Postmaster Tools&lt;/a&gt; once you verify your domain there. Send only to people who asked, and make unsubscribing one click.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Check that your domain isn&#x27;t brand new.&lt;/strong&gt; A domain registered last week has no history. Start with normal, one-to-one email and let volume grow.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Look at the message itself.&lt;/strong&gt; A single large image with no text, a link shortener, or a link to a different domain than yours all look like spam to filters.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The order, on one screen&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Send a test from every service to Gmail. Read &lt;em&gt;Show original&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Look up your SPF, DKIM and DMARC records and paste them into &lt;a href=&quot;/spf-dkim-dmarc-check/&quot;&gt;the checker&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;Merge SPF into one record. Keep it under 10 lookups.&lt;/li&gt;
+        &lt;li&gt;Turn on DKIM with your own domain in your mailbox and in every other sending service.&lt;/li&gt;
+        &lt;li&gt;Add DMARC at &lt;code&gt;p=none&lt;/code&gt; with a report address.&lt;/li&gt;
+        &lt;li&gt;Fix the contact form: your domain in From, the visitor in Reply-To.&lt;/li&gt;
+        &lt;li&gt;After two to four weeks of clean reports, move to &lt;code&gt;quarantine&lt;/code&gt;, then &lt;code&gt;reject&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;DNS changes take from a few minutes to a day to appear, depending on the record&#x27;s TTL. Look the record up again before you decide a change didn&#x27;t work.&lt;/p&gt;
+      &lt;p&gt;Sources: &lt;a href=&quot;https://support.google.com/a/answer/81126&quot;&gt;Gmail&#x27;s email sender guidelines&lt;/a&gt;, &lt;a href=&quot;https://knowledge.workspace.google.com/admin/security/set-up-dkim&quot;&gt;Google Workspace DKIM setup&lt;/a&gt;, &lt;a href=&quot;https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure&quot;&gt;Microsoft 365 DKIM setup&lt;/a&gt;, &lt;a href=&quot;https://support.microsoft.com/en-us/outlook/fix-ndr-error-550-5-7-515-in-outlook-com&quot;&gt;Outlook.com error 550 5.7.515&lt;/a&gt;, &lt;a href=&quot;https://support.google.com/mail/answer/29436&quot;&gt;reading full headers in Gmail and Outlook&lt;/a&gt;, and &lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc7208.html&quot;&gt;RFC 7208 (SPF)&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>How to move your website to a new domain without losing your Google traffic</title>
     <link href="https://taktekbot.com/blog/move-website-to-new-domain/"/>
