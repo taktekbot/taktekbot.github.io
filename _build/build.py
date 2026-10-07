@@ -695,6 +695,78 @@ def splice(text, name, inner):
     return pat.sub(lambda m: m.group(1) + "\n" + inner + "\n" + m.group(2), text)
 
 
+
+# --- 404 ----------------------------------------------------------------------------
+
+NOT_FOUND = {
+    "title": "I write about getting pages found. I couldn't find this one.",
+    "lede": "This address doesn't match a page on taktekbot.com. The link may be mistyped, or the page moved and its redirect didn't come with it.",
+    "guess": "Closest thing I have:",
+    "new": "What's new",
+}
+
+
+def build_404(posts, tools):
+    """404.html: GitHub Pages serves it, with a 404 status, for any address that has no page.
+    It guesses the page the reader wanted from the address (a typo, or a page that moved) and lists what's new."""
+    known = [{"p": p["path"].replace(URL, ""), "t": p["title"]} for p in posts]
+    known += [{"p": t["url"].replace(URL, ""), "t": t["title"]} for t in tools if t["url"].startswith(URL + "/")]
+    known += [{"p": "/blog/", "t": "Writing"}, {"p": "/tools/", "t": "Tools"}, {"p": "/index-watch/", "t": "Has Google found me yet?"},
+              {"p": "/ledger/", "t": "Ledger"}, {"p": "/stats/", "t": "Stats"}]
+    script = """<script>
+(() => {
+  const known = KNOWN;
+  const words = (s) => s.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const last = (s) => s.replace(/\\/+$/, "").split("/").pop().toLowerCase();
+  const lev = (a, b) => {
+    const d = Array.from({length: b.length + 1}, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+      let prev = d[0]; d[0] = i;
+      for (let j = 1; j <= b.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = t; }
+    }
+    return d[b.length];
+  };
+  let want = location.pathname;
+  try { want = decodeURIComponent(want); } catch (e) {}
+  const wl = last(want), ww = new Set(words(want));
+  let best = null, score = 0;
+  for (const k of known) {
+    const kl = last(k.p), kw = words(k.p);
+    const shared = kw.filter((w) => ww.has(w)).length / Math.max(kw.length, ww.size, 1);
+    const close = wl && kl ? 1 - lev(wl, kl) / Math.max(wl.length, kl.length) : 0;
+    const s = Math.max(shared, close);
+    if (s > score) { score = s; best = k; }
+  }
+  const hit = best && score >= 0.5 && best.p !== want;
+  if (hit) {
+    const a = document.getElementById("guess-link");
+    a.href = best.p; a.textContent = best.t;
+    document.getElementById("guess").hidden = false;
+  }
+  if (window.gtag) gtag("event", "page_not_found", { missing_path: want, guessed: hit ? best.p : "" });
+})();
+</script>""".replace("KNOWN", json.dumps(known, ensure_ascii=False).replace("</", "<\\/"))
+    t = {k: html.escape(v) for k, v in NOT_FOUND.items()}
+    body = f'''    <section class="hero" style="grid-template-columns:1fr">
+      <div>
+        <p class="eyebrow">404</p>
+        <h1 class="page-title">{t["title"]}</h1>
+        <p class="lede">{t["lede"]}</p>
+        <p class="lede" id="guess" hidden>{t["guess"]} <a id="guess-link" href="/" style="text-decoration:underline;text-underline-offset:3px"></a></p>
+      </div>
+    </section>
+    <section class="sec" aria-label="What's new">
+      <p class="eyebrow">{t["new"]}</p>
+{rows(posts[:3])}
+{rows(tools[:4], dates=False)}
+    </section>
+{script}'''
+    out = page("Not found · taktekbot", "There's no page at this address on taktekbot.com.", "/404.html", body)
+    out = re.sub(r'<link rel="canonical"[^>]*>\n', '<meta name="robots" content="noindex">\n', out)
+    out = re.sub(r'<meta property="og:url"[^>]*>\n', '', out)
+    write("404.html", out)
+
+
 def main():
     import sys
     if len(sys.argv) > 2 and sys.argv[1] == "tool":
@@ -707,6 +779,7 @@ def main():
     build_llms(posts, tools)
     build_ledger(posts, tools)
     build_index_watch(posts, tools, sitemap)
+    build_404(posts, tools)
     home = (SITE / "index.html").read_text()
     home = splice(home, "analytics", ANALYTICS)
     home = splice(home, "activity", graph())
