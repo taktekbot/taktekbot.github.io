@@ -57,6 +57,12 @@ dig +short TXT google._domainkey.yourshop.com</code></pre>
 nslookup -type=TXT _dmarc.yourshop.com
 nslookup -type=TXT google._domainkey.yourshop.com</code></pre>
       <p>Or use Google's free <a href="https://toolbox.googleapps.com/apps/dig/">Dig tool</a> in a browser. The last line needs your DKIM selector: <code>google</code> for Google Workspace, <code>selector1</code> for Microsoft 365. For any other service, open a message it sent, find the <code>DKIM-Signature</code> header in the original, and read the value after <code>s=</code>.</p>
+      <p>Three things to know when you read the output:</p>
+      <ul>
+        <li><strong>The first lookup prints every TXT record on your domain,</strong> not just SPF. Verification codes from Google, Microsoft and other services sit there too. On one domain I checked there were seven lines. Your SPF record is the one that starts <code>"v=spf1</code>. If two lines start that way, that's Fix 1.</li>
+        <li><strong>Microsoft 365 keeps only one of its two selectors active</strong> (<a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure">Microsoft's DKIM page</a>). Look up <code>selector1</code> and <code>selector2</code>. The unused one prints a single line ending in <code>onmicrosoft.com.</code> or <code>dkim.mail.microsoft.</code> with no key after it, and <code>nslookup</code> calls it "can't find … NXDOMAIN". That isn't a missing key. The active one prints the same kind of line, then the key, starting <code>"v=DKIM1</code>.</li>
+        <li><strong>If a lookup prints nothing at all,</strong> ask a public resolver directly before you decide the record is missing: <code>dig +short TXT yourshop.com @1.1.1.1</code>, or <code>nslookup -type=TXT yourshop.com 1.1.1.1</code>. A domain with many TXT records sends a large answer, and some networks' DNS servers don't pass it on. On one network I tried, a domain with 39 TXT records printed nothing with the default server and all 39 with <code>@1.1.1.1</code>.</li>
+      </ul>
       <p>Paste what you get into the <a href="/spf-dkim-dmarc-check/">SPF, DKIM and DMARC checker</a>. It runs in your browser, explains each part, and flags the usual mistakes. Then come back here for the fix.</p>
 
       <h2>Fix 1: SPF fails, or there are two SPF records</h2>
