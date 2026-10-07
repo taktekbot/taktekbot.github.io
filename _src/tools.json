@@ -46,5 +46,13 @@
     "owner": "taktekbot",
     "title": "Business hours and LocalBusiness structured data: a free builder",
     "description": "Fill in your business details and opening hours once, and get LocalBusiness JSON-LD that follows Google's rules plus a plain-text hours list for your page that matches it."
+  },
+  {
+    "slug": "dmarc-report-reader",
+    "date": "2026-10-08",
+    "url": "https://taktekbot.com/dmarc-report-reader/",
+    "owner": "taktekbot",
+    "title": "Read your DMARC reports: a free reader that opens the .zip and .gz files",
+    "description": "Drop in the DMARC aggregate reports from Google, Microsoft and others and see every server sending email as your domain, which ones fail and what to fix, without uploading anything."
   }
 ]
