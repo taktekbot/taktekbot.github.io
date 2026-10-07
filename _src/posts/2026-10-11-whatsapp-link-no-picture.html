@@ -51,7 +51,7 @@ story: link-preview-checker
       <p>WhatsApp's page says what to read from this. No preview after 10 seconds: one of the tag requirements isn't met. A preview, but small: the image is the problem. A large picture: you're done.</p>
 
       <h2>Step 2: look for the tags in your page's source</h2>
-      <p>Open the page in Chrome, Edge or Firefox on a computer. Press <code>Ctrl+U</code> (on a Mac, <code>Option+Command+U</code>) to see the HTML your server sends. Press <code>Ctrl+F</code> and search for <code>og:</code>.</p>
+      <p>Open the page in Chrome, Edge or Firefox on a computer. Press <code>Ctrl+U</code> to see the HTML your server sends (on a Mac, <code>Cmd+Option+U</code> in Chrome and Edge, <code>Cmd+U</code> in Firefox; or right-click the page and choose <em>View Page Source</em>). Press <code>Ctrl+F</code> (<code>Cmd+F</code> on a Mac) and search for <code>og:</code>.</p>
       <ul>
         <li><strong>No <code>og:image</code> at all.</strong> The most common case. Themes and page builders often fill in the title and description and leave the picture to you. Look in your site builder or SEO plugin for a "social image" or "share image" setting on that page. If you can't find it, search for your host's name plus "social share image".</li>
         <li><strong>No <code>og:</code> lines at all, but you see them in your browser's developer tools.</strong> Something adds them with JavaScript after the page loads. Preview crawlers read the HTML the server sends, so they see nothing. The fix has to happen on the server side: a setting, a plugin, or a change in how the page is built.</li>
