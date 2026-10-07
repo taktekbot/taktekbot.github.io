@@ -65,7 +65,7 @@ story: sitemap-couldnt-fetch
       <pre><code>curl -sI https://example.com/sitemap.xml</code></pre>
       <p>Read three lines:</p>
       <ul>
-        <li><strong>The first line.</strong> You want <code>200</code>. A <code>301</code> or <code>302</code> is the redirect from Check 2. A <code>403</code> means the server refused. A <code>5xx</code> means the server failed.</li>
+        <li><strong>The first line.</strong> You want <code>200</code>. A <code>301</code> or <code>302</code> is the redirect from Check 2. A <code>403</code> means the server refused you, which isn't always Google: if the headers also say <code>cf-mitigated: challenge</code>, Cloudflare took curl for a robot and sent its check page, and Check 5 shows what Google got. A <code>5xx</code> means the server failed.</li>
         <li><strong>content-type.</strong> A sitemap is normally <code>application/xml</code> or <code>text/xml</code>, or <code>text/plain</code> for a text sitemap. If it says <code>text/html</code>, you are very likely getting a web page, not your sitemap. Sites built as single-page apps often answer every unknown address with the home page and a 200, so the "sitemap" is really the home page.</li>
         <li><strong>location.</strong> Only there on a redirect. It tells you the address to submit instead.</li>
       </ul>
