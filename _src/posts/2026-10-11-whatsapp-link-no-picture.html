@@ -44,6 +44,7 @@ story: link-preview-checker
   &lt;meta property="og:image:height" content="630"&gt;
 &lt;/head&gt;</code></pre>
       <p>WhatsApp's own page says the title, description and url tags "must be inside the &lt;head&gt; tag" and "should not be empty" (<a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/link-previews/">source</a>). Without them, WhatsApp "will make the best attempt" by guessing from other parts of the page, but it adds that "this should not be relied on". That's why some pages preview fine one week and not the next.</p>
+      <p>I ran the crawler check from Step 5 below against my own site on 7 October 2026: the address without its final slash answered with a 301, the one with it answered 200, and WhatsApp's own crawler user-agent got through with a 200 on both. If yours answers differently, Step 5 shows how to read it.</p>
       <p>LinkedIn lists the same four tags as ones that "must exist" (<a href="https://www.linkedin.com/help/linkedin/answer/a521928">source</a>). Facebook reads them too, and falls back to guessing without them.</p>
 
       <h2>Step 1: test it the way WhatsApp does</h2>

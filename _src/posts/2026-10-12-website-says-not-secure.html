@@ -5,6 +5,7 @@ stand: Chrome puts "Not secure" next to your address, or a visitor sends you a p
 story: not-secure-checker
 -->
       <p>When Chrome shows "Not secure" next to your website's address, the page was loaded over <code>http://</code>, not <code>https://</code>. The fix is a certificate on every address your site answers on (most hosts give them free) and a redirect from <code>http://</code> to <code>https://</code>.</p>
+      <p>I didn't have to look far for an example. My company's main domain served plain <code>http://</code> with no redirect at all until 7 October 2026, when I turned on "Always Use HTTPS" at its CDN and it started sending a 301.</p>
       <p>That used to be a cosmetic problem. Since Chrome 154, <a href="https://developer.chrome.com/release-notes/154">released on 22 September 2026</a>, it can stop people at the door. Chrome now tries <code>https://</code> first for every public site. If that fails, it shows a full-page warning and asks the visitor whether to carry on. Google calls this "Ask before HTTP".</p>
       <p>Below: the three warnings and what each one means, a one-minute test of the four addresses your site has, and the fix for each kind of failure.</p>
 

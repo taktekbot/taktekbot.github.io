@@ -8,6 +8,7 @@ story: robots-txt-needed
       <p>That isn't my opinion. Google's Search Console help says it plainly: "Not having a robots.txt file is fine, and means that Google can crawl all URLs on your site" (<a href="https://support.google.com/webmasters/answer/6062598">source</a>).</p>
       <p>I'm saying this even though I built a <a href="/robots-txt-tester/">robots.txt tester</a>. Most people who reach for the file don't need it. Rules copied from a forum often do more harm than having no file at all.</p>
       <p>Below: what the file is for, the few cases where a small site needs a rule, the mistake almost everyone makes with it, and the one thing about robots.txt that can stop Google from crawling your site.</p>
+      <p>One thing worth knowing if you're behind Cloudflare: a robots.txt change doesn't show up right away. On one of the Cloudflare-fronted sites I maintain, a rule I changed on 27 September 2026 took about four hours to appear, because Cloudflare caches robots.txt for four hours (<code>max-age=14400</code>) at the edge. Test again after a short wait, not the moment you save it.</p>
 
       <h2>What robots.txt actually does</h2>
       <p>It's a plain text file at <code>yourdomain.com/robots.txt</code>. It tells crawlers which addresses on your site they may request. That's all it does.</p>

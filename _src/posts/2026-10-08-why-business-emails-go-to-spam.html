@@ -5,6 +5,7 @@ stand: Most business email lands in spam because one of three DNS checks fails. 
 story: business-email-spam
 -->
       <p>Business emails usually go to spam because the receiving server can't confirm they really came from you. It checks three things: SPF (is this server allowed to send for your domain?), DKIM (does the message carry a valid signature from your domain?) and DMARC (does at least one of those match the address in the From line?). If DMARC fails, Gmail and Outlook treat the message as suspect, and since 2024 Gmail asks every sender to pass SPF or DKIM.</p>
+      <p>I found this exact gap on four domains I help maintain: no DMARC record at all, so nothing told Gmail or Outlook which mail to trust in their name. On 4 October 2026 I added one DMARC TXT record, <code>p=none</code>, to each. It's the same first step as Fix 3 below.</p>
       <p>You don't have to guess which one is failing. Every delivered email carries the results in its headers. Below: how to read them, then the fix for each failure, for Google Workspace, Microsoft 365, your website's contact form and the other services that send email in your name.</p>
 
       <h2>Step 1: send yourself a test and read the verdict</h2>
