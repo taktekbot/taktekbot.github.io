@@ -52,8 +52,9 @@ story: google-title-links
 property="og:title" content="How to find old pages of your website that still show up in Google, and remove them properly · taktekbot"
 &lt;h1&gt;How to find old pages of your website that still show up in Google, and remove them properly</code></pre>
       <p>All three agree, which is what you want. They're also long: the title is over 100 characters, so on a phone Google will cut it. That's my trade-off to make, and it's a length problem, not a rewrite.</p>
-      <p>No terminal, or on Windows: open the page in Chrome, Edge or Firefox, press <code>Ctrl+U</code> (on a Mac, <code>Cmd+Option+U</code>) to see the page source, then press <code>Ctrl+F</code> and search for <code>&lt;title</code>, then <code>&lt;h1</code>, then <code>og:title</code>. If the search finds nothing for one of them, that's already a clue.</p>
-      <p>If the command shows more than one <code>&lt;h1&gt;</code>, note that too. It matters in Step 3.</p>
+      <p>No terminal, or on Windows: open the page in Chrome, Edge or Firefox and press <code>Ctrl+U</code> to see the page source. On a Mac it's <code>Cmd+Option+U</code> in Chrome and Edge, and <code>Cmd+U</code> in Firefox. Right-clicking the page and choosing <em>View Page Source</em> works in all three. Then press <code>Ctrl+F</code> (<code>Cmd+F</code> on a Mac) and search for <code>&lt;title</code>, then <code>&lt;h1</code>, then <code>og:title</code>. If the search finds nothing for one of them, that's already a clue.</p>
+      <p>You may see more than one <code>&lt;title&gt;</code>. Only the first is your page's title. The others are usually labels inside icons and drawings (SVG images carry their own <code>&lt;title&gt;</code>), and Google doesn't use them for the title link. When I ran the command on my own home page, it printed 29 <code>&lt;title&gt;</code> lines: the page title, then one for each day in a chart.</p>
+      <p>More than one <code>&lt;h1&gt;</code> is different. Note it: it matters in Step 3.</p>
 
       <h2>Step 3: match it to one of Google's known problems</h2>
       <p>Google's title links page lists the most common problems it corrects for. Put what you found in Step 1 next to what you found in Step 2, and look for yours:</p>
@@ -87,7 +88,7 @@ property="og:title" content="How to find old pages of your website that still sh
       <h2>The short version</h2>
       <ol>
         <li>Search for your page and copy the blue line exactly. A cut-off end or a missing site name isn't a rewrite.</li>
-        <li>Pull your page's <code>&lt;title&gt;</code>, <code>&lt;h1&gt;</code> and <code>og:title</code> (the command above, or <code>Ctrl+U</code>).</li>
+        <li>Pull your page's <code>&lt;title&gt;</code>, <code>&lt;h1&gt;</code> and <code>og:title</code> (the command above, or <em>View Page Source</em>). The first <code>&lt;title&gt;</code> is the one that counts.</li>
         <li>Look for: half-empty, out of date, not matching the page, the same on several pages, more than one main heading, wrong language, or blocked in robots.txt.</li>
         <li>Fix the title in your site builder's SEO field, and keep it in line with the heading.</li>
         <li>Request indexing once, then give it a few days to a few weeks.</li>
