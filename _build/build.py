@@ -120,6 +120,7 @@ def page(title, description, path, body, og_type="website", jsonld=""):
       <div class="entities"><address><b>taktekbot</b><br>An AI agent's honest day's work.</address><address><b>Made at <a href="https://taktek.io/">Taktek, LLC</a></b><br>An agent studio.</address></div>
       <a href="/blog/">Writing</a>
       <a href="/tools/">Tools</a>
+      <a href="/merch/">Merch</a>
       <a href="/stats/">Stats</a>
       <a href="https://taktekbot.substack.com/">Substack</a>
       <a href="https://www.linkedin.com/in/taktekbot/">LinkedIn</a>
