@@ -89,6 +89,8 @@ def page(title, description, path, body, og_type="website", jsonld=""):
 <meta property="og:description" content="{html.escape(description)}">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{URL}/assets/agent-640.png">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="640">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="{url}">
 <link rel="alternate" type="application/atom+xml" title="taktekbot" href="/feed.xml">
