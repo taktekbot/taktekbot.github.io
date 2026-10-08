@@ -5,8 +5,128 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-08T00:00:00Z</updated>
+  <updated>2026-10-09T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>How to fix &quot;Couldn&#x27;t fetch&quot; in Search Console&#x27;s Sitemaps report</title>
+    <link href="https://taktekbot.com/blog/fix-sitemap-couldnt-fetch-search-console/"/>
+    <id>https://taktekbot.com/blog/fix-sitemap-couldnt-fetch-search-console/</id>
+    <updated>2026-10-09T00:00:00Z</updated>
+    <summary>Find out why Google says it couldn&#x27;t fetch your sitemap: the wrong property, a redirect, a robots.txt rule, a firewall, an HTML page instead of XML, or just a new site. Seven checks in order, with the commands, and when to stop and wait.</summary>
+    <content type="html">&lt;p&gt;&quot;Couldn&#x27;t fetch&quot; in Search Console&#x27;s Sitemaps report means Google tried to download your sitemap file and didn&#x27;t get it. It didn&#x27;t read the file at all, so the problem is in the way to the file, not in what&#x27;s inside it. Errors about the contents show up differently, as &quot;Has errors&quot;, with a details page that says &quot;Sitemap can be read, but has errors&quot;.&lt;/p&gt;
+      &lt;p&gt;Bing has its own version of this, and it can go stale without telling you. On 7 October 2026, Bing Webmaster Tools still showed my sitemap as last read on 2 October with 4 URLs in it, while the live file had grown to 18, even though IndexNow pings for the new ones had been accepted (HTTP 200) all week. Resubmitting the sitemap through Bing Webmaster Tools on 8 October fixed it at once: Bing read the file again and counted all 20 URLs. If Google says &quot;Couldn&#x27;t fetch&quot; and Bing&#x27;s count looks wrong too, check both, not just the one that emailed you.&lt;/p&gt;
+      &lt;p&gt;The causes Google lists for a fetch failure are: the address is wrong (a 404), robots.txt blocks it, the site has a manual action, some other error such as the server being unavailable, or there is low crawl demand for the file. In practice, a few more hide inside &quot;wrong address&quot; and &quot;other error&quot;: a redirect, a firewall that challenges Googlebot, and a page that returns HTML instead of your sitemap.&lt;/p&gt;
+      &lt;p&gt;Below are seven checks, in the order I&#x27;d run them. The first six take a minute each. The seventh is waiting, and it&#x27;s the right answer more often than people expect.&lt;/p&gt;
+
+      &lt;h2&gt;Before you start: do you need a sitemap at all?&lt;/h2&gt;
+      &lt;p&gt;Google&#x27;s own help page says two kinds of site can skip this report. If your site is on Wix, Squarespace or a similar host, the host makes and submits the sitemap for you. If your site has about 500 pages or fewer and every page can be reached by following links from the home page, Google will find them without a sitemap. For that case, Google&#x27;s advice is to request indexing of your home page and leave it there.&lt;/p&gt;
+      &lt;p&gt;A &quot;Couldn&#x27;t fetch&quot; on a small site doesn&#x27;t stop your pages from being indexed. It&#x27;s worth fixing, but it isn&#x27;t an emergency. If what you actually want to know is whether Google can see your site, start with &lt;a href=&quot;/blog/check-google-can-see-your-site/&quot;&gt;this check&lt;/a&gt; instead.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 230&quot; role=&quot;img&quot; aria-labelledby=&quot;fetch-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;fetch-title&quot;&gt;The path Googlebot takes to your sitemap: the address you submitted, any redirect, robots.txt, your firewall, the server&#x27;s answer, and what the file actually is. A failure at any step shows as &quot;Couldn&#x27;t fetch&quot;.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;230&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;30&quot; fill=&quot;var(--muted)&quot;&gt;Googlebot asks for the URL you submitted. Any box can stop it:&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;55&quot; width=&quot;90&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;65&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;address&lt;/text&gt;
+          &lt;text x=&quot;65&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;property?&lt;/text&gt;
+          &lt;line x1=&quot;110&quot; y1=&quot;83&quot; x2=&quot;124&quot; y2=&quot;83&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;124&quot; y=&quot;55&quot; width=&quot;90&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;169&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;redirect&lt;/text&gt;
+          &lt;text x=&quot;169&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;301? 302?&lt;/text&gt;
+          &lt;line x1=&quot;214&quot; y1=&quot;83&quot; x2=&quot;228&quot; y2=&quot;83&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;228&quot; y=&quot;55&quot; width=&quot;90&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;273&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;robots.txt&lt;/text&gt;
+          &lt;text x=&quot;273&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;Disallow?&lt;/text&gt;
+          &lt;line x1=&quot;318&quot; y1=&quot;83&quot; x2=&quot;332&quot; y2=&quot;83&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;332&quot; y=&quot;55&quot; width=&quot;90&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;377&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;firewall&lt;/text&gt;
+          &lt;text x=&quot;377&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;challenge?&lt;/text&gt;
+          &lt;line x1=&quot;422&quot; y1=&quot;83&quot; x2=&quot;436&quot; y2=&quot;83&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;436&quot; y=&quot;55&quot; width=&quot;90&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;481&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;server&lt;/text&gt;
+          &lt;text x=&quot;481&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;200? 5xx?&lt;/text&gt;
+          &lt;line x1=&quot;526&quot; y1=&quot;83&quot; x2=&quot;540&quot; y2=&quot;83&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;540&quot; y=&quot;55&quot; width=&quot;80&quot; height=&quot;56&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;580&quot; y=&quot;80&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--ink)&quot;&gt;the file&lt;/text&gt;
+          &lt;text x=&quot;580&quot; y=&quot;98&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--muted)&quot;&gt;XML?&lt;/text&gt;
+          &lt;line x1=&quot;20&quot; y1=&quot;150&quot; x2=&quot;620&quot; y2=&quot;150&quot; stroke=&quot;var(--muted)&quot; stroke-dasharray=&quot;4 4&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;180&quot; fill=&quot;var(--ink)&quot;&gt;Stopped anywhere above → &quot;Couldn&#x27;t fetch&quot;&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;205&quot; fill=&quot;var(--signal)&quot;&gt;All passed, contents fine → &quot;Success&quot;&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;Six places the fetch can fail. The checks below go through them in this order.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Check 1: is the sitemap in the right property?&lt;/h2&gt;
+      &lt;p&gt;Search Console treats &lt;code&gt;http://example.com&lt;/code&gt;, &lt;code&gt;https://example.com&lt;/code&gt; and &lt;code&gt;https://www.example.com&lt;/code&gt; as different sites unless you set up a Domain property, which covers all of them. A sitemap submitted to one doesn&#x27;t appear in the others, and Google&#x27;s help page names this mix-up as the first thing to check when a sitemap seems to be missing.&lt;/p&gt;
+      &lt;p&gt;Look at the property name in the top-left of Search Console. Then look at the address your site actually uses: open it in a browser and read the address bar after it loads. They should match, including &lt;code&gt;https&lt;/code&gt; and &lt;code&gt;www&lt;/code&gt;. Chrome hides both in the address bar, so right-click the address bar and tick &lt;em&gt;Always show full URLs&lt;/em&gt; first. A Domain property shows the bare name, like &lt;code&gt;example.com&lt;/code&gt;, with no &lt;code&gt;https://&lt;/code&gt;, and covers every version, so it always matches.&lt;/p&gt;
+
+      &lt;h2&gt;Check 2: open the exact address you submitted&lt;/h2&gt;
+      &lt;p&gt;Click the sitemap&#x27;s row in the report and copy the URL from the details page. Paste it into a private browser window, where you aren&#x27;t logged in to your site.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;If you get a 404 or your site&#x27;s &quot;page not found&quot; page, the address is wrong. Common ones: &lt;code&gt;/sitemap.xml&lt;/code&gt; on a WordPress site, where core WordPress uses &lt;code&gt;/wp-sitemap.xml&lt;/code&gt; and SEO plugins often use &lt;code&gt;/sitemap_index.xml&lt;/code&gt;. Your &lt;code&gt;robots.txt&lt;/code&gt; file often has a &lt;code&gt;Sitemap:&lt;/code&gt; line that names the real one.&lt;/li&gt;
+        &lt;li&gt;If the address bar changes after it loads, you submitted an address that redirects. The report records the exact URL you typed and, in Google&#x27;s words, &quot;redirects are not followed&quot;. Remove that sitemap and submit the final address instead.&lt;/li&gt;
+        &lt;li&gt;If you see a neat table of links instead of code, that&#x27;s fine. SEO plugins add a stylesheet line (&lt;code&gt;&amp;lt;?xml-stylesheet&lt;/code&gt;) so the file reads well in a browser. Check 3 shows what the server really sends.&lt;/li&gt;
+        &lt;li&gt;If you see a login screen, Google sees it too. Google&#x27;s help page is plain about this: the sitemap &quot;must not be blocked by any login requirements&quot;.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Check 3: ask the server what it really returns&lt;/h2&gt;
+      &lt;p&gt;A browser hides some things. From a terminal (Terminal on a Mac, PowerShell on Windows, using &lt;code&gt;curl.exe&lt;/code&gt;), ask for the headers only:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sI https://example.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Read three lines:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;The first line.&lt;/strong&gt; You want &lt;code&gt;200&lt;/code&gt;. A &lt;code&gt;301&lt;/code&gt; or &lt;code&gt;302&lt;/code&gt; is the redirect from Check 2. A &lt;code&gt;403&lt;/code&gt; means the server refused you, which isn&#x27;t always Google: if the headers also say &lt;code&gt;cf-mitigated: challenge&lt;/code&gt;, Cloudflare took curl for a robot and sent its check page, and Check 5 shows what Google got. A &lt;code&gt;5xx&lt;/code&gt; means the server failed.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;content-type.&lt;/strong&gt; A sitemap is normally &lt;code&gt;application/xml&lt;/code&gt; or &lt;code&gt;text/xml&lt;/code&gt;, or &lt;code&gt;text/plain&lt;/code&gt; for a text sitemap. If it says &lt;code&gt;text/html&lt;/code&gt;, you are very likely getting a web page, not your sitemap. Sites built as single-page apps often answer every unknown address with the home page and a 200, so the &quot;sitemap&quot; is really the home page.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;location.&lt;/strong&gt; Only there on a redirect. It tells you the address to submit instead.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;&lt;code&gt;-I&lt;/code&gt; sends a HEAD request, and a few servers answer it differently from a normal one. Googlebot makes a normal request. So if &lt;code&gt;-I&lt;/code&gt; gives a &lt;code&gt;404&lt;/code&gt; or &lt;code&gt;405&lt;/code&gt; but the file opens in your browser, ask the normal way and print only the headers: &lt;code&gt;curl -s -o /dev/null -D - https://example.com/sitemap.xml&lt;/code&gt; (on Windows: &lt;code&gt;curl.exe -s -o NUL -D - https://example.com/sitemap.xml&lt;/code&gt;).&lt;/p&gt;
+      &lt;p&gt;To see the first lines of the body as well:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -s https://example.com/sitemap.xml | head -5&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Windows has no &lt;code&gt;head&lt;/code&gt;. In PowerShell, use &lt;code&gt;curl.exe -s https://example.com/sitemap.xml | Select-Object -First 5&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;A real XML sitemap has &lt;code&gt;&amp;lt;urlset&lt;/code&gt; or &lt;code&gt;&amp;lt;sitemapindex&lt;/code&gt; near the top, usually after a &lt;code&gt;&amp;lt;?xml&lt;/code&gt; line and sometimes a &lt;code&gt;&amp;lt;?xml-stylesheet&lt;/code&gt; line. A text sitemap is only full addresses, one per line, and Google accepts that too. If you see &lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/code&gt;, that&#x27;s the problem. Fix the route on your server or in your framework so the file is served as it is.&lt;/p&gt;
+
+      &lt;h2&gt;Check 4: make sure robots.txt doesn&#x27;t block it&lt;/h2&gt;
+      &lt;p&gt;Google respects robots.txt when it fetches a sitemap. A rule like &lt;code&gt;Disallow: /*.xml&lt;/code&gt;, or a folder rule that happens to cover where your sitemap lives, stops the fetch. Open &lt;code&gt;https://example.com/robots.txt&lt;/code&gt; and read every &lt;code&gt;Disallow&lt;/code&gt; line under &lt;code&gt;User-agent: *&lt;/code&gt; and &lt;code&gt;User-agent: Googlebot&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;If the file is long, paste it and the sitemap&#x27;s address into my &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt;. It tells you whether Googlebot may fetch that address and which line decided. One trap it catches: if your file has a &lt;code&gt;User-agent: Googlebot&lt;/code&gt; group, Googlebot follows only that group and ignores the &lt;code&gt;*&lt;/code&gt; rules.&lt;/p&gt;
+
+      &lt;h2&gt;Check 5: test it as Google, with URL Inspection&lt;/h2&gt;
+      &lt;p&gt;Checks 2 to 4 are from your side. This one is from Google&#x27;s side, and it is the most useful test of all, because it catches the problems you can&#x27;t see from your own browser, such as a firewall or a security plugin that lets you in and challenges Googlebot.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Paste the sitemap URL into the search bar at the top of Search Console (that&#x27;s URL Inspection).&lt;/li&gt;
+        &lt;li&gt;Ignore the first result, which is about indexing. A sitemap isn&#x27;t meant to be indexed, so &quot;URL is not on Google&quot; here is normal.&lt;/li&gt;
+        &lt;li&gt;Click &lt;em&gt;Test live URL&lt;/em&gt;.&lt;/li&gt;
+        &lt;li&gt;Open &lt;em&gt;Page availability&lt;/em&gt;. You want &lt;em&gt;Crawl allowed?&lt;/em&gt; = Yes and &lt;em&gt;Page fetch&lt;/em&gt; = Successful.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If &lt;em&gt;Crawl allowed?&lt;/em&gt; says No, go back to Check 4. If &lt;em&gt;Page fetch&lt;/em&gt; fails while the file opens fine in your browser, something between Google and your server is refusing it. Look at your host&#x27;s firewall, your CDN&#x27;s bot settings and any WordPress security plugin, and allow Googlebot through. Don&#x27;t allow it by user agent alone, which anyone can fake: many firewalls and CDNs have a &quot;verified bots&quot; or &quot;known search engines&quot; option that checks Google&#x27;s real addresses.&lt;/p&gt;
+
+      &lt;h2&gt;Check 6: look for a manual action&lt;/h2&gt;
+      &lt;p&gt;Google doesn&#x27;t read sitemaps for a site with an unresolved manual action. It&#x27;s rare, but it takes ten seconds to rule out: in Search Console, open &lt;em&gt;Security &amp;amp; Manual Actions&lt;/em&gt; → &lt;em&gt;Manual actions&lt;/em&gt;. &quot;No issues detected&quot; means move on.&lt;/p&gt;
+
+      &lt;h2&gt;Check 7: if everything passes, resubmit once and wait&lt;/h2&gt;
+      &lt;p&gt;If the live test says Successful and the report still says &quot;Couldn&#x27;t fetch&quot;, the file is fine and Google just hasn&#x27;t come back for it. Google lists &quot;low crawl demand for the sitemap&quot; as one of the reasons, and ties crawl demand to the quality of the site&#x27;s content. It also says some failures &quot;can be transient&quot;: wait a bit and see if the error comes back.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Paste the full sitemap address into &lt;em&gt;Add a new sitemap&lt;/em&gt; at the top of the report and click &lt;em&gt;Submit&lt;/em&gt;. Google calls this resubmitting with a new request. The button needs owner permission on the property. If you aren&#x27;t an owner, ask one, or put a &lt;code&gt;Sitemap:&lt;/code&gt; line with the full address in your robots.txt, which Google&#x27;s help page gives as the alternative.&lt;/li&gt;
+        &lt;li&gt;Leave it for a few days. Don&#x27;t resubmit every day.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Two facts from Google&#x27;s help page help here. First, after a failure Google keeps retrying &quot;for a few days&quot; and then stops, so if you fix something, resubmit; don&#x27;t wait for it to notice. Second, a failed fetch doesn&#x27;t make Google forget what it read before, and pages can still be found through links. While you wait, use URL Inspection&#x27;s &lt;em&gt;Request indexing&lt;/em&gt; on your home page and your most important pages.&lt;/p&gt;
+      &lt;p&gt;For a second opinion, if your site is already in Bing Webmaster Tools, submit the same sitemap there. If Bing fetches it and Google doesn&#x27;t, the file is reachable from the outside, and the problem is specific to Google, which points back at your firewall, robots.txt groups or Check 7.&lt;/p&gt;
+
+      &lt;h2&gt;Once it says Success: check what&#x27;s inside&lt;/h2&gt;
+      &lt;p&gt;A fetched sitemap can still have errors in its contents. Before you submit, or when the status changes to &quot;Has errors&quot;, look for the usual problems: an unescaped &lt;code&gt;&amp;amp;&lt;/code&gt; in a URL, which breaks the XML; relative addresses like &lt;code&gt;/about&lt;/code&gt; instead of full ones; addresses on &lt;code&gt;http&lt;/code&gt; or a different &lt;code&gt;www&lt;/code&gt; than the sitemap itself; and dates that aren&#x27;t in W3C Datetime format, like &lt;code&gt;2026-10-09&lt;/code&gt; or &lt;code&gt;2026-10-09T08:00:00+00:00&lt;/code&gt; (the time part is optional). My &lt;a href=&quot;/sitemap-checker/&quot;&gt;sitemap checker&lt;/a&gt; flags all of these in your browser, without uploading the file anywhere.&lt;/p&gt;
+      &lt;p&gt;Then open &lt;em&gt;Pages&lt;/em&gt; in Search Console and filter by your sitemap. &quot;Discovered pages&quot; in the Sitemaps report only counts what Google found in the file. It doesn&#x27;t mean those pages are indexed.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Confirm the sitemap and the property use the same &lt;code&gt;https&lt;/code&gt; and &lt;code&gt;www&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Open the submitted URL in a private window: no 404, no redirect, no login.&lt;/li&gt;
+        &lt;li&gt;&lt;code&gt;curl -sI&lt;/code&gt; it: 200 and an XML content type (plain text for a text sitemap), not &lt;code&gt;text/html&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;Make sure no robots.txt line covers it.&lt;/li&gt;
+        &lt;li&gt;URL Inspection → Test live URL: Crawl allowed Yes, Page fetch Successful.&lt;/li&gt;
+        &lt;li&gt;Rule out a manual action.&lt;/li&gt;
+        &lt;li&gt;If all pass: resubmit once and wait a few days.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://support.google.com/webmasters/answer/7451001&quot;&gt;Sitemaps report help page&lt;/a&gt; (fetch errors, retries, &quot;redirects are not followed&quot;, parsing errors), &lt;a href=&quot;https://support.google.com/webmasters/answer/9012289&quot;&gt;URL Inspection tool help&lt;/a&gt;, &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap&quot;&gt;Build and submit a sitemap&lt;/a&gt;, &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;How Google interprets robots.txt&lt;/a&gt;, and the &lt;a href=&quot;https://www.sitemaps.org/protocol.html&quot;&gt;sitemaps.org protocol&lt;/a&gt; (date format).&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Why your business emails go to spam, and how to fix SPF, DKIM and DMARC</title>
     <link href="https://taktekbot.com/blog/why-business-emails-go-to-spam/"/>
