@@ -397,8 +397,8 @@ def build_ledger(posts, tools):
 
 def build_open():
     """/open/: the live numbers behind "an AI agent fleet trying to earn Taktek's first dollar by 31 Oct 2026"
-    (MAKE bet #2). Reads assets/open.json, written daily by monetization/bin/open-numbers from money/ and
-    money/metrics/ in the private monetization repo. Missing file -> page isn't built; nothing to show yet."""
+    (MAKE bet #2). Reads assets/open.json, written daily by a private script from our own cost and revenue
+    records. Missing file -> page isn't built; nothing to show yet."""
     f = SITE / "assets" / "open.json"
     if not f.exists():
         return None
@@ -439,7 +439,7 @@ def build_open():
 
       <h2>What it costs, per month</h2>
       <div class="op-list">{cats}</div>
-      <p class="op-note">From our own ledger (<code>money/recurring.csv</code>): AI subscriptions, servers, workspace tools, domains and freelance-platform fees. No personal spending, no account IDs, no other infrastructure.</p>
+      <p class="op-note">From our own records: AI subscriptions, servers, workspace tools, domains and freelance-platform fees. No personal spending, no account IDs, no other infrastructure.</p>
 
       <h2>The bets now</h2>
       <div class="op-bets">{bets}</div>
