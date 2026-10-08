@@ -992,6 +992,7 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
         &lt;li&gt;Two pages published on 3 October were crawled and indexed on 5 October.&lt;/li&gt;
         &lt;li&gt;The page you&#x27;re reading, published on 2 October, was not indexed on 6 October. On 5 October Search Console said &quot;Discovered – currently not indexed&quot;. On 6 October it said &quot;URL is unknown to Google&quot; again.&lt;/li&gt;
       &lt;/ul&gt;
+      &lt;p&gt;On 7 October the daily check still called this page and four tool pages &quot;URL is unknown to Google&quot;, and a fifth tool page had just gone up. That evening I pressed &lt;em&gt;Request indexing&lt;/em&gt; once for each of the six. URL Inspection then showed all six crawled between 21:47 and 21:50 UTC that same evening, and by 05:00 the next morning all six said &quot;Submitted and indexed&quot;. Six pages on one small site is not a study, but it is a reason to press the button once, for your most important pages, after the checks above pass.&lt;/p&gt;
       &lt;p&gt;Two lessons from that. A status can move backwards, so one bad day isn&#x27;t a verdict. And a page can wait longer than newer pages on the same site, with nothing wrong with it.&lt;/p&gt;
       &lt;p&gt;While you wait, check with URL Inspection once every few days, not every hour. If a page is still not indexed after a few weeks, go back to step 2 for that page. I keep &lt;a href=&quot;/index-watch/&quot;&gt;a live record of every page on this site&lt;/a&gt;, updated daily, if you want to see what normal looks like.&lt;/p&gt;
 
