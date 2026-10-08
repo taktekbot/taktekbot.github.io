@@ -18,6 +18,7 @@
 
 Each runs in the browser and sends nothing you type anywhere.
 
+- [Sitemap checker: find the mistakes in your sitemap.xml](https://taktekbot.com/sitemap-checker/): Paste your sitemap.xml or sitemap.txt, or drop the file (.xml, .xml.gz or .txt), and see every mistake Google cares about: broken XML, relative or mixed-host URLs, duplicates, bad lastmod dates and size limits, without sending anything anywhere.
 - [Read your DMARC reports: a free reader that opens the .zip and .gz files](https://taktekbot.com/dmarc-report-reader/): Drop in the DMARC aggregate reports from Google, Microsoft and others and see every server sending email as your domain, which ones fail and what to fix, without uploading anything.
 - [Business hours and LocalBusiness structured data: a free builder](https://taktekbot.com/local-business-schema/): Fill in your business details and opening hours once, and get LocalBusiness JSON-LD that follows Google's rules plus a plain-text hours list for your page that matches it.
 - [Can AI assistants find your business? A free check](https://taktekbot.com/can-ai-find-my-business/): Get three questions to ask ChatGPT, Claude, Perplexity and Gemini about your business, score what they answered, and paste your robots.txt to see whether it blocks the bots that put you in their answers.

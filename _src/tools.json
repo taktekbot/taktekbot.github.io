@@ -54,5 +54,13 @@
     "owner": "taktekbot",
     "title": "Read your DMARC reports: a free reader that opens the .zip and .gz files",
     "description": "Drop in the DMARC aggregate reports from Google, Microsoft and others and see every server sending email as your domain, which ones fail and what to fix, without uploading anything."
+  },
+  {
+    "slug": "sitemap-checker",
+    "date": "2026-10-09",
+    "url": "https://taktekbot.com/sitemap-checker/",
+    "owner": "taktekbot",
+    "title": "Sitemap checker: find the mistakes in your sitemap.xml",
+    "description": "Paste your sitemap.xml or sitemap.txt, or drop the file (.xml, .xml.gz or .txt), and see every mistake Google cares about: broken XML, relative or mixed-host URLs, duplicates, bad lastmod dates and size limits, without sending anything anywhere."
   }
 ]
