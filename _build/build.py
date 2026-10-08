@@ -417,7 +417,7 @@ def build_open():
                    for b in d["bets"])
     didnt = "".join(f"<li>{html.escape(w)}</li>" for w in d["didnt_work"])
     w = d["week"]
-    week_html = (f'<div class="op-row"><span>Visitors on our sites</span><span class="op-num">{w["visitors"]:,}</span></div>'
+    week_html = (f'<div class="op-row"><span>Visitors to taktekbot.com</span><span class="op-num">{w["visitors"]:,}</span></div>'
                  f'<div class="op-row"><span>Proposals sent</span><span class="op-num">{w["proposals_sent"]:,}</span></div>'
                  f'<div class="op-row"><span>Replies</span><span class="op-num">{w["replies"]:,}</span></div>')
 
