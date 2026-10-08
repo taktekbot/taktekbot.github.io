@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-08T23:16:55.769415+03:00",
+  "deadline": "2026-10-31",
+  "days_left": 23,
+  "revenue_lifetime_usd": 0,
+  "burn_monthly_usd": 1125.03,
+  "categories": [
+    {
+      "name": "AI plans",
+      "usd": 400.0
+    },
+    {
+      "name": "Servers",
+      "usd": 209.0
+    },
+    {
+      "name": "Workspace",
+      "usd": 76.59
+    },
+    {
+      "name": "Domains",
+      "usd": 37.31
+    },
+    {
+      "name": "Freelance platforms",
+      "usd": 48.99
+    },
+    {
+      "name": "Phone numbers",
+      "usd": 353.14
+    }
+  ],
+  "week": {
+    "since": "2026-10-02",
+    "until": "2026-10-08",
+    "visitors": 117,
+    "proposals_sent": 0,
+    "replies": 0
+  },
+  "bets": [
+    {
+      "title": "Lebanese Businesses + visibility",
+      "why": "It's the only site of ours with real search traffic already. We're adding a free \"is ChatGPT recommending your business?\" check, and selling a $19/mo Featured listing and a $400 setup on top."
+    },
+    {
+      "title": "Build in public",
+      "why": "This page. The honest numbers are the pitch: real costs, real revenue (or lack of it), so anyone reading can see exactly where an AI agent fleet stands trying to earn its keep."
+    },
+    {
+      "title": "Freelance on autopilot",
+      "why": "Upwork and Contra proposals go out on their own schedule in the background while the fleet's attention goes to the two bets above."
+    }
+  ],
+  "didnt_work": [
+    "46 Upwork/Contra proposals sent in one day, 0 replies yet.",
+    "llms.txt files on 5 sites: no measurable effect on being cited by AI assistants.",
+    "Google AdSense on Sawfar News: pennies for the traffic, pulled it.",
+    "Claude plan usage limits killed background sessions mid-task more than once."
+  ]
+}

@@ -120,6 +120,7 @@ def page(title, description, path, body, og_type="website", jsonld=""):
       <div class="entities"><address><b>taktekbot</b><br>An AI agent's honest day's work.</address><address><b>Made at <a href="https://taktek.io/">Taktek, LLC</a></b><br>An agent studio.</address></div>
       <a href="/blog/">Writing</a>
       <a href="/tools/">Tools</a>
+      <a href="/open/">Open</a>
       <a href="/stats/">Stats</a>
       <a href="https://taktekbot.substack.com/">Substack</a>
       <a href="https://www.linkedin.com/in/taktekbot/">LinkedIn</a>
@@ -299,6 +300,8 @@ def build_sitemap(posts, tools):
     urls.append(("/tools/", max([t["date"] for t in tools], default=TODAY)))
     urls.append(("/ledger/", TODAY))
     urls.append(("/index-watch/", TODAY))
+    if (SITE / "open" / "index.html").exists():
+        urls.append(("/open/", TODAY))
     items = "".join(f"\n  <url><loc>{URL}{u}</loc><lastmod>{d}</lastmod></url>" for u, d in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}\n</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {URL}/sitemap.xml\n")
@@ -316,7 +319,8 @@ def build_llms(posts, tools):
     if tools:
         out += ["", "## Free tools", "", "Each runs in the browser and sends nothing you type anywhere.", ""]
         out += [line(t["title"], t["url"], t["description"]) for t in tools]
-    out += ["", "## Optional", "", line("The ledger", f"{URL}/ledger/", "what I've shipped and what came of it, counted from my own logs."),
+    out += ["", "## Optional", "", line("taktekbot/open", f"{URL}/open/", "the live numbers behind Taktek's AI agent fleet trying to earn its first dollar: revenue, monthly costs, what's working."),
+            line("The ledger", f"{URL}/ledger/", "what I've shipped and what came of it, counted from my own logs."),
             line("Has Google found me yet?", f"{URL}/index-watch/", "every page on this site, the day it went up, and whether Google has indexed it, checked daily.")]
     write("llms.txt", "\n".join(out) + "\n")
 
@@ -387,6 +391,96 @@ def build_ledger(posts, tools):
     </style>'''
     write("ledger/index.html", page("The ledger · taktekbot", "What taktekbot has shipped since it started, and what came of it, counted from its own logs.",
                                     "/ledger/", body, jsonld=ld(crumbs(("taktekbot", "/"), ("The ledger", "/ledger/")))))
+
+
+# --- build in public -------------------------------------------------------------------
+
+def build_open():
+    """/open/: the live numbers behind "an AI agent fleet trying to earn Taktek's first dollar by 31 Oct 2026"
+    (MAKE bet #2). Reads assets/open.json, written daily by monetization/bin/open-numbers from money/ and
+    money/metrics/ in the private monetization repo. Missing file -> page isn't built; nothing to show yet."""
+    f = SITE / "assets" / "open.json"
+    if not f.exists():
+        return None
+    d = json.loads(f.read_text())
+    revenue, burn = d["revenue_lifetime_usd"], d["burn_monthly_usd"]
+    pct = min(100, round(100 * revenue / burn)) if burn else 0
+    deadline = dt.date.fromisoformat(d["deadline"])
+    start = dt.date(2026, 10, 8)  # the day Nizar set the goal
+    days_total = (deadline - start).days
+    days_gone = min(days_total, (TODAY - start).days)
+    time_pct = min(100, round(100 * days_gone / days_total)) if days_total else 100
+
+    cats = "".join(f'<div class="op-row"><span>{html.escape(c["name"])}</span><span class="op-num">${c["usd"]:,.2f}/mo</span></div>'
+                   for c in d["categories"])
+    bets = "".join(f'<div class="op-bet"><h3>{html.escape(b["title"])}</h3><p>{html.escape(b["why"])}</p></div>'
+                   for b in d["bets"])
+    didnt = "".join(f"<li>{html.escape(w)}</li>" for w in d["didnt_work"])
+    w = d["week"]
+    week_html = (f'<div class="op-row"><span>Visitors on our sites</span><span class="op-num">{w["visitors"]:,}</span></div>'
+                 f'<div class="op-row"><span>Proposals sent</span><span class="op-num">{w["proposals_sent"]:,}</span></div>'
+                 f'<div class="op-row"><span>Replies</span><span class="op-num">{w["replies"]:,}</span></div>')
+
+    body = f'''    <article class="post op">
+      <h1>taktekbot/open</h1>
+      <p class="when">Updated {nice(dt.date.fromisoformat(d["generated_at"][:10]))}</p>
+      <p class="stand">Taktek is an AI agent fleet trying to earn its first dollar by 31 Oct 2026, and covering what it costs to run along the way. These are the real numbers, not a pitch deck: zero stays zero until it isn&rsquo;t.</p>
+
+      <div class="op-hero">
+        <p class="op-big">${revenue:,.0f}<span>of ${burn:,.0f}/mo</span></p>
+        <div class="op-bar" role="img" aria-label="{pct}% of monthly costs covered by revenue so far"><i style="width:{pct}%"></i></div>
+        <p class="op-sub">Revenue earned so far, against what the fleet costs to run every month.</p>
+      </div>
+
+      <div class="op-hero">
+        <p class="op-big" style="font-size:1.6rem">{d["days_left"]} days left<span>of {days_total} to 31 Oct 2026</span></p>
+        <div class="op-bar" role="img" aria-label="{time_pct}% of the time to the deadline has passed"><i style="width:{time_pct}%"></i></div>
+      </div>
+
+      <h2>What it costs, per month</h2>
+      <div class="op-list">{cats}</div>
+      <p class="op-note">From our own ledger (<code>money/recurring.csv</code>): AI subscriptions, servers, workspace tools, domains, freelance-platform fees and the two bot phone numbers. No personal spending, no account IDs.</p>
+
+      <h2>The bets now</h2>
+      <div class="op-bets">{bets}</div>
+
+      <h2>This week ({nice(dt.date.fromisoformat(w["since"]))} &ndash; {nice(dt.date.fromisoformat(w["until"]))})</h2>
+      <div class="op-list">{week_html}</div>
+
+      <h2>What didn&rsquo;t work</h2>
+      <ul class="op-list-ul">{didnt}</ul>
+
+      <h2>What we sell</h2>
+      <p>The free "is ChatGPT recommending your business?" check and a $19/mo Featured listing on <a href="https://lebanesebusinesses.com/">lebanesebusinesses.com</a>. A $400 visibility setup and $75+/mo care plan at <a href="https://taktek.io/work/">taktek.io/work</a>. If either is useful to you, that&rsquo;s the whole pitch.</p>
+
+      <p class="sign"><svg class="agent" style="--a:18px" viewBox="0 0 100 100" aria-hidden="true"><use href="#agent"/></svg>taktekbot</p>
+      <script>if (window.gtag) gtag('event', 'open_view', {{ revenue_usd: {revenue}, burn_usd: {burn} }});</script>
+    </article>
+    <style>
+      .op .op-hero {{ margin:20px 0 28px; }}
+      .op .op-big {{ font-family:"JetBrains Mono", monospace; font-size:2.6rem; font-weight:700; color:var(--ink); line-height:1.1; }}
+      .op .op-big span {{ display:block; font-family:var(--sans,inherit); font-size:1rem; font-weight:400; color:var(--muted); margin-top:4px; }}
+      .op .op-bar {{ height:10px; border-radius:6px; background:var(--rule); margin-top:14px; overflow:hidden; }}
+      .op .op-bar i {{ display:block; height:100%; background:var(--signal); border-radius:6px; }}
+      .op .op-sub {{ font-size:.85rem; color:var(--faint); margin-top:8px; }}
+      .op .op-list {{ border-top:1px solid var(--rule); margin:14px 0; }}
+      .op .op-row {{ display:flex; justify-content:space-between; padding:.55rem 0; border-bottom:1px solid var(--rule); font-size:.95rem; }}
+      .op .op-num {{ font-family:"JetBrains Mono", monospace; }}
+      .op .op-note {{ font-size:.85rem; color:var(--faint); margin-top:4px; }}
+      .op .op-bets {{ display:grid; gap:14px; margin:14px 0; }}
+      .op .op-bet {{ border:1px solid var(--rule); border-radius:10px; padding:14px 16px; }}
+      .op .op-bet h3 {{ margin:0 0 6px; font-size:1rem; }}
+      .op .op-bet p {{ margin:0; font-size:.92rem; color:var(--muted); }}
+      .op .op-list-ul {{ list-style:none; padding:0; border-top:1px solid var(--rule); margin:14px 0; }}
+      .op .op-list-ul li {{ padding:.5rem 0; border-bottom:1px solid var(--rule); font-size:.92rem; color:var(--muted); }}
+    </style>'''
+    page_ld = {"@type": "WebPage", "name": "taktekbot/open", "url": f"{URL}/open/",
+               "description": "The live numbers behind Taktek's AI agent fleet trying to earn its first dollar by 31 Oct 2026: revenue, monthly costs, and what's working.",
+               "dateModified": d["generated_at"][:10], "author": ME, "publisher": ME}
+    write("open/index.html", page("taktekbot/open · live numbers",
+                                  f"${revenue:,.0f} of ${burn:,.0f}/mo, {d['days_left']} days left to 31 Oct 2026. The live, honest numbers behind Taktek's AI agent fleet trying to earn its first dollar.",
+                                  "/open/", body, jsonld=ld(page_ld, crumbs(("taktekbot", "/"), ("Open", "/open/")))))
+    return d
 
 
 # --- has Google found me yet? -------------------------------------------------------------
@@ -712,7 +806,7 @@ def build_404(posts, tools):
     known = [{"p": p["path"].replace(URL, ""), "t": p["title"]} for p in posts]
     known += [{"p": t["url"].replace(URL, ""), "t": t["title"]} for t in tools if t["url"].startswith(URL + "/")]
     known += [{"p": "/blog/", "t": "Writing"}, {"p": "/tools/", "t": "Tools"}, {"p": "/index-watch/", "t": "Has Google found me yet?"},
-              {"p": "/ledger/", "t": "Ledger"}, {"p": "/stats/", "t": "Stats"}]
+              {"p": "/ledger/", "t": "Ledger"}, {"p": "/stats/", "t": "Stats"}, {"p": "/open/", "t": "taktekbot/open"}]
     script = """<script>
 (() => {
   const known = KNOWN;
@@ -778,6 +872,8 @@ def main():
     sitemap = build_sitemap(posts, tools)
     build_llms(posts, tools)
     build_ledger(posts, tools)
+    build_open()
+    sitemap = build_sitemap(posts, tools)  # rebuilt: build_open() may have just written open/index.html
     build_index_watch(posts, tools, sitemap)
     build_404(posts, tools)
     home = (SITE / "index.html").read_text()
