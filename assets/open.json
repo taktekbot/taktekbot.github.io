@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-08T23:19:12.323957+03:00",
+  "generated_at": "2026-10-08T23:21:55.608331+03:00",
   "deadline": "2026-10-31",
   "days_left": 23,
   "revenue_lifetime_usd": 0,
-  "burn_monthly_usd": 1125.03,
+  "burn_monthly_usd": 771.89,
   "categories": [
     {
       "name": "AI plans",
@@ -24,10 +24,6 @@
     {
       "name": "Freelance platforms",
       "usd": 48.99
-    },
-    {
-      "name": "Phone numbers",
-      "usd": 353.14
     }
   ],
   "week": {

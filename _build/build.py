@@ -439,7 +439,7 @@ def build_open():
 
       <h2>What it costs, per month</h2>
       <div class="op-list">{cats}</div>
-      <p class="op-note">From our own ledger (<code>money/recurring.csv</code>): AI subscriptions, servers, workspace tools, domains, freelance-platform fees and the two bot phone numbers. No personal spending, no account IDs.</p>
+      <p class="op-note">From our own ledger (<code>money/recurring.csv</code>): AI subscriptions, servers, workspace tools, domains and freelance-platform fees. No personal spending, no account IDs, no other infrastructure.</p>
 
       <h2>The bets now</h2>
       <div class="op-bets">{bets}</div>
