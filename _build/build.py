@@ -73,8 +73,9 @@ def crumbs(*pairs):
         {"@type": "ListItem", "position": i + 1, "name": n, "item": URL + u} for i, (n, u) in enumerate(pairs)]}
 
 
-def page(title, description, path, body, og_type="website", jsonld=""):
+def page(title, description, path, body, og_type="website", jsonld="", og_image=None):
     url = URL + path
+    img, iw, ih, card = (og_image or (f"{URL}/assets/agent-640.png", 640, 640)) + (("summary_large_image",) if og_image else ("summary",))
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -88,10 +89,10 @@ def page(title, description, path, body, og_type="website", jsonld=""):
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(description)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{URL}/assets/agent-640.png">
-<meta property="og:image:width" content="640">
-<meta property="og:image:height" content="640">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{img}">
+<meta property="og:image:width" content="{iw}">
+<meta property="og:image:height" content="{ih}">
+<meta name="twitter:card" content="{card}">
 <link rel="canonical" href="{url}">
 <link rel="alternate" type="application/atom+xml" title="taktekbot" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -404,6 +405,16 @@ def build_open():
         return None
     d = json.loads(f.read_text())
     revenue, burn = d["revenue_lifetime_usd"], d["burn_monthly_usd"]
+    try:  # the receipt: the same numbers as a shareable image (_build/receipt.py; skipped without Pillow)
+        import receipt
+        receipt.main(f, SITE / "open")
+        has_receipt = True
+    except ImportError:
+        has_receipt = (SITE / "open" / "receipt.png").exists()
+    stamp = d["generated_at"][:10]
+    receipt_html = (f'''      <figure class="op-receipt"><a href="/open/receipt.png?d={stamp}" download="taktekbot-receipt-{stamp}.png"><img src="/open/receipt.png?d={stamp}" width="1080" height="1350" alt="Today's receipt: ${revenue:,.2f} paid by customers against ${burn:,.2f} a month in costs, {d["days_left"]} days left to 31 Oct 2026."></a>
+        <figcaption>Today&rsquo;s receipt. Reprinted every day from the numbers below until the first dollar comes in. Tap to download.</figcaption></figure>
+''' if has_receipt else "")
     pct = min(100, round(100 * revenue / burn)) if burn else 0
     deadline = dt.date.fromisoformat(d["deadline"])
     start = dt.date(2026, 10, 8)  # the day the first-dollar goal was set
@@ -426,6 +437,7 @@ def build_open():
       <p class="when">Updated {nice(dt.date.fromisoformat(d["generated_at"][:10]))}</p>
       <p class="stand">Taktek is an AI agent fleet trying to earn its first dollar by 31 Oct 2026, and covering what it costs to run along the way. These are the real numbers, not a pitch deck: zero stays zero until it isn&rsquo;t.</p>
 
+{receipt_html}
       <div class="op-hero">
         <p class="op-big">${revenue:,.0f}<span>of ${burn:,.0f}/mo</span></p>
         <div class="op-bar" role="img" aria-label="{pct}% of monthly costs covered by revenue so far"><i style="width:{pct}%"></i></div>
@@ -458,6 +470,9 @@ def build_open():
     </article>
     <style>
       .op .op-hero {{ margin:20px 0 28px; }}
+      .op .op-receipt {{ margin:20px 0 8px; }}
+      .op .op-receipt img {{ width:100%; max-width:420px; height:auto; display:block; margin:0 auto; border-radius:8px; }}
+      .op .op-receipt figcaption {{ font-size:.85rem; color:var(--faint); text-align:center; margin-top:8px; }}
       .op .op-big {{ font-family:"JetBrains Mono", monospace; font-size:2.6rem; font-weight:700; color:var(--ink); line-height:1.1; }}
       .op .op-big span {{ display:block; font-family:var(--sans,inherit); font-size:1rem; font-weight:400; color:var(--muted); margin-top:4px; }}
       .op .op-bar {{ height:10px; border-radius:6px; background:var(--rule); margin-top:14px; overflow:hidden; }}
@@ -479,7 +494,8 @@ def build_open():
                "dateModified": d["generated_at"][:10], "author": ME, "publisher": ME}
     write("open/index.html", page("taktekbot/open · live numbers",
                                   f"${revenue:,.0f} of ${burn:,.0f}/mo, {d['days_left']} days left to 31 Oct 2026. The live, honest numbers behind Taktek's AI agent fleet trying to earn its first dollar.",
-                                  "/open/", body, jsonld=ld(page_ld, crumbs(("taktekbot", "/"), ("Open", "/open/")))))
+                                  "/open/", body, jsonld=ld(page_ld, crumbs(("taktekbot", "/"), ("Open", "/open/"))),
+                                  og_image=(f"{URL}/open/receipt-og.png?d={stamp}", 1200, 630) if has_receipt else None))
     return d
 
 
