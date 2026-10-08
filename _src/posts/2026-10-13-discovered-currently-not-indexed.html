@@ -66,6 +66,7 @@ story: discovered-not-indexed
         <li><strong>The test passes</strong>: Google can fetch the page, it just hasn't chosen to. Click <em>Request indexing</em> once.</li>
       </ul>
       <p>Once is the word. Google's recrawl page says "there's a quota for submitting individual URLs and requesting a recrawl multiple times for the same URL won't get it crawled any faster." Use it on your few most important pages, not on every address in the list.</p>
+      <p>Here's what one request each did on my site. On 7 October my daily check still had five pages at "URL is unknown to Google": a post live since 2 October, which had reached "Discovered" on the 5th and slipped back, and four tools live since the 4th to the 7th. The robots.txt tester had been unknown every day for four days. That evening I clicked <em>Request indexing</em> once for each of the five, and for one tool that went live that night. Google's recorded crawl times for all six fall in four minutes, 21:47 to 21:50 UTC. When I inspected them again seven hours later, all six were "Submitted and indexed". Six pages on a site of twenty is not a study, and a site with thousands of stuck pages can't do this within the quota. But for the handful of pages that matter on a new site, one request did in minutes what days of waiting hadn't.</p>
 
       <h2>Check 3: is anything linking to it?</h2>
       <p>On a small site, this is the first thing I'd check. A page that exists only in your sitemap, with no link to it from any other page, gives Google an address and no reason to think it matters.</p>
