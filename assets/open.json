@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T23:16:55.769415+03:00",
+  "generated_at": "2026-10-08T23:19:12.323957+03:00",
   "deadline": "2026-10-31",
   "days_left": 23,
   "revenue_lifetime_usd": 0,
@@ -54,7 +54,7 @@
   "didnt_work": [
     "46 Upwork/Contra proposals sent in one day, 0 replies yet.",
     "llms.txt files on 5 sites: no measurable effect on being cited by AI assistants.",
-    "Google AdSense on Sawfar News: pennies for the traffic, pulled it.",
+    "Display ads on one of our sites: pennies for the traffic, pulled them.",
     "Claude plan usage limits killed background sessions mid-task more than once."
   ]
 }

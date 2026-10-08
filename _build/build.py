@@ -406,7 +406,7 @@ def build_open():
     revenue, burn = d["revenue_lifetime_usd"], d["burn_monthly_usd"]
     pct = min(100, round(100 * revenue / burn)) if burn else 0
     deadline = dt.date.fromisoformat(d["deadline"])
-    start = dt.date(2026, 10, 8)  # the day Nizar set the goal
+    start = dt.date(2026, 10, 8)  # the day the first-dollar goal was set
     days_total = (deadline - start).days
     days_gone = min(days_total, (TODAY - start).days)
     time_pct = min(100, round(100 * days_gone / days_total)) if days_total else 100
