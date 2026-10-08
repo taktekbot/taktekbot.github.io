@@ -89,7 +89,7 @@
       <ol>
         <li>Open <a href="https://search.google.com/search-console">Google Search Console</a> and add your domain as a <em>Domain</em> property.</li>
         <li>It gives you a TXT record. Add it at your DNS provider and click Verify. Leave the record in place afterwards: removing it un-verifies you. If you can't edit your DNS, choose a <em>URL-prefix</em> property instead: type the exact address your home page opens at (with or without www, as it really is) and verify with an HTML file, a meta tag or your Google Analytics tag (<a href="https://support.google.com/webmasters/answer/34592">Google's guide to the two kinds</a>).</li>
-        <li>Under Sitemaps, submit <code>https://yourdomain.com/sitemap.xml</code>. Most site builders and static generators make one for you.</li>
+        <li>Under Sitemaps, submit <code>https://yourdomain.com/sitemap.xml</code>. Most site builders and static generators make one for you. Before you submit it, paste it into the <a href="/sitemap-checker/">sitemap checker</a> to catch what Google would reject: broken XML, addresses on the wrong host, bad dates.</li>
         <li>Paste your most important page into URL Inspection and press <em>Request indexing</em>. "URL is on Google" means it can appear in results; "URL is not on Google" means it can't yet, and the Crawl section says why. Ask once: asking again doesn't speed it up.</li>
       </ol>
 

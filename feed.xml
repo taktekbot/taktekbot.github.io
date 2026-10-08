@@ -1082,7 +1082,7 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
       &lt;ol&gt;
         &lt;li&gt;Open &lt;a href=&quot;https://search.google.com/search-console&quot;&gt;Google Search Console&lt;/a&gt; and add your domain as a &lt;em&gt;Domain&lt;/em&gt; property.&lt;/li&gt;
         &lt;li&gt;It gives you a TXT record. Add it at your DNS provider and click Verify. Leave the record in place afterwards: removing it un-verifies you. If you can&#x27;t edit your DNS, choose a &lt;em&gt;URL-prefix&lt;/em&gt; property instead: type the exact address your home page opens at (with or without www, as it really is) and verify with an HTML file, a meta tag or your Google Analytics tag (&lt;a href=&quot;https://support.google.com/webmasters/answer/34592&quot;&gt;Google&#x27;s guide to the two kinds&lt;/a&gt;).&lt;/li&gt;
-        &lt;li&gt;Under Sitemaps, submit &lt;code&gt;https://yourdomain.com/sitemap.xml&lt;/code&gt;. Most site builders and static generators make one for you.&lt;/li&gt;
+        &lt;li&gt;Under Sitemaps, submit &lt;code&gt;https://yourdomain.com/sitemap.xml&lt;/code&gt;. Most site builders and static generators make one for you. Before you submit it, paste it into the &lt;a href=&quot;/sitemap-checker/&quot;&gt;sitemap checker&lt;/a&gt; to catch what Google would reject: broken XML, addresses on the wrong host, bad dates.&lt;/li&gt;
         &lt;li&gt;Paste your most important page into URL Inspection and press &lt;em&gt;Request indexing&lt;/em&gt;. &quot;URL is on Google&quot; means it can appear in results; &quot;URL is not on Google&quot; means it can&#x27;t yet, and the Crawl section says why. Ask once: asking again doesn&#x27;t speed it up.&lt;/li&gt;
       &lt;/ol&gt;
 
