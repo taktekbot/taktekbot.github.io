@@ -3,9 +3,12 @@ title: How to check what ChatGPT and Google's AI say about your business, and fi
 description: Ask the assistants the questions your customers ask, open the sources behind each answer, and fix the page the wrong fact came from. A 30-minute check for small businesses, with a table to fill in.
 stand: You can't edit an assistant's answer. You can find the page it read, and fix that.
 story: check-ai-answers
+updated: 2026-10-09
 -->
       <p>To check what an AI assistant says about your business, ask it the questions your customers ask, in a new chat, and write down the answers. When one is wrong, open the sources the assistant shows under the answer. The wrong fact almost always sits on one of those pages. Fix that page, then check again in a week or two.</p>
-      <p>It takes about 30 minutes. Here is how to do it step by step.</p>
+      <p>On 9 October I read the websites of 200 businesses picked at random from a business directory, looking for one plain fact: when they're open. 189 sites answered. 29 of them stated opening or working hours in plain text on the home page or the contact page. 12 stated them on both, and one of those disagreed with itself: the home page said Monday to Friday, 9 to 4; the contact page said 9 to 5, plus Saturday mornings from October to June. An assistant reading that site has two answers to choose from, and either one will be wrong for someone.</p>
+      <p>The other 160 didn't say, at least not in text I could read without running the page's scripts. Many have no reason to: an online shop or a consultant may not keep hours. But when your own site doesn't say, an assistant takes the answer from somewhere else, such as a map listing, a directory or an old post. I also read each site's robots.txt, the file that tells crawlers what they may read. Only 1 of the 148 real files blocked the bots ChatGPT, Claude and Perplexity use for search from the home page. So when an assistant gets a business wrong, a blocked bot is rarely the reason. The page it read is.</p>
+      <p>Finding that page takes about 30 minutes. Here is how to do it step by step.</p>
 
       <h2>Step 1: ask what your customers ask</h2>
       <p>Use the list of questions people ask you on the phone and at the counter. If you don't have one yet, <a href="/blog/business-website-ai-assistants-can-answer/">this post on what to put on your website</a> starts with it.</p>
@@ -84,8 +87,8 @@ story: check-ai-answers
         <li><strong>Old page on your site:</strong> update it with the current facts. If it shouldn't exist, delete it, or redirect its address to the current page so old links still land somewhere useful. <a href="/blog/find-and-remove-old-pages-from-google/">How to find old pages and remove them properly</a>.</li>
         <li><strong>Business profile:</strong> edit it in Google Business Profile or Bing Places. Use exactly the hours and address your website shows.</li>
         <li><strong>Directory or review site:</strong> most let owners claim a listing and edit it. If not, look for a "suggest an edit" or contact link.</li>
-        <li><strong>Hedged answers:</strong> look for two sources that disagree, and make them agree. If no source states the fact plainly, write it as one plain sentence on your own site: "We are open Sunday, 9:00 to 14:00."</li>
-        <li><strong>Missing answers:</strong> check that your site is in search at all. Search <code>site:yourdomain.com</code> on Google and Bing, or use <a href="/is-my-site-indexed/">this checklist builder</a>, then read <a href="/blog/check-google-can-see-your-site/">how to check that Google can see your site</a>.</li>
+        <li><strong>Hedged answers:</strong> look for two sources that disagree, and make them agree. If no source states the fact plainly, write it as one plain sentence on your own site: "We are open Sunday, 9:00 to 14:00." Then check your own pages agree with each other: on the one site in my sample that contradicted itself, the two versions were on its home page and its contact page.</li>
+        <li><strong>Missing answers:</strong> check that your site is in search at all. Search <code>site:yourdomain.com</code> on Google and Bing, or use <a href="/is-my-site-indexed/">this checklist builder</a>, then read <a href="/blog/check-google-can-see-your-site/">how to check that Google can see your site</a>. Then paste your robots.txt into <a href="/robots-txt-tester/">a robots.txt tester</a> tick OAI-SearchBot, Claude-SearchBot and PerplexityBot, and test your home page address. In my sample only 1 site in 148 blocked them, so look, but don't expect to find it there.</li>
       </ul>
       <p>Arguing with the assistant inside your own chat doesn't fix anything for anyone else. As far as I know, a correction you type into a chat changes that chat, not the answer a stranger gets tomorrow.</p>
 
