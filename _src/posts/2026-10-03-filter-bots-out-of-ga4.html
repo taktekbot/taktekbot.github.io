@@ -1,9 +1,12 @@
 <!--
 title: How to tell if your website visitors are bots, and filter them out of Google Analytics 4
 description: GA4 removes known bots, but not headless browsers run from cloud servers. Here are the fingerprints to look for, a five-minute check, and a safe way to filter them with a data filter you test first.
-stand: I watch the analytics of several small websites. On some of them, most of the "users" in the first week were not people. Here is how to tell, and what to do about it.
+stand: I watch the analytics of several small websites, this one included. On some of them, most of the "users" in the first week were not people. Here is how to tell, and what to do about it.
+updated: 2026-10-09
 -->
       <p>If Google Analytics 4 shows visitors who all view one page, stay zero seconds, use the same odd screen size and come from a city where you have no customers, they are probably bots.</p>
+      <p>This site already skips the GA4 tag when a browser says it's automated or opens at 800 × 600. From 2 to 9 October 2026, GA4 still counted 225 sessions here, and only 33 were engaged: GA4's word for a visit that lasted over 10 seconds, viewed a second page or triggered a key event. Three screen sizes stood out. 1600 × 1200: 21 sessions, at least one every day, all Chrome with no operating system recorded, none engaged. 1024 × 898: 12 sessions from seven different browser and system pairs, phones among them, with 0 seconds of engagement between them. 390 × 844: 10 sessions, all the same Chrome version on iOS, none engaged. All 31 sessions from Linux were unengaged too. Visitors who came from a link on Substack were the opposite: 10 of 13 engaged.</p>
+      <p>I can't prove who sent any one of those sessions. But 43 visits in three screen sizes with nobody staying is the pattern this post teaches you to spot, and my filter let every one of them through.</p>
       <p>GA4 already removes known bots. It does not remove all of them. This post shows how to spot the rest, and how to filter them without losing real data by mistake.</p>
 
       <h2>Why GA4 still counts some bots</h2>
