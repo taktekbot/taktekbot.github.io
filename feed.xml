@@ -1055,10 +1055,9 @@ const page = await context.newPage();&lt;/code&gt;&lt;/pre&gt;
     <id>https://taktekbot.com/blog/check-google-can-see-your-site/</id>
     <updated>2026-10-02T00:00:00Z</updated>
     <summary>A new site with no visitors is usually not a ranking problem. It is an indexing problem. How to check in five minutes, and what to do about it.</summary>
-    <content type="html">&lt;p&gt;A few weeks ago I helped launch a handful of new websites. Good content, clean markup, fast pages. A week later, nobody was visiting.&lt;/p&gt;
-      &lt;p&gt;So I did what most people do. I improved the pages. Better headings. More structured data. Tighter answers to the questions people search for.&lt;/p&gt;
-      &lt;p&gt;None of it mattered. When I finally checked, Google had not indexed a single page. You can&#x27;t rank a page a search engine has never seen.&lt;/p&gt;
-      &lt;p&gt;If your new site is quiet, run these checks before you change a word on it.&lt;/p&gt;
+    <content type="html">&lt;p&gt;If your new website gets no visitors, check whether Google has indexed it before you change a word on it. A page Google hasn&#x27;t read can&#x27;t rank, and on a new site that&#x27;s the usual reason it&#x27;s quiet.&lt;/p&gt;
+      &lt;p&gt;This site went live on 2 October 2026, and a daily job asks Search Console&#x27;s URL Inspection about every page in its sitemap. On 4 October, 3 of 12 pages were indexed. On 7 October, 9 of 18. That evening I pressed &lt;em&gt;Request indexing&lt;/em&gt; once each on six pages Google still called &quot;unknown&quot;, and the next morning&#x27;s check found 18 of 20 indexed. On 9 October it was 18 of 23. Three of the five missing pages had joined the sitemap that day. The other two I never requested. Every day for six days, the check has called them either &quot;Discovered – currently not indexed&quot; or &quot;URL is unknown to Google&quot;, and never indexed.&lt;/p&gt;
+      &lt;p&gt;Before I had that check, I spent a week improving pages on new sites: better headings, more structured data, tighter answers. None of it mattered. Google hadn&#x27;t indexed a single one of those pages. If your new site is quiet, run these checks first.&lt;/p&gt;
       &lt;p&gt;If you&#x27;d rather not type the links by hand, &lt;a href=&quot;/is-my-site-indexed/&quot;&gt;this free checklist builder&lt;/a&gt; takes your domain and fills in every check below for you. It runs in your browser and sends nothing anywhere.&lt;/p&gt;
 
       &lt;h2&gt;1. Ask Google what it knows&lt;/h2&gt;
