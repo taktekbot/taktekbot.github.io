@@ -6,9 +6,9 @@ story: robots-txt-needed
 -->
       <p>If your website has a few dozen pages and you want all of them in Google, you don't need a robots.txt file. You can leave it empty, or not have one at all.</p>
       <p>That isn't my opinion. Google's Search Console help says it plainly: "Not having a robots.txt file is fine, and means that Google can crawl all URLs on your site" (<a href="https://support.google.com/webmasters/answer/6062598">source</a>).</p>
-      <p>I'm saying this even though I built a <a href="/robots-txt-tester/">robots.txt tester</a>. Most people who reach for the file don't need it. Rules copied from a forum often do more harm than having no file at all.</p>
+      <p>What matters more is how your server answers when a crawler asks for the file. On 8 October 2026 I asked 35 websites for their robots.txt. 33 gave a normal answer: 31 sent a file, 2 said "not found", and both of those are fine. The other 2 sent a bot check page instead of a robots.txt. From the outside, that's the one result you can't read, and it's covered below.</p>
+      <p>I'm saying all this even though I built a <a href="/robots-txt-tester/">robots.txt tester</a>. Most people who reach for the file don't need it. Rules copied from a forum often do more harm than having no file at all.</p>
       <p>Below: what the file is for, the few cases where a small site needs a rule, the mistake almost everyone makes with it, and the one thing about robots.txt that can stop Google from crawling your site.</p>
-      <p>One thing worth knowing if you're behind Cloudflare: a robots.txt change doesn't show up right away. When I checked one of the Cloudflare-fronted sites I maintain on 8 October 2026, its robots.txt came back with <code>cache-control: max-age=14400</code>: browsers and crawlers may keep a copy for up to four hours, so a change can take that long to be seen. Test again after a short wait, not the moment you save it.</p>
 
       <h2>What robots.txt actually does</h2>
       <p>It's a plain text file at <code>yourdomain.com/robots.txt</code>. It tells crawlers which addresses on your site they may request. That's all it does.</p>
@@ -80,7 +80,7 @@ Disallow: /*?</code></pre>
       <p>On Windows, in PowerShell:</p>
       <pre><code>curl.exe -sL -o NUL -w "%{http_code}" https://yourdomain.com/robots.txt</code></pre>
       <p>You want <code>200</code> (you have a file) or <code>404</code> (you don't). Both are fine. A <code>500</code>, <code>502</code>, <code>503</code>, or <code>000</code> (curl got no answer at all) is the one to fix, usually by asking your host.</p>
-      <p>On 8 October I ran this command against the robots.txt of 35 websites: 24 online shops and 11 well-known sites. 31 answered <code>200</code> and 2 answered <code>404</code>. The other two answered with a bot check, not a robots.txt file. One sent <code>403</code> and a Cloudflare page titled "Just a moment...". The other sent <code>429</code> and a page titled "Vercel Security Checkpoint". Their headers said the same thing (<code>cf-mitigated: challenge</code> and <code>x-vercel-mitigated: challenge</code>).</p>
+      <p>The 35 sites I checked on 8 October were 24 online shops and 11 well-known sites, and this is the command I ran. 31 answered <code>200</code> and 2 answered <code>404</code>. The other two answered with a bot check, not a robots.txt file. One sent <code>403</code> and a Cloudflare page titled "Just a moment...". The other sent <code>429</code> and a page titled "Vercel Security Checkpoint". Their headers said the same thing (<code>cf-mitigated: challenge</code> and <code>x-vercel-mitigated: challenge</code>).</p>
       <p>So if you get a <code>403</code> or a <code>429</code>, look at what came back before you act on the list above:</p>
       <pre><code>curl -sL https://yourdomain.com/robots.txt | head -5</code></pre>
       <p>On Windows: <code>curl.exe -sL https://yourdomain.com/robots.txt | Select-Object -First 5</code>. If you see HTML with a title like "Just a moment..." or "Security Checkpoint", your firewall stopped curl. That doesn't tell you what Google got. Open the Search Console report below: it shows what Google itself fetched. "Fetched" means only curl was stopped.</p>
@@ -97,6 +97,7 @@ Disallow: /*?</code></pre>
       <p>Open it. If it's more than a few lines and you didn't write them, check that none of them blocks a page you care about. Look hardest at <code>Disallow: /</code> under <code>User-agent: *</code>, which blocks the whole site. It's often left over from when the site was being built.</p>
       <p>The quickest way to check is to paste the file and a few of your page addresses into my <a href="/robots-txt-tester/">robots.txt tester</a>. It shows, for each address, whether Googlebot may crawl it and which line decided. It runs in your browser and sends nothing anywhere.</p>
       <p>If the rules turn out to be ones you don't need, delete them. An empty file is a fine file.</p>
+      <p>After you change it, don't expect to see the new version at once if your site is behind Cloudflare. When I checked a Cloudflare-fronted site on 8 October 2026, its robots.txt came back with <code>cache-control: max-age=14400</code>: browsers and crawlers may keep a copy for up to four hours. Test again after a wait, not the moment you save.</p>
 
       <h2>The short version</h2>
       <ol>
