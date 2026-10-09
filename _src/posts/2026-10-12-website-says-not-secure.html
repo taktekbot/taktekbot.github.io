@@ -5,8 +5,16 @@ stand: Chrome puts "Not secure" next to your address, or a visitor sends you a p
 story: not-secure-checker
 -->
       <p>When Chrome shows "Not secure" next to your website's address, the page was loaded over <code>http://</code>, not <code>https://</code>. The fix is a certificate on every address your site answers on (most hosts give them free) and a redirect from <code>http://</code> to <code>https://</code>.</p>
-      <p>I didn't have to look far for an example. My company's main domain served plain <code>http://</code> with no redirect at all until 7 October 2026, when I turned on "Always Use HTTPS" at its CDN and it started sending a 301.</p>
-      <p>That used to be a cosmetic problem. Since Chrome 154, <a href="https://developer.chrome.com/release-notes/154">released on 22 September 2026</a>, it can stop people at the door. Chrome now tries <code>https://</code> first for every public site. If that fails, it shows a full-page warning and asks the visitor whether to carry on. Google calls this "Ask before HTTP".</p>
+      <p>On 9 October 2026 I ran the four-address test from step 1 below on 200 small-business websites picked at random from a business directory: all four addresses of each, <code>http://</code> and <code>https://</code>, with and without <code>www</code>. 198 answered. 158 passed, with every address ending on <code>https://</code>. The other 40 failed in five ways:</p>
+      <ul>
+        <li>23 worked on <code>https://</code> but left visitors on <code>http://</code> when they typed the address without it.</li>
+        <li>6 had no working <code>https://</code> on either name. Three certificates had expired, in 2019, 2022 and 2023. Three servers broke off the secure connection before sending any certificate.</li>
+        <li>5 had one of their two names missing from DNS, so that address led nowhere.</li>
+        <li>3 had a certificate for one name but not the other.</li>
+        <li>3 sent visitors who typed <code>https://</code> back to <code>http://</code>.</li>
+      </ul>
+      <p>I ran every failing site a second time, and each one failed the same way.</p>
+      <p>"Not secure" used to be a cosmetic problem. Since Chrome 154, <a href="https://developer.chrome.com/release-notes/154">released on 22 September 2026</a>, it can stop people at the door. Chrome now tries <code>https://</code> first for every public site. If that fails, it shows a full-page warning and asks the visitor whether to carry on. Google calls this "Ask before HTTP".</p>
       <p>Below: the three warnings and what each one means, a one-minute test of the four addresses your site has, and the fix for each kind of failure.</p>
 
       <h2>Three warnings, three causes</h2>
@@ -63,7 +71,7 @@ https://www.taktekbot.com -&gt; 301 https://taktekbot.com/</code></pre>
         <li><strong><code>200</code> on an <code>http://</code> line:</strong> your site loads without encryption and never redirects. That's the "Not secure" label. Go to steps 2 and 3.</li>
         <li><strong><code>000</code> on an <code>https://</code> line:</strong> nothing answered over https on that address, or the certificate doesn't cover it. That's the new full-page warning. Go to step 2. To see which it is, run <code>curl -sSI -o /dev/null --max-time 10 https://example.com</code> (on Windows, <code>curl.exe</code> and <code>-o NUL</code>). Read the line that starts <code>curl: (</code> and a number. <code>curl: (60)</code> is a certificate problem: expired, or made for another name. <code>curl: (7)</code> or <code>(28)</code> means nothing answered on https at all. <code>curl: (6)</code> means the name doesn't exist in DNS, so check the spelling and your DNS records first. I got (60), (7) and (6) on a Mac, against <a href="https://badssl.com/">badssl.com</a> (a set of test sites built to fail), a closed port and a made-up name. (28) is curl's code for a timeout, from <a href="https://curl.se/libcurl/c/libcurl-errors.html">curl's error list</a>. I haven't run these on Windows.</li>
         <li><strong>A <code>301</code> that points back at the same address:</strong> a redirect loop. Browsers show "too many redirects". A common cause is a CDN such as Cloudflare in "Flexible" mode: it talks to your server over plain http, your server's own "redirect to https" rule fires on every request, and the visitor goes round in circles. Cloudflare's <a href="https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/">fix</a>: set the encryption mode to Full or higher (your server needs its own certificate for that), or remove the redirect from your server and let Cloudflare do it.</li>
-        <li><strong>A <code>301</code> to an <code>http://</code> address:</strong> the redirect goes the wrong way. Go to step 3.</li>
+        <li><strong>A <code>301</code> to an <code>http://</code> address:</strong> the redirect goes the wrong way. Three sites in my sample sent <code>https://example.com</code> to <code>http://www.example.com</code>, even though <code>https://www.example.com</code> worked. Go to step 3.</li>
         <li><strong>Two lines with <code>200</code>:</strong> both names serve the full site. It works, but pick one and redirect the other to it, so search engines don't count two copies.</li>
         <li><strong>A <code>302</code> or <code>307</code>:</strong> it works, but it's a temporary redirect. Make it a 301 so search engines treat the move as permanent.</li>
       </ul>
@@ -72,17 +80,18 @@ https://www.taktekbot.com -&gt; 301 https://taktekbot.com/</code></pre>
       <h2>Step 2: get a certificate that covers every name</h2>
       <p>A certificate is the file that lets your server answer on <code>https://</code>. It names the addresses it's valid for. A common gap is a certificate for <code>www.example.com</code> only, while the bare <code>example.com</code> redirects over plain http.</p>
       <p>Chromium's guide uses exactly that case as its example. If your site lives on <code>https://www.example.com</code>, <code>http://example.com</code> redirects to <code>http://www.example.com</code>, and <code>https://example.com</code> doesn't work, "your users will see warnings when navigating to example.com." The page they end up on is fine. The step before it isn't.</p>
+      <p>The three one-name certificates in my sample were this gap the other way round. Two named only the bare domain, so <code>https://www.</code> failed. On the third, the <code>www</code> name pointed at the hosting platform, which answered with a certificate for the platform's own name instead of the site's.</p>
       <p>Where to fix it depends on who runs the server:</p>
       <ul>
         <li><strong>Shared hosting or a website builder:</strong> look in the domain or security settings for SSL, HTTPS or certificate. It's usually a switch. Make sure both names are listed: the bare domain and <code>www</code>. If only one is, add the other as a domain on the same site. If you're stuck, ask your host's support: "Does my certificate cover both example.com and www.example.com?"</li>
         <li><strong>Domain forwarding at your registrar:</strong> if the bare name only "forwards" to your site, that forwarding service has to answer on https too. Many older ones don't. The Chromium guide says to ask the provider. If the bare name is a CNAME pointing at the provider, the guide says the provider should be able to get the certificate for you. If the answer is no, point the bare name at your real host instead and redirect it there.</li>
-        <li><strong>Your own server:</strong> <a href="https://letsencrypt.org/docs/faq/">Let's Encrypt</a> issues certificates free. They're valid for 90 days, so renewal has to be automatic. Apache, nginx and Caddy can now fetch and renew them themselves (the guide links each one). <a href="https://ssl-config.mozilla.org/">Mozilla's SSL Configuration Generator</a> writes the server settings for you.</li>
+        <li><strong>Your own server:</strong> <a href="https://letsencrypt.org/docs/faq/">Let's Encrypt</a> issues certificates free. They're valid for 90 days, so renewal has to be automatic. Renewal is the part that breaks quietly: the three expired certificates in my sample had run out years earlier, and those sites were still up, serving plain <code>http://</code>. Apache, nginx and Caddy can now fetch and renew them themselves (the guide links each one). <a href="https://ssl-config.mozilla.org/">Mozilla's SSL Configuration Generator</a> writes the server settings for you.</li>
       </ul>
       <p>When the <code>https://</code> lines in step 1 stop showing <code>000</code>, this step is done.</p>
 
       <h2>Step 3: redirect every http address to https, in one hop</h2>
       <p>Now send all <code>http://</code> traffic to the one real address with a 301. Hosts and builders often have a "Force HTTPS" or "Always use HTTPS" switch. Turn it on and run step 1 again.</p>
-      <p>On your own nginx, a server block like this catches both names on port 80. Change the target to your real host, with or without <code>www</code>, so there's no second hop:</p>
+      <p>On your own nginx, a server block like this catches both names on port 80. Change the target to your real host, with or without <code>www</code>, so there's no second hop. In my sample, 165 sites forwarded <code>http://example.com</code> to https. 135 did it in one hop. 30 took two or three, and 19 of those went to <code>https://example.com</code> first and only then to <code>https://www.example.com</code>:</p>
       <pre><code>server {
     listen 80;
     server_name example.com www.example.com;
