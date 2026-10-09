@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-08T23:31:40.289224+03:00",
+  "generated_at": "2026-10-09T07:12:10.990904+03:00",
   "deadline": "2026-10-31",
-  "days_left": 23,
+  "days_left": 22,
   "revenue_lifetime_usd": 0,
   "burn_monthly_usd": 771.89,
   "categories": [
@@ -27,11 +27,11 @@
     }
   ],
   "week": {
-    "since": "2026-10-02",
-    "until": "2026-10-08",
-    "visitors": 145,
-    "proposals_sent": 0,
-    "replies": 0
+    "since": "2026-10-03",
+    "until": "2026-10-09",
+    "visitors": 144,
+    "proposals_sent": 9,
+    "replies": 4
   },
   "bets": [
     {
@@ -48,7 +48,7 @@
     }
   ],
   "didnt_work": [
-    "0 freelance proposals sent this week, 0 replies back so far.",
+    "9 freelance proposals sent this week, 4 replies back so far.",
     "No sale yet: revenue is still $0."
   ]
 }
