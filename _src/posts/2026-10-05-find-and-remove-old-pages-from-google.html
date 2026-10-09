@@ -1,10 +1,20 @@
 <!--
 title: How to find old pages of your website that still show up in Google, and remove them properly
 description: Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.
+updated: 2026-10-09
 stand: A page you forgot is still a page a search engine reads. Here is how to find yours and retire them without breaking anything.
 -->
       <p>To find old pages that still show up in Google, search <code>site:yourdomain.com</code> with words like "price", "hours" or a past year, and export the indexed pages from Google Search Console. For each old page, update it, redirect it to the page that replaced it, or delete it so it returns a 404. Then use Google's Removals tool to hide it while Google catches up.</p>
       <p>Old pages matter more than they used to. Search engines show them, and AI assistants that search the web read them and repeat what they say. If ChatGPT quotes your 2023 prices, there's usually a 2023 page behind it. This post is the cleanup that follows <a href="/blog/check-what-ai-assistants-say-about-your-business/">checking what assistants say about you</a>.</p>
+      <p>Deleting a page is the step most likely to fail without anyone noticing. On 9 October I asked 200 small-business websites, picked at random from a business directory, for an old page that never existed: <code>/summer-sale-2023-zz9</code>. 197 answered. 175 said 404, page not found, which is right. 18 said 200, which tells Google "here is the page":</p>
+      <ul>
+        <li>8 sent the made-up address their home page, byte for byte, without redirecting.</li>
+        <li>3 redirected it to the home page. On one of them, the www address answered 404 correctly. The address without www was the problem: its forward to www sent every path to the home page.</li>
+        <li>3 redirected it to an error page, and the error page itself answered 200.</li>
+        <li>3 showed a "not found" message, with status 200.</li>
+        <li>1 sent an empty page.</li>
+      </ul>
+      <p>Google's help says what happens to answers like these: "If the content suggests an error for Google Search, an empty page or an error message, Search Console will show a soft 404 error" (<a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">source</a>). On those 18 sites, deleting an old page leaves an address that still answers 200. I ran each failing site twice; the answers didn't change. Step 3 shows how to check yours in one command.</p>
 
       <h2>Step 1: find the old pages</h2>
       <p>Use more than one way. Each one finds pages the others miss.</p>
@@ -65,7 +75,13 @@ site:yourdomain.com before:2024</code></pre>
 
       <h2>Step 3: check that it actually worked</h2>
       <p>Website builders get this wrong more often than you'd think. A "deleted" page can still answer with a 200 status and a friendly "page not found" message. Google calls that a soft 404, and it stays a problem (<a href="https://support.google.com/webmasters/answer/7440203">source</a>).</p>
-      <p>Check each changed address. In a terminal, on Mac or Linux:</p>
+      <p>Start with an address that never existed, so you know what your site does with a missing page. In a terminal, on Mac or Linux:</p>
+      <pre><code>curl -sL -o /dev/null -w "%{http_code} %{url_effective}\n" https://yourdomain.com/no-such-page-test
+# 404 https://yourdomain.com/no-such-page-test    good
+# 200 https://yourdomain.com/                      redirects missing pages home
+# 200 https://yourdomain.com/no-such-page-test     a soft 404</code></pre>
+      <p>On Windows, type <code>curl.exe</code> instead of <code>curl</code> and put <code>%{http_code}</code> in single quotes: <code>-w '%{http_code} %{url_effective}'</code>. Run it on both names, with and without <code>www.</code>: one site in my sample did it right on one and wrong on the other. If the answer is 200, deleting pages won't work until that's fixed. Look in your website builder's settings for a 404 page; on a site someone built for you, ask them to make missing addresses answer 404. Of the 18 sites in my sample, 8 served the home page at any address. Missing addresses have to answer 404 before any deleted page can.</p>
+      <p>Then check each changed address:</p>
       <pre><code>curl -sI https://yourdomain.com/summer-sale | head -1
 # HTTP/2 404              deleted, good
 # HTTP/2 301              redirected, good
