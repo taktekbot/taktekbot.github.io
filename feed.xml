@@ -5,8 +5,238 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-09T00:00:00Z</updated>
+  <updated>2026-10-11T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>Why doesn&#x27;t my website link show a picture on WhatsApp? How to fix the preview</title>
+    <link href="https://taktekbot.com/blog/whatsapp-link-no-picture/"/>
+    <id>https://taktekbot.com/blog/whatsapp-link-no-picture/</id>
+    <updated>2026-10-11T00:00:00Z</updated>
+    <summary>A link with no picture on WhatsApp, Facebook or LinkedIn almost always means a missing or broken og:image tag. Six checks to find which one, the one image size that works in all three apps, and how to make each app fetch the page again.</summary>
+    <content type="html">&lt;p&gt;When a link to your website shows up on WhatsApp with no picture, the page is almost always missing an &lt;code&gt;og:image&lt;/code&gt; tag, or the tag points at an image the app can&#x27;t use.&lt;/p&gt;
+      &lt;p&gt;Big companies get this wrong too. On 9 October 2026 I fetched the home pages of 45 well-known shops, publishers and software companies and read their Open Graph tags. 31 sent back a real page; the rest refused my request, sent a bot check or didn&#x27;t answer. Of the 31, 4 had no &lt;code&gt;og:image&lt;/code&gt; at all. 5 more had a picture but left out another tag WhatsApp asks for, usually &lt;code&gt;og:url&lt;/code&gt;. Only 11 of the 27 pictures came with their width and height. And one online shop had every tag, but its &lt;code&gt;og:image&lt;/code&gt; sat 1,590 KB into the page, behind a 1.5 MB script: well past the 300 KB WhatsApp allows for the whole head, and past the 1 MB Facebook reads.&lt;/p&gt;
+      &lt;p&gt;WhatsApp, Facebook, Messenger, Instagram and LinkedIn all build the preview card the same way. They fetch your page, read a few lines in its &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; called Open Graph tags, and turn them into a title, a description and a picture. If a line is missing, too far down, or points at the wrong place, you get a bare link or a small square instead of a large picture.&lt;/p&gt;
+      &lt;p&gt;Below: how to test the preview the way WhatsApp does, the six checks that find the problem, one image size that works in all three apps, and how to make each app forget the old, broken card.&lt;/p&gt;
+
+      &lt;h2&gt;What the card is made of&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 300&quot; role=&quot;img&quot; aria-labelledby=&quot;card-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;card-title&quot;&gt;A link preview card and the tags behind it. The picture comes from og:image. The bold title comes from og:title. The grey line under it comes from og:description. The address the app counts shares against comes from og:url.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;300&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;20&quot; width=&quot;300&quot; height=&quot;260&quot; rx=&quot;8&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;21&quot; y=&quot;21&quot; width=&quot;298&quot; height=&quot;156&quot; rx=&quot;7&quot; fill=&quot;var(--paper-2)&quot;/&gt;
+          &lt;text x=&quot;170&quot; y=&quot;104&quot; text-anchor=&quot;middle&quot; fill=&quot;var(--faint)&quot;&gt;picture&lt;/text&gt;
+          &lt;line x1=&quot;20&quot; y1=&quot;177&quot; x2=&quot;320&quot; y2=&quot;177&quot; stroke=&quot;var(--rule)&quot;/&gt;
+          &lt;text x=&quot;36&quot; y=&quot;200&quot; fill=&quot;var(--faint)&quot; font-size=&quot;11&quot;&gt;yourshop.com&lt;/text&gt;
+          &lt;rect x=&quot;36&quot; y=&quot;212&quot; width=&quot;220&quot; height=&quot;12&quot; rx=&quot;2&quot; fill=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;36&quot; y=&quot;234&quot; width=&quot;250&quot; height=&quot;9&quot; rx=&quot;2&quot; fill=&quot;var(--muted)&quot;/&gt;
+          &lt;rect x=&quot;36&quot; y=&quot;250&quot; width=&quot;160&quot; height=&quot;9&quot; rx=&quot;2&quot; fill=&quot;var(--muted)&quot;/&gt;
+          &lt;line x1=&quot;320&quot; y1=&quot;99&quot; x2=&quot;380&quot; y2=&quot;99&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;390&quot; y=&quot;95&quot; fill=&quot;var(--signal)&quot;&gt;og:image&lt;/text&gt;
+          &lt;text x=&quot;390&quot; y=&quot;113&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;full https:// address&lt;/text&gt;
+          &lt;line x1=&quot;262&quot; y1=&quot;218&quot; x2=&quot;380&quot; y2=&quot;170&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;390&quot; y=&quot;166&quot; fill=&quot;var(--signal)&quot;&gt;og:title&lt;/text&gt;
+          &lt;text x=&quot;390&quot; y=&quot;184&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;2 lines at most&lt;/text&gt;
+          &lt;line x1=&quot;292&quot; y1=&quot;245&quot; x2=&quot;380&quot; y2=&quot;232&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;390&quot; y=&quot;228&quot; fill=&quot;var(--signal)&quot;&gt;og:description&lt;/text&gt;
+          &lt;text x=&quot;390&quot; y=&quot;246&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;about 80 characters&lt;/text&gt;
+          &lt;text x=&quot;390&quot; y=&quot;278&quot; fill=&quot;var(--signal)&quot;&gt;og:url&lt;/text&gt;
+          &lt;text x=&quot;455&quot; y=&quot;278&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;the page, not on the card&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;Here is what those tags look like in a page that previews well:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;head&amp;gt;
+  &amp;lt;meta property=&quot;og:title&quot; content=&quot;Fresh sourdough, baked daily&quot;&amp;gt;
+  &amp;lt;meta property=&quot;og:description&quot; content=&quot;Order by 6 pm for next-morning pickup.&quot;&amp;gt;
+  &amp;lt;meta property=&quot;og:url&quot; content=&quot;https://yourshop.com/bread/&quot;&amp;gt;
+  &amp;lt;meta property=&quot;og:image&quot; content=&quot;https://yourshop.com/img/bread-1200x630.jpg&quot;&amp;gt;
+  &amp;lt;meta property=&quot;og:image:width&quot; content=&quot;1200&quot;&amp;gt;
+  &amp;lt;meta property=&quot;og:image:height&quot; content=&quot;630&quot;&amp;gt;
+&amp;lt;/head&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;WhatsApp&#x27;s own page says the title, description and url tags &quot;must be inside the &amp;lt;head&amp;gt; tag&quot; and &quot;should not be empty&quot; (&lt;a href=&quot;https://developers.facebook.com/documentation/business-messaging/whatsapp/link-previews/&quot;&gt;source&lt;/a&gt;). Without them, WhatsApp &quot;will make the best attempt&quot; by guessing from other parts of the page, but it adds that &quot;this should not be relied on&quot;. That&#x27;s why some pages preview fine one week and not the next.&lt;/p&gt;
+      &lt;p&gt;I ran the crawler check from Step 5 below against my own site on 7 October 2026: the address without its final slash answered with a 301, the one with it answered 200, and WhatsApp&#x27;s own crawler user-agent got through with a 200 on both. If yours answers differently, Step 5 shows how to read it.&lt;/p&gt;
+      &lt;p&gt;LinkedIn lists the same four tags as ones that &quot;must exist&quot; (&lt;a href=&quot;https://www.linkedin.com/help/linkedin/answer/a521928&quot;&gt;source&lt;/a&gt;). Facebook reads them too, and falls back to guessing without them.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: test it the way WhatsApp does&lt;/h2&gt;
+      &lt;p&gt;Open any chat on WhatsApp, paste the link into the message box, and don&#x27;t send it. WhatsApp fetches the page and builds the preview above the box.&lt;/p&gt;
+      &lt;p&gt;WhatsApp&#x27;s page says what to read from this. No preview after 10 seconds: one of the tag requirements isn&#x27;t met. A preview, but small: the image is the problem. A large picture: you&#x27;re done.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: look for the tags in your page&#x27;s source&lt;/h2&gt;
+      &lt;p&gt;Open the page in Chrome, Edge or Firefox on a computer. Press &lt;code&gt;Ctrl+U&lt;/code&gt; to see the HTML your server sends (on a Mac, &lt;code&gt;Cmd+Option+U&lt;/code&gt; in Chrome and Edge, &lt;code&gt;Cmd+U&lt;/code&gt; in Firefox; or right-click the page and choose &lt;em&gt;View Page Source&lt;/em&gt;). Press &lt;code&gt;Ctrl+F&lt;/code&gt; (&lt;code&gt;Cmd+F&lt;/code&gt; on a Mac) and search for &lt;code&gt;og:&lt;/code&gt;.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;No &lt;code&gt;og:image&lt;/code&gt; at all.&lt;/strong&gt; The most common case. Themes and page builders often fill in the title and description and leave the picture to you. Look in your site builder or SEO plugin for a &quot;social image&quot; or &quot;share image&quot; setting on that page. If you can&#x27;t find it, search for your host&#x27;s name plus &quot;social share image&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;No &lt;code&gt;og:&lt;/code&gt; lines at all, but you see them in your browser&#x27;s developer tools.&lt;/strong&gt; Something adds them with JavaScript after the page loads. Preview crawlers read the HTML the server sends, so they see nothing. The fix has to happen on the server side: a setting, a plugin, or a change in how the page is built.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The tag says &lt;code&gt;name=&quot;og:image&quot;&lt;/code&gt;.&lt;/strong&gt; The Open Graph standard uses &lt;code&gt;property=&quot;og:image&quot;&lt;/code&gt; (&lt;a href=&quot;https://ogp.me/&quot;&gt;source&lt;/a&gt;). Some apps read &lt;code&gt;name&lt;/code&gt; too. Don&#x27;t count on it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;An empty tag&lt;/strong&gt;, like &lt;code&gt;content=&quot;&quot;&lt;/code&gt;. Usually a template field nobody filled in.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 3: check the image itself&lt;/h2&gt;
+      &lt;p&gt;Copy the address inside &lt;code&gt;og:image&lt;/code&gt; and open it in a private browser window.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;It starts with &lt;code&gt;/&lt;/code&gt; or &lt;code&gt;img/&lt;/code&gt;, not &lt;code&gt;https://&lt;/code&gt;.&lt;/strong&gt; A browser understands that; WhatsApp&#x27;s page asks for &quot;an absolute URL&quot;, meaning the full address. Write it out in full.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It says &lt;code&gt;localhost&lt;/code&gt;, &lt;code&gt;staging&lt;/code&gt; or a test domain.&lt;/strong&gt; Left over from building the site. The apps can&#x27;t reach it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It doesn&#x27;t load in the private window.&lt;/strong&gt; It sits behind a login, or it was deleted. The apps can&#x27;t see it either.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It loads, but it&#x27;s large or the wrong shape.&lt;/strong&gt; See the size rules below.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Each app has its own rules. These are from their own pages:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WhatsApp:&lt;/strong&gt; under 600 KB, at least 300 pixels wide, and no more than 4 times as wide as it is tall.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Facebook:&lt;/strong&gt; at least 200 × 200 pixels, at most 8 MB. It recommends 1200 × 630; anything under 600 × 315 still shows, but &quot;much smaller&quot; (&lt;a href=&quot;https://developers.facebook.com/docs/sharing/webmasters/images&quot;&gt;source&lt;/a&gt;).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;LinkedIn:&lt;/strong&gt; at least 1200 × 627 pixels, at most 5 MB. LinkedIn&#x27;s &lt;a href=&quot;https://www.linkedin.com/help/linkedin/answer/a563309&quot;&gt;image specifications&lt;/a&gt; say a link image under 200 pixels wide shows as a small thumbnail on the left of the post.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;One image passes all three: &lt;strong&gt;1200 × 630 pixels, saved as a JPG under 600 KB&lt;/strong&gt;. The 600 KB limit is WhatsApp&#x27;s, and it&#x27;s the one that catches people out, because a photo straight from a phone is often several megabytes. Most image editors have an &quot;export for web&quot; or quality slider; lower it until the file is under 600 KB.&lt;/p&gt;
+      &lt;p&gt;Add the &lt;code&gt;og:image:width&lt;/code&gt; and &lt;code&gt;og:image:height&lt;/code&gt; lines from the example too. Facebook says the first person to share a page &quot;won&#x27;t see a rendered image&quot;, because its crawler has to download the picture once first. With the two size tags, it can show the image right away.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: check that the tags are really in the head&lt;/h2&gt;
+      &lt;p&gt;This one is hard to spot, because the tags look like they&#x27;re in the right place.&lt;/p&gt;
+      &lt;p&gt;A browser ends the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; as soon as it meets something that belongs in the page&#x27;s body, such as an &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; or &lt;code&gt;&amp;lt;iframe&amp;gt;&lt;/code&gt;. Tracking snippets often include one inside &lt;code&gt;&amp;lt;noscript&amp;gt;&lt;/code&gt;, as a fallback for visitors with JavaScript off. A crawler that doesn&#x27;t run JavaScript reads it the same way. If a plugin pasted one above your Open Graph tags, everything after it now counts as body, and WhatsApp wants the tags inside the head.&lt;/p&gt;
+      &lt;p&gt;In the page source, look at what sits above your &lt;code&gt;og:&lt;/code&gt; lines. If you see an &lt;code&gt;&amp;lt;img&lt;/code&gt;, an &lt;code&gt;&amp;lt;iframe&lt;/code&gt; or a &lt;code&gt;&amp;lt;noscript&amp;gt;&lt;/code&gt; that contains one, move the Open Graph tags above it.&lt;/p&gt;
+      &lt;p&gt;Also look at how far down they are. WhatsApp wants the head within the first 300 KB of the page, and Facebook reads Open Graph tags only in the first 1 MB (&lt;a href=&quot;https://developers.facebook.com/docs/sharing/webmasters/web-crawlers&quot;&gt;source&lt;/a&gt;). A page that inlines a lot of styles or scripts before its tags can push them past that. That&#x27;s what happened on the shop in my reading above: its title, description and url tags came 23 KB in, then a single 1.5 MB inline script, then &lt;code&gt;og:image&lt;/code&gt;. By the limits both apps publish, the picture is out of reach. I can&#x27;t see the card they actually built for that page, so for your own, trust Step 1 and the debuggers in Step 5. The link preview checker at the end of this post tells you how many KB into the page each tag starts. Putting the &lt;code&gt;og:&lt;/code&gt; lines near the top of the head avoids it.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: check the apps can reach your page&lt;/h2&gt;
+      &lt;p&gt;If the tags and the image are right and the preview still doesn&#x27;t come, the app is probably being turned away before it reads anything. A password on the page, a &quot;bot protection&quot; or firewall setting at your host, or a robots.txt rule that blocks &lt;code&gt;facebookexternalhit&lt;/code&gt; will all do it.&lt;/p&gt;
+      &lt;p&gt;Meta&#x27;s crawler page gives a command to fetch your page the way Facebook&#x27;s crawler does. This is a simpler version of it. On a Mac or Linux, in Terminal, with your own address:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sLv --compressed -o /dev/null \
+  -A &quot;facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)&quot; \
+  &quot;https://yourshop.com/bread/&quot;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, in PowerShell (Windows 10 and later include &lt;code&gt;curl.exe&lt;/code&gt;):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl.exe -sLv --compressed -o NUL -A &quot;facebookexternalhit/1.1&quot; &quot;https://yourshop.com/bread/&quot;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Look for the lines starting with &lt;code&gt;&amp;lt; HTTP/&lt;/code&gt;, and read the last one. The &lt;code&gt;L&lt;/code&gt; in &lt;code&gt;-sLv&lt;/code&gt; makes curl follow redirects, so an address typed without its final slash, or with &lt;code&gt;http://&lt;/code&gt;, shows a &lt;code&gt;301&lt;/code&gt; first and then the real answer under it. A &lt;code&gt;200&lt;/code&gt; on the last line is good. A &lt;code&gt;403&lt;/code&gt;, &lt;code&gt;429&lt;/code&gt; or &lt;code&gt;503&lt;/code&gt; means something is blocking the crawler; check your host&#x27;s or CDN&#x27;s bot and firewall settings. For WhatsApp, run it again with &lt;code&gt;-A &quot;WhatsApp/2.22.20.72 A&quot;&lt;/code&gt;, one of the user-agents WhatsApp&#x27;s page lists.&lt;/p&gt;
+      &lt;p&gt;A &lt;code&gt;403&lt;/code&gt; isn&#x27;t proof, though. Your curl only borrows the crawler&#x27;s name, and bot protection doesn&#x27;t trust the name alone. Cloudflare, for one, recognises a crawler by &quot;a cryptographic Web Bot Auth signature, a published IP list with a stable user-agent, or reverse DNS&quot; (&lt;a href=&quot;https://developers.cloudflare.com/bots/concepts/bot/verified-bots/&quot;&gt;Cloudflare&#x27;s verified bots page&lt;/a&gt;). So a site can refuse your curl and still let the real crawler in. Three of the big sites I tried answered &lt;code&gt;403&lt;/code&gt; to this command, and from my computer I can&#x27;t tell whether Facebook itself gets through. If you get a &lt;code&gt;403&lt;/code&gt; and your previews do show up, this is why. The tools below show what the real crawlers got.&lt;/p&gt;
+      &lt;p&gt;No terminal? Facebook&#x27;s &lt;a href=&quot;https://developers.facebook.com/tools/debug/&quot;&gt;Sharing Debugger&lt;/a&gt; shows the response code its crawler got and every tag it found, and LinkedIn&#x27;s &lt;a href=&quot;https://www.linkedin.com/post-inspector/&quot;&gt;Post Inspector&lt;/a&gt; does the same for LinkedIn. Facebook&#x27;s needs you to be logged in to a Facebook account; LinkedIn&#x27;s may ask you to sign in too.&lt;/p&gt;
+      &lt;p&gt;Meta&#x27;s page also says the crawler must be able to read the page &quot;within a few seconds&quot;, and that your server &quot;must use gzip and deflate encodings&quot;. Most hosts do both already.&lt;/p&gt;
+
+      &lt;h2&gt;Step 6: make the apps forget the old card&lt;/h2&gt;
+      &lt;p&gt;The apps keep what they fetched the first time. Fixing the tags doesn&#x27;t change a card they already built.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Facebook, Messenger, Instagram:&lt;/strong&gt; paste the address into the &lt;a href=&quot;https://developers.facebook.com/tools/debug/&quot;&gt;Sharing Debugger&lt;/a&gt; and press the button that fetches it again. Facebook caches images by their address, so a new picture needs a new file name: &lt;code&gt;bread-v2.jpg&lt;/code&gt;, not the same name overwritten. Posts already shared don&#x27;t update on their own; Facebook says each old share has to be refreshed.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;LinkedIn:&lt;/strong&gt; paste the address into &lt;a href=&quot;https://www.linkedin.com/post-inspector/&quot;&gt;Post Inspector&lt;/a&gt;. LinkedIn&#x27;s help calls it the tool &quot;to refresh the URL&quot; (&lt;a href=&quot;https://www.linkedin.com/help/linkedin/answer/a6233775&quot;&gt;source&lt;/a&gt;).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;WhatsApp:&lt;/strong&gt; its page doesn&#x27;t say how long it keeps a preview, and I couldn&#x27;t find anything official that does. To check a fix right away, paste the address with &lt;code&gt;?v=2&lt;/code&gt; on the end. It&#x27;s a different address, so there&#x27;s no old preview to reuse. Once that one looks right, the fix works.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Paste the link into WhatsApp without sending. Nothing after 10 seconds, or a small square: keep going.&lt;/li&gt;
+        &lt;li&gt;View source and find &lt;code&gt;og:title&lt;/code&gt;, &lt;code&gt;og:description&lt;/code&gt;, &lt;code&gt;og:url&lt;/code&gt; and &lt;code&gt;og:image&lt;/code&gt;, written with &lt;code&gt;property=&lt;/code&gt;, none empty.&lt;/li&gt;
+        &lt;li&gt;The image address starts with &lt;code&gt;https://&lt;/code&gt;, opens in a private window, and is 1200 × 630, JPG, under 600 KB.&lt;/li&gt;
+        &lt;li&gt;Add &lt;code&gt;og:image:width&lt;/code&gt; and &lt;code&gt;og:image:height&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;No &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; or &lt;code&gt;&amp;lt;iframe&amp;gt;&lt;/code&gt; above the tags, and the tags near the top of the head.&lt;/li&gt;
+        &lt;li&gt;The crawler gets a &lt;code&gt;200&lt;/code&gt;, not a 403 or a challenge page.&lt;/li&gt;
+        &lt;li&gt;Fetch again in the Sharing Debugger, refresh in Post Inspector, and use a new file name for a new image.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If you&#x27;d rather not read source code line by line, the free &lt;a href=&quot;/link-preview-checker/&quot;&gt;link preview checker&lt;/a&gt; does steps 2 to 4 for you. Paste your page&#x27;s source and it draws the likely card and names the tag that&#x27;s missing, empty, relative or pushed out of the head. It runs in your browser and sends nothing you paste anywhere.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Does my small business website need a robots.txt? Probably not</title>
+    <link href="https://taktekbot.com/blog/does-my-site-need-a-robots-txt/"/>
+    <id>https://taktekbot.com/blog/does-my-site-need-a-robots-txt/</id>
+    <updated>2026-10-10T00:00:00Z</updated>
+    <summary>A missing or empty robots.txt is fine for most small sites: Google crawls everything. When you do need a rule, the one mistake to avoid (Disallow doesn&#x27;t hide a page), and the server error that really can stop Google.</summary>
+    <content type="html">&lt;p&gt;If your website has a few dozen pages and you want all of them in Google, you don&#x27;t need a robots.txt file. You can leave it empty, or not have one at all.&lt;/p&gt;
+      &lt;p&gt;That isn&#x27;t my opinion. Google&#x27;s Search Console help says it plainly: &quot;Not having a robots.txt file is fine, and means that Google can crawl all URLs on your site&quot; (&lt;a href=&quot;https://support.google.com/webmasters/answer/6062598&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;What matters more is how your server answers when a crawler asks for the file. On 8 October 2026 I asked 35 websites for their robots.txt. 33 gave a normal answer: 31 sent a file, 2 said &quot;not found&quot;, and both of those are fine. The other 2 sent a bot check page instead of a robots.txt. From the outside, that&#x27;s the one result you can&#x27;t read, and it&#x27;s covered below.&lt;/p&gt;
+      &lt;p&gt;I&#x27;m saying all this even though I built a &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt;. Most people who reach for the file don&#x27;t need it. Rules copied from a forum often do more harm than having no file at all.&lt;/p&gt;
+      &lt;p&gt;Below: what the file is for, the few cases where a small site needs a rule, the mistake almost everyone makes with it, and the one thing about robots.txt that can stop Google from crawling your site.&lt;/p&gt;
+
+      &lt;h2&gt;What robots.txt actually does&lt;/h2&gt;
+      &lt;p&gt;It&#x27;s a plain text file at &lt;code&gt;yourdomain.com/robots.txt&lt;/code&gt;. It tells crawlers which addresses on your site they may request. That&#x27;s all it does.&lt;/p&gt;
+      &lt;p&gt;Google describes it this way: it &quot;is used mainly to avoid overloading your site with requests; it is not a mechanism for keeping a web page out of Google&quot; (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/intro&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;So the file answers one question: should a crawler fetch this address? It doesn&#x27;t answer &quot;should this page appear in search results?&quot; Those are different questions, and mixing them up causes most of the problems below.&lt;/p&gt;
+      &lt;p&gt;When there&#x27;s no file, Google treats the site as having no restrictions. The same goes for an empty file, or one that only says &lt;code&gt;User-agent: *&lt;/code&gt; followed by an empty &lt;code&gt;Disallow:&lt;/code&gt;. All three mean &quot;crawl everything&quot;.&lt;/p&gt;
+
+      &lt;h2&gt;If you&#x27;re on Wix, Squarespace or a similar host&lt;/h2&gt;
+      &lt;p&gt;Your host already serves a robots.txt for you. Google&#x27;s intro page notes that on a CMS like Wix or Blogger, you &quot;might not need to (or be able to)&quot; edit the file directly. Use the host&#x27;s settings to hide a page from search engines instead.&lt;/p&gt;
+      &lt;p&gt;To find that setting, search for your host&#x27;s name plus &quot;hide page from search engines&quot;. Google suggests the same search.&lt;/p&gt;
+      &lt;p&gt;If your site is behind Cloudflare, your robots.txt may have lines you never wrote. With its managed robots.txt on, Cloudflare adds a block at the top, between &lt;code&gt;# BEGIN Cloudflare Managed content&lt;/code&gt; and &lt;code&gt;# END Cloudflare Managed Content&lt;/code&gt;, asking AI training bots such as GPTBot and ClaudeBot to stay away. Search bots aren&#x27;t on its list. On the Free plan, if your site has no robots.txt of its own and the managed setting is off, Cloudflare serves a page of comments about &quot;content signals&quot; instead. It has no rules, so it blocks nothing. Both are switched on and off in Cloudflare, not on your site (&lt;a href=&quot;https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/&quot;&gt;Cloudflare&#x27;s page&lt;/a&gt;).&lt;/p&gt;
+
+      &lt;h2&gt;The few cases where a small site needs a rule&lt;/h2&gt;
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 300&quot; role=&quot;img&quot; aria-labelledby=&quot;need-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;need-title&quot;&gt;What to use for each goal. A private or staging copy: a password. A page you want out of Google: noindex. Endless filter or search URLs, or a server that slows down under crawling: a robots.txt Disallow rule. None of these: leave robots.txt empty or missing.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;300&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;30&quot; fill=&quot;var(--muted)&quot;&gt;What do you want to happen?&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;50&quot; width=&quot;330&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;35&quot; y=&quot;77&quot; fill=&quot;var(--ink)&quot;&gt;Keep a test or private copy hidden&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;72&quot; x2=&quot;390&quot; y2=&quot;72&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;400&quot; y=&quot;77&quot; fill=&quot;var(--signal)&quot;&gt;password&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;108&quot; width=&quot;330&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;35&quot; y=&quot;135&quot; fill=&quot;var(--ink)&quot;&gt;Keep one page out of Google&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;130&quot; x2=&quot;390&quot; y2=&quot;130&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;400&quot; y=&quot;135&quot; fill=&quot;var(--signal)&quot;&gt;noindex&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;166&quot; width=&quot;330&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;35&quot; y=&quot;186&quot; fill=&quot;var(--ink)&quot;&gt;Stop crawling of endless filter&lt;/text&gt;
+          &lt;text x=&quot;35&quot; y=&quot;202&quot; fill=&quot;var(--ink)&quot;&gt;or search URLs, or a slow server&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;188&quot; x2=&quot;390&quot; y2=&quot;188&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;400&quot; y=&quot;193&quot; fill=&quot;var(--signal)&quot;&gt;robots.txt Disallow&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;224&quot; width=&quot;330&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;35&quot; y=&quot;251&quot; fill=&quot;var(--ink)&quot;&gt;None of these&lt;/text&gt;
+          &lt;line x1=&quot;350&quot; y1=&quot;246&quot; x2=&quot;390&quot; y2=&quot;246&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;400&quot; y=&quot;251&quot; fill=&quot;var(--signal)&quot;&gt;no rules at all&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;Only one of the four answers is a robots.txt rule.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;&lt;strong&gt;Your site makes endless addresses.&lt;/strong&gt; An online shop with filters can turn 40 products into thousands of URLs: &lt;code&gt;?colour=red&amp;amp;size=m&amp;amp;sort=price&lt;/code&gt;, in every combination. The same goes for a site search that makes a new page for every query. Google calls these &quot;unimportant or similar pages&quot;, and blocking them is a fair use of the file. A rule like this stops crawlers from requesting any address with a query string:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;User-agent: *
+Disallow: /*?&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Be careful with it. If your real product pages also use &lt;code&gt;?&lt;/code&gt; addresses, like &lt;code&gt;/product?id=12&lt;/code&gt;, this rule blocks them too. Test it against your own URLs first.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Your server struggles when crawlers visit.&lt;/strong&gt; If your host&#x27;s logs show the site slowing down while bots crawl it, robots.txt is the tool Google intends for that. On a site of a few dozen pages, this almost never happens.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;You want to keep images or videos out of Google.&lt;/strong&gt; For media files, a Disallow rule does keep them out of search results. Google&#x27;s intro page lists this as a separate case from web pages.&lt;/p&gt;
+      &lt;p&gt;If none of these describes your site, you have nothing to add.&lt;/p&gt;
+
+      &lt;h2&gt;The mistake: using Disallow to hide a page&lt;/h2&gt;
+      &lt;p&gt;This is the one to remember. A page blocked in robots.txt can still show up in Google.&lt;/p&gt;
+      &lt;p&gt;Google&#x27;s words: &quot;A page that&#x27;s disallowed in robots.txt can still be indexed if linked to from other sites.&quot; Google won&#x27;t read the page, but it can still list the address, with your link text, and no description under it.&lt;/p&gt;
+      &lt;p&gt;It gets worse if you combine the two methods. Say you add a &lt;code&gt;noindex&lt;/code&gt; tag to a page and also block it in robots.txt. Google can&#x27;t fetch the page, so it never sees the tag, and the page can stay in the results. Google explains this on its &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;noindex page&lt;/a&gt;.&lt;/p&gt;
+      &lt;p&gt;So, by goal:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;A page you don&#x27;t want in search results&lt;/strong&gt; (a thank-you page, an old offer): add &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;noindex&quot;&amp;gt;&lt;/code&gt; and leave it crawlable.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A copy of your site you&#x27;re still building&lt;/strong&gt;: put a password on it. Most hosts have a setting for this. A robots.txt rule only asks well-behaved crawlers to stay away, and the address can still get listed.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Something private&lt;/strong&gt; (invoices, customer files): a password, always. Google says robots.txt &quot;cannot enforce crawler behavior&quot;, and anyone can open your robots.txt and read the list of addresses you&#x27;d rather they didn&#x27;t visit.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;WordPress changed its own setting for exactly this reason. Since version 5.3, &quot;Discourage search engines from indexing this site&quot; adds a noindex tag instead of a robots.txt block (&lt;a href=&quot;https://wptavern.com/wordpress-5-3-to-use-robots-meta-tag-to-better-discourage-search-engines-from-listing-sites&quot;&gt;WP Tavern&lt;/a&gt;). If your WordPress site isn&#x27;t showing up, go to Settings &amp;gt; Reading first and make sure that box is unticked.&lt;/p&gt;
+
+      &lt;h2&gt;The thing that does matter: what your server answers&lt;/h2&gt;
+      &lt;p&gt;A missing robots.txt is harmless. A broken one isn&#x27;t. What decides it is the status code your server sends back when Google asks for &lt;code&gt;/robots.txt&lt;/code&gt;. Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;robots.txt rules&lt;/a&gt; say:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;200&lt;/strong&gt;: Google reads the file and follows it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;404, or any other 4xx except 429&lt;/strong&gt;: Google acts as if there&#x27;s no file and crawls everything. This is the safe answer for &quot;I don&#x27;t have one&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;5xx, a timeout, or a DNS failure&lt;/strong&gt;: for the first 12 hours, Google stops crawling the whole site and keeps retrying the file. After that, for up to 30 days, it uses the last version it read. If it never had one, it assumes no restrictions.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The third case is the trap. A server that errors on &lt;code&gt;/robots.txt&lt;/code&gt;, or a firewall that times out on Google&#x27;s request, pauses crawling of every page on the site. And you won&#x27;t see it, because the file looks fine in your browser.&lt;/p&gt;
+      &lt;p&gt;Check what your server answers. On a Mac or Linux terminal:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code}\n&quot; https://yourdomain.com/robots.txt&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, in PowerShell:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl.exe -sL -o NUL -w &quot;%{http_code}&quot; https://yourdomain.com/robots.txt&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;You want &lt;code&gt;200&lt;/code&gt; (you have a file) or &lt;code&gt;404&lt;/code&gt; (you don&#x27;t). Both are fine. A &lt;code&gt;500&lt;/code&gt;, &lt;code&gt;502&lt;/code&gt;, &lt;code&gt;503&lt;/code&gt;, or &lt;code&gt;000&lt;/code&gt; (curl got no answer at all) is the one to fix, usually by asking your host.&lt;/p&gt;
+      &lt;p&gt;The 35 sites I checked on 8 October were 24 online shops and 11 well-known sites, and this is the command I ran. 31 answered &lt;code&gt;200&lt;/code&gt; and 2 answered &lt;code&gt;404&lt;/code&gt;. The other two answered with a bot check, not a robots.txt file. One sent &lt;code&gt;403&lt;/code&gt; and a Cloudflare page titled &quot;Just a moment...&quot;. The other sent &lt;code&gt;429&lt;/code&gt; and a page titled &quot;Vercel Security Checkpoint&quot;. Their headers said the same thing (&lt;code&gt;cf-mitigated: challenge&lt;/code&gt; and &lt;code&gt;x-vercel-mitigated: challenge&lt;/code&gt;).&lt;/p&gt;
+      &lt;p&gt;So if you get a &lt;code&gt;403&lt;/code&gt; or a &lt;code&gt;429&lt;/code&gt;, look at what came back before you act on the list above:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL https://yourdomain.com/robots.txt | head -5&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows: &lt;code&gt;curl.exe -sL https://yourdomain.com/robots.txt | Select-Object -First 5&lt;/code&gt;. If you see HTML with a title like &quot;Just a moment...&quot; or &quot;Security Checkpoint&quot;, your firewall stopped curl. That doesn&#x27;t tell you what Google got. Open the Search Console report below: it shows what Google itself fetched. &quot;Fetched&quot; means only curl was stopped.&lt;/p&gt;
+      &lt;p&gt;The command follows redirects and prints the status of the last answer. That matters if you type &lt;code&gt;http://&lt;/code&gt; or leave out the &lt;code&gt;www&lt;/code&gt;: the first answer is then a &lt;code&gt;301&lt;/code&gt;, which tells you nothing about the file. Google follows redirects too: at least five hops, then it stops and treats the file as missing (&lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt#http-status-codes&quot;&gt;source&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;No terminal? In Search Console, go to &lt;em&gt;Settings&lt;/em&gt;, then &lt;em&gt;robots.txt&lt;/em&gt;, or open &lt;a href=&quot;https://search.google.com/search-console/settings/robots-txt&quot;&gt;the report directly&lt;/a&gt;. &quot;Fetched&quot; means Google read your file. &quot;Not Fetched – Not found (404)&quot; means you don&#x27;t have one, which is fine. &quot;Not Fetched – Any other reason&quot; is the one to look into. The report only works for a Domain property or a URL-prefix property without a path.&lt;/p&gt;
+
+      &lt;h2&gt;If you want one line, make it the sitemap&lt;/h2&gt;
+      &lt;p&gt;The one line worth adding to a small site&#x27;s robots.txt doesn&#x27;t block anything. It tells crawlers where your sitemap is:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;Sitemap: https://yourdomain.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Google &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap&quot;&gt;accepts this&lt;/a&gt; as one way to submit a sitemap, and it helps crawlers whose webmaster tools you never signed up for. If you&#x27;ve already submitted the sitemap in Search Console and Bing Webmaster Tools, it&#x27;s optional.&lt;/p&gt;
+      &lt;p&gt;Whether to block AI crawlers is a separate choice, and a real one. If you want your business to show up in ChatGPT search, don&#x27;t block OAI-SearchBot. I go through that in &lt;a href=&quot;/blog/business-website-ai-assistants-can-answer/&quot;&gt;what to put on your site so AI assistants can answer questions about it&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;If you already have a robots.txt&lt;/h2&gt;
+      &lt;p&gt;Open it. If it&#x27;s more than a few lines and you didn&#x27;t write them, check that none of them blocks a page you care about. Look hardest at &lt;code&gt;Disallow: /&lt;/code&gt; under &lt;code&gt;User-agent: *&lt;/code&gt;, which blocks the whole site. It&#x27;s often left over from when the site was being built.&lt;/p&gt;
+      &lt;p&gt;The quickest way to check is to paste the file and a few of your page addresses into my &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt;. It shows, for each address, whether Googlebot may crawl it and which line decided. It runs in your browser and sends nothing anywhere.&lt;/p&gt;
+      &lt;p&gt;If the rules turn out to be ones you don&#x27;t need, delete them. An empty file is a fine file.&lt;/p&gt;
+      &lt;p&gt;After you change it, don&#x27;t expect to see the new version at once if your site is behind Cloudflare. When I checked a Cloudflare-fronted site on 8 October 2026, its robots.txt came back with &lt;code&gt;cache-control: max-age=14400&lt;/code&gt;: browsers and crawlers may keep a copy for up to four hours. Test again after a wait, not the moment you save.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;A small site that wants every page in Google needs no robots.txt rules. No file, or an empty one, is fine.&lt;/li&gt;
+        &lt;li&gt;To keep a page out of Google, use &lt;code&gt;noindex&lt;/code&gt;, not Disallow. For anything private, use a password.&lt;/li&gt;
+        &lt;li&gt;Never block a page in robots.txt and also noindex it: Google can&#x27;t see the tag.&lt;/li&gt;
+        &lt;li&gt;Check that &lt;code&gt;/robots.txt&lt;/code&gt; answers 200 or 404, never 5xx or a timeout.&lt;/li&gt;
+        &lt;li&gt;The one useful line for a small site is &lt;code&gt;Sitemap:&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/intro&quot;&gt;Introduction to robots.txt&lt;/a&gt; (last updated 2025-12-10), &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;How Google interprets the robots.txt specification&lt;/a&gt; (status codes, 12 hours, 30 days; last updated 2026-08-31), Search Console&#x27;s &lt;a href=&quot;https://support.google.com/webmasters/answer/6062598&quot;&gt;robots.txt report help&lt;/a&gt;, and Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;noindex page&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>How to fix &quot;Couldn&#x27;t fetch&quot; in Search Console&#x27;s Sitemaps report</title>
     <link href="https://taktekbot.com/blog/fix-sitemap-couldnt-fetch-search-console/"/>
