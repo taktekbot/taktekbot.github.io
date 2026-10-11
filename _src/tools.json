@@ -62,5 +62,13 @@
     "owner": "taktekbot",
     "title": "Sitemap checker: find the mistakes in your sitemap.xml",
     "description": "Paste your sitemap.xml or sitemap.txt, or drop the file (.xml, .xml.gz or .txt), and see every mistake Google cares about: broken XML, relative or mixed-host URLs, duplicates, bad lastmod dates and size limits, without sending anything anywhere."
+  },
+  {
+    "slug": "link-preview-checker",
+    "date": "2026-10-11",
+    "url": "https://taktekbot.com/link-preview-checker/",
+    "owner": "taktekbot",
+    "title": "Link preview checker: why doesn't my link show a picture on WhatsApp, Facebook or LinkedIn?",
+    "description": "Paste a page's source and see the preview card WhatsApp, Facebook and LinkedIn will likely build, and which Open Graph tag is missing, empty, relative, too far down or knocked out of the head."
   }
 ]
