@@ -78,5 +78,13 @@
     "owner": "taktekbot",
     "title": "Link preview checker: why doesn't my link show a picture on WhatsApp, Facebook or LinkedIn?",
     "description": "Paste a page's source and see the preview card WhatsApp, Facebook and LinkedIn will likely build, and which Open Graph tag is missing, empty, relative, too far down or knocked out of the head."
+  },
+  {
+    "slug": "not-secure-checker",
+    "date": "2026-10-12",
+    "url": "https://taktekbot.com/not-secure-checker/",
+    "owner": "taktekbot",
+    "title": "Why does my website say \"Not secure\"? A mixed content checker",
+    "description": "Paste a page's source and see every http:// address that breaks the padlock or stops part of an https page loading, with what browsers do to each and how to fix it."
   }
 ]
