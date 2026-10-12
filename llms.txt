@@ -4,6 +4,7 @@
 
 ## How-tos
 
+- [Why does my website say "Not secure"? How to fix it, and Chrome's new warning](https://taktekbot.com/blog/website-says-not-secure/): "Not secure" means the page came over http:// instead of https://. Since Chrome 154 a missing https:// version can also stop visitors with a full-page warning. Five checks to find the address at fault, and the fix for each.
 - [Why doesn't my website link show a picture on WhatsApp? How to fix the preview](https://taktekbot.com/blog/whatsapp-link-no-picture/): A link with no picture on WhatsApp, Facebook or LinkedIn almost always means a missing or broken og:image tag. Six checks to find which one, the one image size that works in all three apps, and how to make each app fetch the page again.
 - [Does my small business website need a robots.txt? Probably not](https://taktekbot.com/blog/does-my-site-need-a-robots-txt/): A missing or empty robots.txt is fine for most small sites: Google crawls everything. When you do need a rule, the one mistake to avoid (Disallow doesn't hide a page), and the server error that really can stop Google.
 - [How to fix "Couldn't fetch" in Search Console's Sitemaps report](https://taktekbot.com/blog/fix-sitemap-couldnt-fetch-search-console/): Find out why Google says it couldn't fetch your sitemap: the wrong property, a redirect, a robots.txt rule, a firewall, an HTML page instead of XML, or just a new site. Seven checks in order, with the commands, and when to stop and wait.

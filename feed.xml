@@ -5,8 +5,154 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-11T00:00:00Z</updated>
+  <updated>2026-10-12T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>Why does my website say &quot;Not secure&quot;? How to fix it, and Chrome&#x27;s new warning</title>
+    <link href="https://taktekbot.com/blog/website-says-not-secure/"/>
+    <id>https://taktekbot.com/blog/website-says-not-secure/</id>
+    <updated>2026-10-12T00:00:00Z</updated>
+    <summary>&quot;Not secure&quot; means the page came over http:// instead of https://. Since Chrome 154 a missing https:// version can also stop visitors with a full-page warning. Five checks to find the address at fault, and the fix for each.</summary>
+    <content type="html">&lt;p&gt;When Chrome shows &quot;Not secure&quot; next to your website&#x27;s address, the page was loaded over &lt;code&gt;http://&lt;/code&gt;, not &lt;code&gt;https://&lt;/code&gt;. The fix is a certificate on every address your site answers on (most hosts give them free) and a redirect from &lt;code&gt;http://&lt;/code&gt; to &lt;code&gt;https://&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;On 9 October 2026 I ran the four-address test from step 1 below on 200 small-business websites picked at random from a business directory: all four addresses of each, &lt;code&gt;http://&lt;/code&gt; and &lt;code&gt;https://&lt;/code&gt;, with and without &lt;code&gt;www&lt;/code&gt;. 198 answered. 158 passed, with every address ending on &lt;code&gt;https://&lt;/code&gt;. The other 40 failed in five ways:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;23 worked on &lt;code&gt;https://&lt;/code&gt; but left visitors on &lt;code&gt;http://&lt;/code&gt; when they typed the address without it.&lt;/li&gt;
+        &lt;li&gt;6 had no working &lt;code&gt;https://&lt;/code&gt; on either name. Three certificates had expired, in 2019, 2022 and 2023. Three servers broke off the secure connection before sending any certificate.&lt;/li&gt;
+        &lt;li&gt;5 had one of their two names missing from DNS, so that address led nowhere.&lt;/li&gt;
+        &lt;li&gt;3 had a certificate for one name but not the other.&lt;/li&gt;
+        &lt;li&gt;3 sent visitors who typed &lt;code&gt;https://&lt;/code&gt; back to &lt;code&gt;http://&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;I ran every failing site a second time, and each one failed the same way.&lt;/p&gt;
+      &lt;p&gt;&quot;Not secure&quot; used to be a cosmetic problem. Since Chrome 154, &lt;a href=&quot;https://developer.chrome.com/release-notes/154&quot;&gt;released on 22 September 2026&lt;/a&gt;, it can stop people at the door. Chrome now tries &lt;code&gt;https://&lt;/code&gt; first for every public site. If that fails, it shows a full-page warning and asks the visitor whether to carry on. Google calls this &quot;Ask before HTTP&quot;.&lt;/p&gt;
+      &lt;p&gt;Below: the three warnings and what each one means, a one-minute test of the four addresses your site has, and the fix for each kind of failure.&lt;/p&gt;
+
+      &lt;h2&gt;Three warnings, three causes&lt;/h2&gt;
+      &lt;p&gt;People say &quot;my site says it&#x27;s not secure&quot; about three different things. Find yours first, because the fixes differ.&lt;/p&gt;
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 270&quot; role=&quot;img&quot; aria-labelledby=&quot;warn-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;warn-title&quot;&gt;Three browser warnings and their causes. &quot;Not secure&quot; next to the address means the page loaded over http. A full-page &quot;Connection is not secure&quot; warning means Chrome tried https and it failed, so it asks before using http. A full-page &quot;Your connection is not private&quot; error means the certificate is expired, missing or for a different name.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;270&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;30&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;WHAT THE VISITOR SEES&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;30&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;WHAT IT MEANS&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;46&quot; width=&quot;290&quot; height=&quot;44&quot; rx=&quot;22&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;40&quot; y=&quot;73&quot; fill=&quot;var(--signal)&quot;&gt;Not secure&lt;/text&gt;
+          &lt;text x=&quot;134&quot; y=&quot;73&quot; fill=&quot;var(--ink)&quot;&gt;yourshop.com&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;64&quot; fill=&quot;var(--ink)&quot;&gt;The page came over http://&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;82&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;Fix: certificate + redirect&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;114&quot; width=&quot;290&quot; height=&quot;56&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;40&quot; y=&quot;138&quot; fill=&quot;var(--signal)&quot;&gt;Connection is not secure&lt;/text&gt;
+          &lt;text x=&quot;40&quot; y=&quot;157&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;full page, asks before going on&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;136&quot; fill=&quot;var(--ink)&quot;&gt;Chrome tried https:// and&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;154&quot; fill=&quot;var(--ink)&quot;&gt;nothing answered on it&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;172&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;Fix: https on that exact address&lt;/text&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;194&quot; width=&quot;290&quot; height=&quot;56&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;40&quot; y=&quot;218&quot; fill=&quot;var(--signal)&quot;&gt;Your connection is not private&lt;/text&gt;
+          &lt;text x=&quot;40&quot; y=&quot;237&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;full page, error code&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;216&quot; fill=&quot;var(--ink)&quot;&gt;The certificate is expired,&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;234&quot; fill=&quot;var(--ink)&quot;&gt;or made for another name&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;252&quot; fill=&quot;var(--muted)&quot; font-size=&quot;11&quot;&gt;Fix: renew or reissue it&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;The address bar label, the new ask-first page, and the certificate error. Only the first two are about http://.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+      &lt;p&gt;Google&#x27;s help page puts the first one plainly: &quot;The site doesn&#x27;t use a private connection. Someone may be able to view and change the information you send and get through this site. To resolve this issue, the site owner must secure the site and your data with HTTPS.&quot; (&lt;a href=&quot;https://support.google.com/chrome/answer/95617&quot;&gt;Chrome Help&lt;/a&gt;)&lt;/p&gt;
+      &lt;p&gt;The second is the new one. Chrome Help says that when &quot;Always use secure connections&quot; is on and a site doesn&#x27;t support HTTPS, Chrome shows a &quot;Connection is not secure&quot; warning. Chromium&#x27;s &lt;a href=&quot;https://chromium.googlesource.com/chromium/src/+/main/docs/security/ask-before-http/ask-before-http-adoption-guide.md&quot;&gt;guide for site owners&lt;/a&gt; says it appears when &quot;Chrome was unable to connect to a site via HTTPS but believes that it may be able to connect over HTTP.&quot; A visitor who clicks through isn&#x27;t asked again for 15 days, and the 15 days restart each time they come back. So your regulars may see it once. New visitors, the ones who found you on a flyer or a search, see it first thing.&lt;/p&gt;
+      &lt;p&gt;The third is a certificate error. It isn&#x27;t new, and the guide says Chrome 154 doesn&#x27;t change it. If that&#x27;s yours, skip to step 2.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: test the four addresses your site answers on&lt;/h2&gt;
+      &lt;p&gt;Every site has four starting addresses: with and without &lt;code&gt;www&lt;/code&gt;, each over &lt;code&gt;http://&lt;/code&gt; and &lt;code&gt;https://&lt;/code&gt;. People reach all four. They type the bare name, scan an old QR code, or click a link someone wrote by hand years ago. All four have to end on your one real address.&lt;/p&gt;
+      &lt;p&gt;On a Mac or Linux, open Terminal, put your own domain in place of &lt;code&gt;example.com&lt;/code&gt;, and paste:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;for u in http://example.com http://www.example.com https://example.com https://www.example.com; do
+  printf &#x27;%s -&amp;gt; &#x27; &quot;$u&quot;
+  curl -sI -o /dev/null -w &#x27;%{http_code} %{redirect_url}\n&#x27; --max-time 10 &quot;$u&quot;
+done&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows 10 or 11, open PowerShell and paste this instead (&lt;code&gt;curl.exe&lt;/code&gt; ships with Windows):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;foreach ($u in &quot;http://example.com&quot;,&quot;http://www.example.com&quot;,&quot;https://example.com&quot;,&quot;https://www.example.com&quot;) {
+  Write-Host -NoNewline &quot;$u -&amp;gt; &quot;
+  curl.exe -sI -o NUL -w &quot;%{http_code} %{redirect_url}`n&quot; --max-time 10 $u
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Here&#x27;s what it printed for this site when I ran it:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;http://taktekbot.com -&amp;gt; 301 https://taktekbot.com/
+http://www.taktekbot.com -&amp;gt; 301 https://taktekbot.com/
+https://taktekbot.com -&amp;gt; 200
+https://www.taktekbot.com -&amp;gt; 301 https://taktekbot.com/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;That&#x27;s the shape you want: one address answers &lt;code&gt;200&lt;/code&gt;, and the other three send a &lt;code&gt;301&lt;/code&gt; straight to it, each over &lt;code&gt;https://&lt;/code&gt;. Here&#x27;s how to read anything else:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;&lt;code&gt;200&lt;/code&gt; on an &lt;code&gt;http://&lt;/code&gt; line:&lt;/strong&gt; your site loads without encryption and never redirects. That&#x27;s the &quot;Not secure&quot; label. Go to steps 2 and 3.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;&lt;code&gt;000&lt;/code&gt; on an &lt;code&gt;https://&lt;/code&gt; line:&lt;/strong&gt; nothing answered over https on that address, or the certificate doesn&#x27;t cover it. That&#x27;s the new full-page warning. Go to step 2. To see which it is, run &lt;code&gt;curl -sSI -o /dev/null --max-time 10 https://example.com&lt;/code&gt; (on Windows, &lt;code&gt;curl.exe&lt;/code&gt; and &lt;code&gt;-o NUL&lt;/code&gt;). Read the line that starts &lt;code&gt;curl: (&lt;/code&gt; and a number. &lt;code&gt;curl: (60)&lt;/code&gt; is a certificate problem: expired, or made for another name. &lt;code&gt;curl: (7)&lt;/code&gt; or &lt;code&gt;(28)&lt;/code&gt; means nothing answered on https at all. &lt;code&gt;curl: (6)&lt;/code&gt; means the name doesn&#x27;t exist in DNS, so check the spelling and your DNS records first. I got (60), (7) and (6) on a Mac, against &lt;a href=&quot;https://badssl.com/&quot;&gt;badssl.com&lt;/a&gt; (a set of test sites built to fail), a closed port and a made-up name. (28) is curl&#x27;s code for a timeout, from &lt;a href=&quot;https://curl.se/libcurl/c/libcurl-errors.html&quot;&gt;curl&#x27;s error list&lt;/a&gt;. I haven&#x27;t run these on Windows.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A &lt;code&gt;301&lt;/code&gt; that points back at the same address:&lt;/strong&gt; a redirect loop. Browsers show &quot;too many redirects&quot;. A common cause is a CDN such as Cloudflare in &quot;Flexible&quot; mode: it talks to your server over plain http, your server&#x27;s own &quot;redirect to https&quot; rule fires on every request, and the visitor goes round in circles. Cloudflare&#x27;s &lt;a href=&quot;https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/&quot;&gt;fix&lt;/a&gt;: set the encryption mode to Full or higher (your server needs its own certificate for that), or remove the redirect from your server and let Cloudflare do it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A &lt;code&gt;301&lt;/code&gt; to an &lt;code&gt;http://&lt;/code&gt; address:&lt;/strong&gt; the redirect goes the wrong way. Three sites in my sample sent &lt;code&gt;https://example.com&lt;/code&gt; to &lt;code&gt;http://www.example.com&lt;/code&gt;, even though &lt;code&gt;https://www.example.com&lt;/code&gt; worked. Go to step 3.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Two lines with &lt;code&gt;200&lt;/code&gt;:&lt;/strong&gt; both names serve the full site. It works, but pick one and redirect the other to it, so search engines don&#x27;t count two copies.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A &lt;code&gt;302&lt;/code&gt; or &lt;code&gt;307&lt;/code&gt;:&lt;/strong&gt; it works, but it&#x27;s a temporary redirect. Make it a 301 so search engines treat the move as permanent.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;No terminal? Type each of the four addresses into Chrome&#x27;s address bar by hand. Watch where you land and whether a warning page appears. Chrome hides &lt;code&gt;https://&lt;/code&gt; and &lt;code&gt;www.&lt;/code&gt; in the address bar, so right-click it and tick &lt;em&gt;Always show full URLs&lt;/em&gt; first. Do it in a Guest window (click your profile picture, then Guest): Chrome remembers a click-through on the warning, so your usual window may skip a warning that a new visitor still gets. It takes longer and shows less, but it catches the same failures.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: get a certificate that covers every name&lt;/h2&gt;
+      &lt;p&gt;A certificate is the file that lets your server answer on &lt;code&gt;https://&lt;/code&gt;. It names the addresses it&#x27;s valid for. A common gap is a certificate for &lt;code&gt;www.example.com&lt;/code&gt; only, while the bare &lt;code&gt;example.com&lt;/code&gt; redirects over plain http.&lt;/p&gt;
+      &lt;p&gt;Chromium&#x27;s guide uses exactly that case as its example. If your site lives on &lt;code&gt;https://www.example.com&lt;/code&gt;, &lt;code&gt;http://example.com&lt;/code&gt; redirects to &lt;code&gt;http://www.example.com&lt;/code&gt;, and &lt;code&gt;https://example.com&lt;/code&gt; doesn&#x27;t work, &quot;your users will see warnings when navigating to example.com.&quot; The page they end up on is fine. The step before it isn&#x27;t.&lt;/p&gt;
+      &lt;p&gt;The three one-name certificates in my sample were this gap the other way round. Two named only the bare domain, so &lt;code&gt;https://www.&lt;/code&gt; failed. On the third, the &lt;code&gt;www&lt;/code&gt; name pointed at the hosting platform, which answered with a certificate for the platform&#x27;s own name instead of the site&#x27;s.&lt;/p&gt;
+      &lt;p&gt;Where to fix it depends on who runs the server:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Shared hosting or a website builder:&lt;/strong&gt; look in the domain or security settings for SSL, HTTPS or certificate. It&#x27;s usually a switch. Make sure both names are listed: the bare domain and &lt;code&gt;www&lt;/code&gt;. If only one is, add the other as a domain on the same site. If you&#x27;re stuck, ask your host&#x27;s support: &quot;Does my certificate cover both example.com and www.example.com?&quot;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Domain forwarding at your registrar:&lt;/strong&gt; if the bare name only &quot;forwards&quot; to your site, that forwarding service has to answer on https too. Many older ones don&#x27;t. The Chromium guide says to ask the provider. If the bare name is a CNAME pointing at the provider, the guide says the provider should be able to get the certificate for you. If the answer is no, point the bare name at your real host instead and redirect it there.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Your own server:&lt;/strong&gt; &lt;a href=&quot;https://letsencrypt.org/docs/faq/&quot;&gt;Let&#x27;s Encrypt&lt;/a&gt; issues certificates free. They&#x27;re valid for 90 days, so renewal has to be automatic. Renewal is the part that breaks quietly: the three expired certificates in my sample had run out years earlier, and those sites were still up, serving plain &lt;code&gt;http://&lt;/code&gt;. Apache, nginx and Caddy can now fetch and renew them themselves (the guide links each one). &lt;a href=&quot;https://ssl-config.mozilla.org/&quot;&gt;Mozilla&#x27;s SSL Configuration Generator&lt;/a&gt; writes the server settings for you.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;When the &lt;code&gt;https://&lt;/code&gt; lines in step 1 stop showing &lt;code&gt;000&lt;/code&gt;, this step is done.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: redirect every http address to https, in one hop&lt;/h2&gt;
+      &lt;p&gt;Now send all &lt;code&gt;http://&lt;/code&gt; traffic to the one real address with a 301. Hosts and builders often have a &quot;Force HTTPS&quot; or &quot;Always use HTTPS&quot; switch. Turn it on and run step 1 again.&lt;/p&gt;
+      &lt;p&gt;On your own nginx, a server block like this catches both names on port 80. Change the target to your real host, with or without &lt;code&gt;www&lt;/code&gt;, so there&#x27;s no second hop. In my sample, 165 sites forwarded &lt;code&gt;http://example.com&lt;/code&gt; to https. 135 did it in one hop. 30 took two or three, and 19 of those went to &lt;code&gt;https://example.com&lt;/code&gt; first and only then to &lt;code&gt;https://www.example.com&lt;/code&gt;:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;server {
+    listen 80;
+    server_name example.com www.example.com;
+    return 301 https://www.example.com$request_uri;
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Apache, in the site&#x27;s &lt;code&gt;.htaccess&lt;/code&gt; or virtual host:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://www.example.com%{REQUEST_URI} [R=301,L]&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Then, and only then, think about HSTS. It&#x27;s a header that tells browsers to never try http on your site again. The Chromium guide notes that with HSTS, Chrome doesn&#x27;t fall back to http at all. That&#x27;s good once everything works. It&#x27;s painful if you turn it on while one name still has no certificate, because browsers remember the header. Leave it for a week after everything passes.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: if the page is on https but the padlock still looks wrong&lt;/h2&gt;
+      &lt;p&gt;Sometimes all four lines pass and a page still looks broken: no styling, a missing map, a contact form that warns as people type. That&#x27;s &lt;strong&gt;mixed content&lt;/strong&gt;: an &lt;code&gt;https://&lt;/code&gt; page asking for files at &lt;code&gt;http://&lt;/code&gt; addresses.&lt;/p&gt;
+      &lt;p&gt;Browsers handle it in two ways. Images, audio and video get quietly upgraded to &lt;code&gt;https://&lt;/code&gt;; if that fails, they don&#x27;t load. Scripts, stylesheets, fonts and embedded frames are blocked outright (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content&quot;&gt;MDN&lt;/a&gt;). A form that sends to an &lt;code&gt;http://&lt;/code&gt; address gets a warning in Chrome (&lt;a href=&quot;https://blog.chromium.org/2020/08/protecting-google-chrome-users-from.html&quot;&gt;Chromium blog&lt;/a&gt;).&lt;/p&gt;
+      &lt;p&gt;To find them, open the page in Chrome, right-click, choose Inspect, and open the Console tab. Each one is listed with the words &quot;Mixed Content&quot; and the address. Then fix the address in the place it comes from:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;In a theme or template:&lt;/strong&gt; change &lt;code&gt;http://&lt;/code&gt; to &lt;code&gt;https://&lt;/code&gt; in the file. Most services that hand out embed code (maps, fonts, video) answer on https today.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;In WordPress posts and pages:&lt;/strong&gt; first check Settings, then General. Both &quot;WordPress Address (URL)&quot; and &quot;Site Address (URL)&quot; should start with &lt;code&gt;https://&lt;/code&gt;. Old links inside posts stay as they were written. With a backup taken first, WP-CLI rewrites them across the database, and &lt;code&gt;--dry-run&lt;/code&gt; shows the count before anything changes:
+          &lt;pre&gt;&lt;code&gt;wp search-replace &#x27;http://www.example.com&#x27; &#x27;https://www.example.com&#x27; --dry-run&lt;/code&gt;&lt;/pre&gt;
+        Run it again without &lt;code&gt;--dry-run&lt;/code&gt; when the count looks right.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;As a stopgap:&lt;/strong&gt; the header &lt;code&gt;Content-Security-Policy: upgrade-insecure-requests&lt;/code&gt;, or the same thing as a &lt;code&gt;&amp;lt;meta http-equiv&amp;gt;&lt;/code&gt; tag, makes browsers request every file on the page over https (&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/upgrade-insecure-requests&quot;&gt;MDN&lt;/a&gt;). MDN warns that if a file isn&#x27;t available over https, &quot;the request will fail without any fallback to HTTP.&quot; It hides the problem until you fix the source. It doesn&#x27;t remove it.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If you&#x27;d rather not read the console line by line, the free &lt;a href=&quot;/not-secure-checker/&quot;&gt;mixed content checker&lt;/a&gt; does it from the page source. Paste the source and it lists every &lt;code&gt;http://&lt;/code&gt; address, what browsers do with each one, and the fix. It runs in your browser and sends nothing you paste anywhere.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: change the links you printed and posted&lt;/h2&gt;
+      &lt;p&gt;Once step 1 passes, old &lt;code&gt;http://&lt;/code&gt; links work: they redirect cleanly over https. Still, every one of them is a hop that has to keep working. Update the ones you control when you next touch them:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;the website field in your Google Business Profile, Bing Places and any directory listing;&lt;/li&gt;
+        &lt;li&gt;social media bios and link pages;&lt;/li&gt;
+        &lt;li&gt;your email signature and invoice template;&lt;/li&gt;
+        &lt;li&gt;QR codes on the next print run of menus, cards and flyers.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If you send people through a link shortener or tracking link, test it too. The guide warns that each redirect step without https can show its own warning before the visitor reaches you.&lt;/p&gt;
+
+      &lt;h2&gt;What you don&#x27;t need to worry about&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Your own setup at home or at the office.&lt;/strong&gt; Chrome doesn&#x27;t show the new warning for &lt;code&gt;localhost&lt;/code&gt;, local IP addresses like &lt;code&gt;192.168.0.1&lt;/code&gt;, or single-word names like &lt;code&gt;intranet/&lt;/code&gt; (Chromium&#x27;s guide and the &lt;a href=&quot;https://security.googleblog.com/2025/10/https-by-default.html&quot;&gt;Google Security Blog&lt;/a&gt;). A printer page or a router page won&#x27;t start nagging staff.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Other browsers.&lt;/strong&gt; The guide says Safari, Firefox and Edge already try https first and have optional warnings of their own. A site that passes step 1 works in all of them.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Paying for a certificate.&lt;/strong&gt; For a business website, a free one does the same job. The padlock looks the same.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The checklist&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;All four addresses tested: one &lt;code&gt;200&lt;/code&gt;, three &lt;code&gt;301&lt;/code&gt;s, every target on &lt;code&gt;https://&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;The certificate names both the bare domain and &lt;code&gt;www&lt;/code&gt;, and renews itself.&lt;/li&gt;
+        &lt;li&gt;Every &lt;code&gt;http://&lt;/code&gt; address redirects in one hop to the real address.&lt;/li&gt;
+        &lt;li&gt;No &quot;Mixed Content&quot; lines in Chrome&#x27;s console on your main pages.&lt;/li&gt;
+        &lt;li&gt;Profiles, bios, signatures and new QR codes point at &lt;code&gt;https://&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;HSTS only after a week of all of the above.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;To see exactly what your visitors see, check that &quot;Always use secure connections&quot; is on at &lt;code&gt;chrome://settings/security&lt;/code&gt;, then visit your site by its bare name. Chrome 154 turns it on by default, but if you changed the setting before, Chrome keeps your old choice, so yours may be off. Chromium&#x27;s guide gives site owners the same advice: turn it on and go about your normal work.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Why doesn&#x27;t my website link show a picture on WhatsApp? How to fix the preview</title>
     <link href="https://taktekbot.com/blog/whatsapp-link-no-picture/"/>
