@@ -1278,6 +1278,7 @@ curl.exe -sIL https://yourdomain.com/2023-prices | Select-String &#x27;^location
       &lt;ul&gt;
         &lt;li&gt;&lt;strong&gt;The first lines of your home page&lt;/strong&gt; say what you are and where: &quot;A bakery selling bread and cakes, with delivery across the city.&quot; One plain sentence. Assistants and search snippets both read the top of the page first.&lt;/li&gt;
         &lt;li&gt;&lt;strong&gt;Hours and address as text&lt;/strong&gt;, on the home page or a contact page. Say which days you&#x27;re closed, in words: &quot;Closed on Sundays.&quot; Add holiday changes when they happen, and take them down after.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Text that&#x27;s in the page itself&lt;/strong&gt;, not drawn by a script after it loads. To check, open your home page in Chrome, press Ctrl+U (Cmd+Option+U on a Mac) to see its source, then press Ctrl+F (Cmd+F) and search for your opening hours. If they&#x27;re not in the source, a script adds them, and a program that doesn&#x27;t run scripts won&#x27;t see them.&lt;/li&gt;
         &lt;li&gt;&lt;strong&gt;Prices on a page&lt;/strong&gt;, even if only &quot;from&quot; prices or ranges. &quot;Call for prices&quot; gives an assistant nothing to repeat.&lt;/li&gt;
         &lt;li&gt;&lt;strong&gt;A short FAQ page&lt;/strong&gt; with the questions from step 1 as headings and one or two sentences under each.&lt;/li&gt;
       &lt;/ul&gt;
