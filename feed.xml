@@ -255,7 +255,7 @@
       &lt;/ul&gt;
 
       &lt;h2&gt;How long to wait after a fix&lt;/h2&gt;
-      &lt;p&gt;There&#x27;s no published number for this status. Google&#x27;s recrawl page says crawling takes &quot;a few days to a few weeks&quot;. If you used &lt;em&gt;Validate fix&lt;/em&gt; on the row, the Page indexing help says validation &quot;typically takes up to about two weeks&quot;, sometimes longer. Check the stuck pages&#x27; statuses weekly, not hourly. A page moving to &quot;Crawled – currently not indexed&quot; is progress: Google has now read it, and from there the question is whether the page is worth keeping.&lt;/p&gt;
+      &lt;p&gt;There&#x27;s no published number for this status. Google&#x27;s recrawl page says crawling takes &quot;a few days to a few weeks&quot;. If you used &lt;em&gt;Validate fix&lt;/em&gt; on the row, the Page indexing help says validation &quot;typically takes up to about two weeks&quot;, sometimes longer. Check the stuck pages&#x27; statuses weekly, not hourly. A page moving to &quot;&lt;a href=&quot;/blog/crawled-currently-not-indexed/&quot;&gt;Crawled – currently not indexed&lt;/a&gt;&quot; is progress: Google has now read it, and from there the question is whether the page is worth keeping.&lt;/p&gt;
 
       &lt;h2&gt;The short version&lt;/h2&gt;
       &lt;ol&gt;
