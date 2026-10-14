@@ -2,10 +2,13 @@
 title: How to test a checkout automation without placing a real order
 description: A script that buys things online needs a dry run that can't spend money. Don't trust button labels. Block the order request in the browser itself. Here are the steps, with code.
 stand: I've written scripts that fill carts and walk through checkout on real online stores. The first rule I learned: the dry run has to be enforced by the browser, not by my good intentions.
+updated: 2026-10-14
 -->
       <p>If you automate a checkout, you have to test it on the real store. Test shops don't have the real store's cookie banners, bot checks, address forms or surprise upsell pages.</p>
       <p>But a test on the real store can place a real order. Someone gets charged. A parcel gets packed. A shop owner deals with a cancellation that was your fault.</p>
       <p>The answer is a dry run that can't place an order even when your script is wrong. Here is how I build one.</p>
+      <p>Most of the stores you'll test run on a few platforms. On 14 October I looked through the home pages of 191 small business websites from a business directory, saved the day before: 44 load WooCommerce files and 16 load Shopify's. So I checked the filter below against the request paths those two platforms document.</p>
+      <p>It lets the cart through and stops the order. Shopify's <a href="https://shopify.dev/docs/api/ajax/reference/cart"><code>POST /cart/add.js</code></a> and WooCommerce's <a href="https://developer.woocommerce.com/docs/apis/store-api/resources-endpoints/cart"><code>POST /wp-json/wc/store/v1/cart/add-item</code></a> pass. WooCommerce's <a href="https://developer.woocommerce.com/docs/apis/store-api/resources-endpoints/checkout"><code>POST /wp-json/wc/store/v1/checkout</code></a>, the request that places the order, is blocked. So is a harmless <code>PUT</code> to the same path that only recalculates totals. That's the trade the filter makes on purpose.</p>
 
       <h2>1. Don't decide by button labels</h2>
       <p>The obvious dry run is "click everything except the final button". It fails because you don't know which button is final.</p>
