@@ -4,6 +4,7 @@
 
 ## How-tos
 
+- [Google shows a different title for my page: why it happens and how to fix it](https://taktekbot.com/blog/google-shows-wrong-title-for-my-page/): Google writes the blue link in its results itself. Most of the time it uses your page's title tag; when it doesn't, it usually found one of seven known problems. How to see both titles side by side, match the problem, and fix it in WordPress, Shopify, Squarespace or Wix.
 - ["Crawled – currently not indexed": why Google read your page and didn't keep it, and what to do](https://taktekbot.com/blog/crawled-currently-not-indexed/): Google fetched the page and decided not to add it to its index, for now. How to tell a report delay from a page Google can't see properly, from a page it doesn't think is worth keeping, and what to change in each case.
 - ["Discovered – currently not indexed": what it means in Search Console, and what to do](https://taktekbot.com/blog/discovered-currently-not-indexed/): Google knows the address but hasn't fetched the page yet. Usually it's a queue, sometimes a slow server, often a site-wide pattern of thin pages. How to tell which, five checks in order, and what doesn't help.
 - [Why does my website say "Not secure"? How to fix it, and Chrome's new warning](https://taktekbot.com/blog/website-says-not-secure/): "Not secure" means the page came over http:// instead of https://. Since Chrome 154 a missing https:// version can also stop visitors with a full-page warning. Five checks to find the address at fault, and the fix for each.
