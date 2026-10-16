@@ -5,8 +5,142 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-15T00:00:00Z</updated>
+  <updated>2026-10-16T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Duplicate, Google chose different canonical than user&quot;: what it means and what to do</title>
+    <link href="https://taktekbot.com/blog/google-chose-different-canonical/"/>
+    <id>https://taktekbot.com/blog/google-chose-different-canonical/</id>
+    <updated>2026-10-16T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Google found several addresses showing the same page, and it kept a different one than the one your page asked for. How to see which one it picked, decide if it&#x27;s right, and fix it when it isn&#x27;t.</summary>
+    <content type="html">&lt;p&gt;&quot;Duplicate, Google chose different canonical than user&quot; is a Search Console status. In plain words: Google found two or more addresses that show the same page, put them in one group, and picked one address to keep in its results. Your page told Google which address it wanted kept. Google picked a different one.&lt;/p&gt;
+      &lt;p&gt;On 8 October I checked 77 pages from 22 online shops: home pages, products, collections and help pages. For each one I fetched the page with curl and read its canonical tag. Then I asked for the same page at other addresses: &lt;code&gt;http://&lt;/code&gt;, with or without &lt;code&gt;www.&lt;/code&gt;, with or without the final slash, and with &lt;code&gt;?utm_source=test&lt;/code&gt; on the end. All 77 answered the &lt;code&gt;?utm_source=test&lt;/code&gt; address with the full page, not a redirect. That&#x27;s normal, since ad and newsletter links add bits like that. It also means the canonical tag is the only thing telling Google which address is the main one. 5 of the 77 pages, at 4 shops, had no canonical tag at all, even after their JavaScript ran in Chrome.&lt;/p&gt;
+      &lt;p&gt;The other mistakes were rarer, and they&#x27;re the kind this status is made of. A restaurant menu page pointed its canonical tag at the home page, which is a different page. On one shop, two pages answered both with and without the final slash, and each version named itself as the main copy: two addresses, each claiming to be the original. The &lt;code&gt;http://&lt;/code&gt; address redirected on all 77. I can&#x27;t see these shops&#x27; Search Console, so I don&#x27;t know which of these Google overruled. The steps below show how to check your own.&lt;/p&gt;
+      &lt;p&gt;The address in the report is not in Google&#x27;s index. The one Google chose is. Often that&#x27;s fine, because the two addresses really are the same page and people still find it. Sometimes Google picked the wrong page, or an address you don&#x27;t want people to see. This guide shows how to tell which case you&#x27;re in and what to change.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Canonical&lt;/strong&gt; means &quot;the main copy&quot;. When the same content is reachable at several addresses, Google indexes one and treats the rest as duplicates. Google&#x27;s own definition: the canonical URL is &quot;the URL of a page that Google chose as the most representative from a set of duplicate pages.&quot;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;User&lt;/strong&gt; is you, the site owner. &quot;User-declared canonical&quot; is the address your page says is the main copy, usually through a line in its code: &lt;code&gt;&amp;lt;link rel=&quot;canonical&quot; href=&quot;...&quot;&amp;gt;&lt;/code&gt;. Most site builders add that line for you.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Google chose different&lt;/strong&gt; means Google read your line and decided otherwise. It&#x27;s allowed to. Google&#x27;s page on canonicals says your preference &quot;is a hint, not a rule.&quot;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Search Console has three neighbours of this status, and they&#x27;re easy to mix up. &lt;em&gt;Alternate page with proper canonical tag&lt;/em&gt;: this address points to another one, and Google agreed. &lt;em&gt;Duplicate without user-selected canonical&lt;/em&gt;: this address points nowhere, and Google picked a main copy itself. &lt;em&gt;Duplicate, submitted URL not selected as canonical&lt;/em&gt;: an address you listed in your sitemap is a duplicate, and Google kept another one. The first is almost always fine. This guide is about the one where Google disagreed with you.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 250&quot; role=&quot;img&quot; aria-labelledby=&quot;cn-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;cn-title&quot;&gt;Five addresses show the same page. Google groups them and keeps one. The page&#x27;s canonical tag asks for one address; Google may keep another. Redirects and canonical tags are strong signals, a sitemap is a weak one.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;250&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;30&quot; fill=&quot;var(--ink)&quot;&gt;same page, five addresses&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;58&quot; fill=&quot;var(--muted)&quot;&gt;http://example.com/shoes/&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;80&quot; fill=&quot;var(--muted)&quot;&gt;https://www.example.com/shoes/&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;102&quot; fill=&quot;var(--muted)&quot;&gt;https://example.com/shoes&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;124&quot; fill=&quot;var(--muted)&quot;&gt;https://example.com/shoes/?ref=ad&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;146&quot; fill=&quot;var(--ink)&quot;&gt;https://example.com/shoes/&lt;/text&gt;
+          &lt;rect x=&quot;12&quot; y=&quot;40&quot; width=&quot;272&quot; height=&quot;116&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot; stroke-dasharray=&quot;4 3&quot;/&gt;
+          &lt;line x1=&quot;284&quot; y1=&quot;98&quot; x2=&quot;360&quot; y2=&quot;98&quot; stroke=&quot;var(--signal)&quot;/&gt;
+          &lt;polygon points=&quot;360,93 370,98 360,103&quot; fill=&quot;var(--signal)&quot;/&gt;
+          &lt;text x=&quot;380&quot; y=&quot;80&quot; fill=&quot;var(--ink)&quot;&gt;Google keeps one&lt;/text&gt;
+          &lt;text x=&quot;380&quot; y=&quot;102&quot; fill=&quot;var(--signal)&quot;&gt;= the canonical&lt;/text&gt;
+          &lt;text x=&quot;380&quot; y=&quot;124&quot; fill=&quot;var(--muted)&quot;&gt;the rest: &quot;duplicate&quot;&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;194&quot; fill=&quot;var(--ink)&quot;&gt;What Google weighs, strongest first:&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;216&quot; fill=&quot;var(--muted)&quot;&gt;redirects (strong) · canonical tag (strong) · sitemap (weak)&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;238&quot; fill=&quot;var(--muted)&quot;&gt;plus HTTPS over HTTP, and which address your own links use&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 1: see what Google picked&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Open Search Console, then &lt;em&gt;Indexing → Pages&lt;/em&gt;. Under &lt;em&gt;Why pages aren&#x27;t indexed&lt;/em&gt;, click &lt;em&gt;Duplicate, Google chose different canonical than user&lt;/em&gt;. You get a list of example addresses.&lt;/li&gt;
+        &lt;li&gt;Hover over one and click the magnifier, or paste the address into the search bar at the top of Search Console. That&#x27;s URL Inspection.&lt;/li&gt;
+        &lt;li&gt;Open &lt;em&gt;Page indexing&lt;/em&gt; and read two lines: &lt;em&gt;User-declared canonical&lt;/em&gt; (what your page asked for) and &lt;em&gt;Google-selected canonical&lt;/em&gt; (what Google kept).&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Don&#x27;t click &lt;em&gt;Test live URL&lt;/em&gt; for this. Google&#x27;s help says the live test can&#x27;t tell you the canonical: &quot;the live test cannot predict whether or not the tested version will be considered canonical.&quot; Read the indexed result.&lt;/p&gt;
+      &lt;p&gt;If the Google-selected address is on a site you don&#x27;t own, Search Console may not show it. Google&#x27;s help says the tool shows the canonical &quot;if the canonical version is in a property that you own.&quot; Search for a sentence from your page in quotes on Google and see whose address comes up.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: decide whether Google is right&lt;/h2&gt;
+      &lt;p&gt;Put the two addresses side by side and ask one question: are these the same page to a visitor?&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Usually yes, and Google picked a variant of your address.&lt;/strong&gt; These are the common ones:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;code&gt;http://&lt;/code&gt; and &lt;code&gt;https://&lt;/code&gt;&lt;/li&gt;
+        &lt;li&gt;with and without &lt;code&gt;www.&lt;/code&gt;&lt;/li&gt;
+        &lt;li&gt;with and without a slash at the end&lt;/li&gt;
+        &lt;li&gt;with tracking or filter bits after a &lt;code&gt;?&lt;/code&gt;, like &lt;code&gt;?ref=ad&lt;/code&gt; or &lt;code&gt;?sort=price&lt;/code&gt;&lt;/li&gt;
+        &lt;li&gt;a product reachable from two categories, like &lt;code&gt;/men/shoes/runner&lt;/code&gt; and &lt;code&gt;/sale/runner&lt;/code&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;In that case Google&#x27;s choice is often the one people already reach and link to. If you don&#x27;t mind which address shows in search, leave it. If you do mind, go to Step 3.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Sometimes no, and the cause is on your side.&lt;/strong&gt; Google&#x27;s page on fixing canonical problems lists the common causes. In plain words:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;A plugin or theme writes the wrong canonical tag.&lt;/strong&gt; For example, every product page points to the shop&#x27;s home page, or every blog page points to page 1 of the blog. Google sees the pages aren&#x27;t the same, so it ignores the tag. That&#x27;s when you see this status on dozens of pages at once.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Two sites serve the same pages.&lt;/strong&gt; An old domain, a test copy of the site, or a host that answers for a domain it shouldn&#x27;t. Google calls the test copy an &quot;accidental variant&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Pages that are almost the same.&lt;/strong&gt; City pages with the town name swapped, or product pages that differ only by colour. Google clusters pages whose main content looks the same.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Language versions&lt;/strong&gt; where only the menu and footer are translated. Google says those count as duplicates.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Someone copied your content&lt;/strong&gt;, or a partner republished it. Google says it picks the copy &quot;in rare situations&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A hacked site.&lt;/strong&gt; Some attacks add a canonical tag or a redirect pointing to a spam site.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 3: count your own addresses&lt;/h2&gt;
+      &lt;p&gt;Before you change anything, check how many addresses your page answers at. I ran this on one of my own posts. Five ways to type the same page:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;for u in \
+  http://taktekbot.com/blog/find-and-remove-old-pages-from-google/ \
+  https://www.taktekbot.com/blog/find-and-remove-old-pages-from-google/ \
+  https://taktekbot.com/blog/find-and-remove-old-pages-from-google \
+  &quot;https://taktekbot.com/blog/find-and-remove-old-pages-from-google/?utm_source=test&quot; \
+  https://taktekbot.com/blog/find-and-remove-old-pages-from-google/index.html
+do
+  curl -s -o /dev/null -w &quot;%{http_code} %{redirect_url}  &amp;lt;- $u\n&quot; &quot;$u&quot;
+done&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;What came back, trimmed:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;301 https://taktekbot.com/blog/find-...-google/   &amp;lt;- http://
+301 https://taktekbot.com/blog/find-...-google/   &amp;lt;- www.
+301 https://taktekbot.com/blog/find-...-google/   &amp;lt;- no slash
+200                                              &amp;lt;- ?utm_source=test
+200                                              &amp;lt;- /index.html&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Three variants redirect to the main address. Two still answer with the full page. For those two, the only thing telling Google which address is the main one is the canonical tag, which on this page points to the address with the slash. No page of mine has had this status yet. If one does, those two are where I&#x27;d look first.&lt;/p&gt;
+      &lt;p&gt;On Windows, the same check in PowerShell. Put your own five addresses in the list; &lt;code&gt;curl.exe&lt;/code&gt; comes with Windows 10 and 11:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;$urls = &quot;http://example.com/shoes/&quot;,
+        &quot;https://www.example.com/shoes/&quot;,
+        &quot;https://example.com/shoes&quot;,
+        &quot;https://example.com/shoes/?utm_source=test&quot;,
+        &quot;https://example.com/shoes/index.html&quot;
+foreach ($u in $urls) {
+  curl.exe -s -o NUL -w &quot;%{http_code} %{redirect_url}  &amp;lt;- $u\n&quot; $u
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;No terminal: paste each variant into your browser. If the address bar changes to your main address, that variant redirects. If it stays as typed and the page loads, it&#x27;s a duplicate that relies on the canonical tag. Two catches. Chrome hides &lt;code&gt;https://&lt;/code&gt; and &lt;code&gt;www.&lt;/code&gt; in the address bar, so right-click the address bar and tick &lt;em&gt;Always show full URLs&lt;/em&gt; first. And since Chrome 154, the browser tries &lt;code&gt;https://&lt;/code&gt; by itself before it asks your site, so the &lt;code&gt;http://&lt;/code&gt; variant can&#x27;t be checked this way. Use the terminal lines for that one. Then right-click the page and choose &lt;em&gt;View Page Source&lt;/em&gt; (or press &lt;code&gt;Ctrl+U&lt;/code&gt;; on a Mac, &lt;code&gt;Cmd+Option+U&lt;/code&gt; in Chrome and Edge, &lt;code&gt;Cmd+U&lt;/code&gt; in Firefox), press &lt;code&gt;Ctrl+F&lt;/code&gt; (&lt;code&gt;Cmd+F&lt;/code&gt; on a Mac) and search for &lt;code&gt;canonical&lt;/code&gt; to see which address the page asks for.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: make every signal point the same way&lt;/h2&gt;
+      &lt;p&gt;Google doesn&#x27;t only read your canonical tag. Its page on choosing a canonical lists what it weighs, &quot;in order of how strongly they can influence canonicalization&quot;: redirects (strong), the canonical tag (strong), and being in your sitemap (weak). It also prefers HTTPS over HTTP, and it watches which address your own pages link to. The signals &quot;can stack&quot;. When they disagree, your tag is one vote among several.&lt;/p&gt;
+      &lt;p&gt;So line them up for the address you want:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;Redirect the variants you don&#x27;t need.&lt;/strong&gt; http to https, www to non-www (or the other way), no slash to slash. These are settings in most hosts and site builders, not code. Google says to use a redirect &quot;only when deprecating a duplicate page&quot;, which is exactly the case for these.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Put the canonical tag on every version, including the main one.&lt;/strong&gt; The main page should point to itself. Use the full address with &lt;code&gt;https://&lt;/code&gt;, not a path like &lt;code&gt;/shoes/&lt;/code&gt;. Google says it accepts the tag only inside the page&#x27;s &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;List only the main address in your sitemap.&lt;/strong&gt; Google&#x27;s rule: don&#x27;t name one address in the sitemap and another in the canonical tag for the same page.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Link to the main address from your own pages.&lt;/strong&gt; Menus, buttons and old blog posts included. Google: &quot;Linking consistently to the URL that you consider to be canonical helps Google understand your preference.&quot;&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Three things Google says not to use for this: a &lt;code&gt;robots.txt&lt;/code&gt; rule (Google can still index a blocked address, just without reading it), the removal tool (it hides every version, including your main one), and &lt;code&gt;noindex&lt;/code&gt; on the duplicate (it &quot;will completely block the page from Search&quot;).&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;If the pages should be different,&lt;/strong&gt; the fix is content, not tags. Give each city page or product page enough of its own text, photos and details that a visitor would see two different pages. Google&#x27;s troubleshooting page: pages &quot;will generally split out faster if the difference between the new content and the other clustered pages is clear and significant.&quot;&lt;/p&gt;
+
+      &lt;h2&gt;Where the canonical tag comes from in your site builder&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress&lt;/strong&gt; prints the tag itself on single posts and pages (it has since version 2.9), pointing at the post&#x27;s own address. SEO plugins write their own tag instead. In Yoast, the per-page field is in the Yoast SEO sidebar under Advanced, Canonical URL; leave it empty unless you mean it. Yoast also leaves the tag out on any page set to noindex, so a missing tag there is expected. If dozens of pages point to the wrong place, check that plugin&#x27;s settings first, and check you don&#x27;t have two SEO plugins both writing a tag.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Shopify&lt;/strong&gt; themes print the tag from a built-in &lt;code&gt;canonical_url&lt;/code&gt; value. A theme someone edited by hand can break it, so check one product page with &lt;code&gt;Ctrl+U&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Squarespace, Wix and other builders:&lt;/strong&gt; Google&#x27;s page on canonicals says a builder &quot;might have a search engine settings page or some other mechanism&quot; for this, and suggests searching for your builder&#x27;s name plus &quot;set the canonical element&quot;.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Whatever the builder, the &lt;code&gt;Ctrl+U&lt;/code&gt; check from Step 3 tells you what it actually printed.&lt;/p&gt;
+
+      &lt;h2&gt;How long it takes&lt;/h2&gt;
+      &lt;p&gt;Google decides the canonical when it indexes a page, so nothing changes until it reads the pages again. Google&#x27;s troubleshooting page says it &quot;might hold pages in a duplicate cluster for up to two weeks&quot; after you fix content. To nudge one important page, inspect it in Search Console and click &lt;em&gt;Request indexing&lt;/em&gt;. Google&#x27;s advice is to save that for your most important addresses, because the button has a quota.&lt;/p&gt;
+      &lt;p&gt;If a page you care about isn&#x27;t in Google at all, this status isn&#x27;t your problem yet. Start with &lt;a href=&quot;/blog/crawled-currently-not-indexed/&quot;&gt;&quot;Crawled – currently not indexed&quot;&lt;/a&gt; or &lt;a href=&quot;/blog/discovered-currently-not-indexed/&quot;&gt;&quot;Discovered – currently not indexed&quot;&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In URL Inspection, compare &lt;em&gt;User-declared canonical&lt;/em&gt; with &lt;em&gt;Google-selected canonical&lt;/em&gt;. Use the indexed result, not the live test.&lt;/li&gt;
+        &lt;li&gt;Same page to a visitor? Google&#x27;s choice is often fine. Leave it, or line up your signals for the address you prefer.&lt;/li&gt;
+        &lt;li&gt;Different pages? Look for a wrong tag from a plugin, a second site or test copy, near-identical pages, or a copy elsewhere.&lt;/li&gt;
+        &lt;li&gt;Redirect the variants, self-canonical the main page, sitemap only the main address, and link to it everywhere.&lt;/li&gt;
+        &lt;li&gt;Never robots.txt, noindex or the removal tool for this. Then wait up to two weeks.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/canonicalization&quot;&gt;What is canonicalization&lt;/a&gt; (updated 20 Aug 2026: the definition, &quot;a hint, not a rule&quot;, the kinds of duplicates, language versions), &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls&quot;&gt;How to specify a canonical URL&lt;/a&gt; (updated 10 Jul 2026: signal strength, stacking, best practices, absolute URLs, the tag only in the head, internal links, HTTPS preference), &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/canonicalization-troubleshooting&quot;&gt;Fix canonicalization issues&lt;/a&gt; (updated 21 Aug 2026: the common causes, &quot;up to two weeks&quot;, &quot;clear and significant&quot;, Request Indexing quota), Search Console&#x27;s &lt;a href=&quot;https://support.google.com/webmasters/answer/9012289&quot;&gt;URL Inspection help&lt;/a&gt; (the two canonical fields, the live-test limit, properties you own) and &lt;a href=&quot;https://support.google.com/webmasters/answer/7440203&quot;&gt;Page indexing report help&lt;/a&gt;. WordPress: &lt;a href=&quot;https://developer.wordpress.org/reference/functions/rel_canonical/&quot;&gt;rel_canonical()&lt;/a&gt; (&quot;Outputs rel=canonical for singular queries&quot;, introduced in 2.9.0). Yoast: &lt;a href=&quot;https://yoast.com/help/canonical-urls-in-wordpress-seo/&quot;&gt;How to change the canonical URL&lt;/a&gt; (the Advanced field; no tag on noindex pages). Shopify: the &lt;a href=&quot;https://shopify.dev/docs/api/liquid/objects/canonical_url&quot;&gt;canonical_url&lt;/a&gt; Liquid object.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Google shows a different title for my page: why it happens and how to fix it</title>
     <link href="https://taktekbot.com/blog/google-shows-wrong-title-for-my-page/"/>
