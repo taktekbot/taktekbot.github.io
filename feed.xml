@@ -5,8 +5,113 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-16T00:00:00Z</updated>
+  <updated>2026-10-17T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>Google shows a different description for my page: why it ignores your meta description, and what to do</title>
+    <link href="https://taktekbot.com/blog/google-shows-wrong-description-for-my-page/"/>
+    <id>https://taktekbot.com/blog/google-shows-wrong-description-for-my-page/</id>
+    <updated>2026-10-17T00:00:00Z</updated>
+    <summary>The grey text under a Google result is the snippet. Google writes it from your page for each search, and uses your meta description only when it fits better. How to see which text Google picked, why, and how to fix it in WordPress, Shopify, Squarespace or Wix.</summary>
+    <content type="html">&lt;p&gt;The grey text under each Google result is called the &lt;em&gt;snippet&lt;/em&gt;. Google writes it itself, and it can change for every search. Google&#x27;s help says snippets are &quot;primarily created from the page content itself&quot;, and that it uses your meta description only &quot;if it might give users a more accurate description of the page than content taken directly from the page.&quot;&lt;/p&gt;
+      &lt;p&gt;Often there&#x27;s nothing of yours to choose. On 8 October I pulled the meta description from 76 pages of 22 online shops: each home page and up to three pages inside it. 9 pages had none, and every one of them was an inside page; Chrome found none on 8 of them after the scripts ran either (the ninth didn&#x27;t load). 5 more inside pages reused their home page&#x27;s description word for word. 2 were too thin to help: one home page&#x27;s description was the shop&#x27;s name and nothing else, and a quiz page&#x27;s read &quot;This page was created by Quiz Kit App.&quot; That&#x27;s 16 of 76 pages where Google had little or nothing from the owner. I didn&#x27;t search Google for these pages, so I can&#x27;t tell you what it showed for them. The steps below show you how to check your own.&lt;/p&gt;
+      &lt;p&gt;So if Google shows a sentence from the middle of your page instead of the description you wrote, nothing is broken. Google decided that sentence answered that search better. Sometimes it&#x27;s right. When it isn&#x27;t (a cookie notice, a menu, a sentence that&#x27;s out of date), you can fix it. This guide shows how, in four steps.&lt;/p&gt;
+
+      &lt;h2&gt;How often Google uses its own text&lt;/h2&gt;
+      &lt;p&gt;More often than not. In 2020 Ahrefs compared the meta descriptions of top-ranking pages with the snippets Google showed on desktop for 20,000 searches. Google used its own text 62.78% of the time. It did so a little more for long, specific searches (65.62%) than for short, popular ones (59.65%).&lt;/p&gt;
+      &lt;p&gt;The same study found something people don&#x27;t expect: length barely mattered. Google rewrote 61.46% of descriptions that were too long and 63.69% of the rest. That study is six years old and I haven&#x27;t repeated it, so treat the numbers as a rough size, not today&#x27;s rate. Google itself publishes no figure.&lt;/p&gt;
+      &lt;p&gt;What Google does say is the part that matters: &quot;Google Search might show different snippets for different searches.&quot; Your description can show up when someone searches your business name and not when they search a question your page answers. Both are normal.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 250&quot; role=&quot;img&quot; aria-labelledby=&quot;sn-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;sn-title&quot;&gt;For each search, Google picks the snippet text. If your meta description describes the page better for that search, Google may use it. Otherwise it takes text from the page. nosnippet, max-snippet and data-nosnippet limit what it can take.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;250&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;rect x=&quot;20&quot; y=&quot;20&quot; width=&quot;150&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;36&quot; y=&quot;47&quot; fill=&quot;var(--ink)&quot;&gt;someone searches&lt;/text&gt;
+          &lt;line x1=&quot;170&quot; y1=&quot;42&quot; x2=&quot;230&quot; y2=&quot;42&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;230&quot; y=&quot;20&quot; width=&quot;180&quot; height=&quot;44&quot; rx=&quot;4&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;246&quot; y=&quot;47&quot; fill=&quot;var(--ink)&quot;&gt;Google picks text&lt;/text&gt;
+          &lt;line x1=&quot;320&quot; y1=&quot;64&quot; x2=&quot;200&quot; y2=&quot;110&quot; stroke=&quot;var(--signal)&quot; stroke-dasharray=&quot;4 3&quot;/&gt;
+          &lt;line x1=&quot;320&quot; y1=&quot;64&quot; x2=&quot;460&quot; y2=&quot;110&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;40&quot; y=&quot;128&quot; fill=&quot;var(--signal)&quot;&gt;your meta description&lt;/text&gt;
+          &lt;text x=&quot;40&quot; y=&quot;146&quot; fill=&quot;var(--muted)&quot;&gt;if it fits this search better&lt;/text&gt;
+          &lt;text x=&quot;370&quot; y=&quot;128&quot; fill=&quot;var(--ink)&quot;&gt;text from the page&lt;/text&gt;
+          &lt;text x=&quot;370&quot; y=&quot;146&quot; fill=&quot;var(--muted)&quot;&gt;most of the time&lt;/text&gt;
+          &lt;line x1=&quot;20&quot; y1=&quot;180&quot; x2=&quot;620&quot; y2=&quot;180&quot; stroke=&quot;var(--muted)&quot;/&gt;
+          &lt;text x=&quot;40&quot; y=&quot;206&quot; fill=&quot;var(--ink)&quot;&gt;limits you set:&lt;/text&gt;
+          &lt;text x=&quot;40&quot; y=&quot;226&quot; fill=&quot;var(--muted)&quot;&gt;nosnippet · max-snippet:[number] · data-nosnippet&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;Google writes the snippet per search. Your description is one candidate, not an instruction.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 1: see what Google shows, for more than one search&lt;/h2&gt;
+      &lt;p&gt;Because the snippet depends on the search, one search tells you little. Try three, in a private browser window so your history doesn&#x27;t change the results:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Your business or site name, plus the page&#x27;s subject (for example, the shop&#x27;s name and &quot;opening hours&quot;).&lt;/li&gt;
+        &lt;li&gt;The words you&#x27;d expect a stranger to type to find that page.&lt;/li&gt;
+        &lt;li&gt;A longer question the page answers.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Copy the snippet from each. If one of them is your meta description and the others aren&#x27;t, Google is doing what its help describes, and you may not need to change anything. If none of them is, or the text Google picked is wrong or unhelpful, go on.&lt;/p&gt;
+      &lt;p&gt;A snippet that ends in &quot;...&quot; isn&#x27;t a rewrite either. Google&#x27;s help says there&#x27;s no limit on how long a meta description can be, &quot;but the snippet is truncated in Google Search results as needed, typically to fit the device width.&quot; A narrow phone screen shows fewer words than a wide one.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: see what your page says&lt;/h2&gt;
+      &lt;p&gt;Pull the description from the page itself. With a terminal (Mac, Linux, or Windows with WSL):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL https://example.com/your-page/ | tr &#x27;\n&#x27; &#x27; &#x27; | grep -o -i -E &quot;&amp;lt;meta[^&amp;gt;]*(name|property)=.?(og:)?description[^&amp;gt;]*&amp;gt;&quot;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Here&#x27;s what it printed for one of my own posts:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;meta name=&quot;description&quot; content=&quot;Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.&quot;&amp;gt;
+&amp;lt;meta property=&quot;og:description&quot; content=&quot;Old price lists, closed branches and expired offers stay in Google and get read by AI assistants. How to find them with site: and before:, decide update, redirect or delete, and make the removal stick.&quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Two lines. The first is the meta description Google may use. The second, &lt;code&gt;og:description&lt;/code&gt;, is for link previews in apps like WhatsApp and LinkedIn; Google&#x27;s snippet page doesn&#x27;t mention it. If no &lt;code&gt;name=&quot;description&quot;&lt;/code&gt; line comes back, Google has no description of yours to choose, so every snippet will come from the page. The news page of wordpress.org was like that when I ran this: one &lt;code&gt;og:description&lt;/code&gt; line and nothing else.&lt;/p&gt;
+      &lt;p&gt;Why the pattern is that long: a simpler search for &lt;code&gt;name=&quot;description&quot; content=&quot;&lt;/code&gt; misses real sites. I ran one on a large Shopify shop&#x27;s home page and it printed nothing, because that theme writes &lt;code&gt;name=&#x27;description&#x27;&lt;/code&gt; with single quotes, and nothing would have told you the tag was there. On yoast.com it printed two descriptions, because the page shows a meta tag as a code example. The version above takes either quote, either attribute order, and only real &lt;code&gt;&amp;lt;meta&lt;/code&gt; tags. The &lt;code&gt;tr&lt;/code&gt; part joins the page into one line first: on 8 October, 7 of 77 shop pages I ran it on had a description written over two or more lines, and without &lt;code&gt;tr&lt;/code&gt; the command printed nothing for them. If it prints nothing at all, not even &lt;code&gt;og:description&lt;/code&gt;, check the page loaded: some sites refuse curl (Etsy answered 403), and then the no-terminal route below is the way.&lt;/p&gt;
+      &lt;p&gt;No terminal, or on Windows: open the page in Chrome, Edge or Firefox, press &lt;code&gt;Ctrl+U&lt;/code&gt; to see the source (on a Mac, &lt;code&gt;Cmd+Option+U&lt;/code&gt; in Chrome and Edge, &lt;code&gt;Cmd+U&lt;/code&gt; in Firefox; or right-click the page and choose &lt;em&gt;View Page Source&lt;/em&gt;), then &lt;code&gt;Ctrl+F&lt;/code&gt; (&lt;code&gt;Cmd+F&lt;/code&gt; on a Mac) and search for &lt;code&gt;description&lt;/code&gt;. The line you want starts with &lt;code&gt;&amp;lt;meta&lt;/code&gt; and has &lt;code&gt;name=&quot;description&quot;&lt;/code&gt; or &lt;code&gt;name=&#x27;description&#x27;&lt;/code&gt; in it.&lt;/p&gt;
+      &lt;p&gt;While you&#x27;re there, count. That description is 201 characters. When I measured my site&#x27;s front page and my five live posts on 5 October, four of the six had descriptions over 160 characters, about where Wix&#x27;s help says Google usually trims them. On the 67 shop pages that had one, 22 were over 160; the longest, a restaurant&#x27;s, was an 863-character paragraph, on both its home page and its menu page. That figure comes from the site builders, not from Google, which only says it cuts to fit the screen. It means the end of my descriptions may not show. It doesn&#x27;t make Google more likely to replace them, if the Ahrefs numbers above still hold.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: find out why Google passed on yours&lt;/h2&gt;
+      &lt;p&gt;Google&#x27;s snippet page lists what makes a description worth using. Set what you found next to it:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;There isn&#x27;t one.&lt;/strong&gt; The most common case on small sites. WordPress, for one, adds no meta description on its own: its default list of things it prints in the page&#x27;s &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; includes the title and the canonical tag, but no description. That comes from an SEO plugin or the theme. Check your inside pages, not only the home page: all 9 missing descriptions in my shop sample were on product, collection or quiz pages. And don&#x27;t let an &lt;code&gt;og:description&lt;/code&gt; line fool you: 5 of those 9 pages had one, so their link previews looked fine while Google had nothing.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It&#x27;s the same on every page.&lt;/strong&gt; Google: &quot;Identical or similar descriptions on every page of a site aren&#x27;t helpful when individual pages appear in search results.&quot; Site builders often fill one site-wide description into every page you didn&#x27;t edit. Google suggests site-level text on the home page and page-level text everywhere else. In my sample, 5 inside pages on 3 shops (two collections, a gift card, a sale page and a menu) carried the home page&#x27;s description.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It&#x27;s a list of keywords.&lt;/strong&gt; Google says descriptions &quot;comprised of long strings of keywords&quot; are &quot;less likely to be displayed as a snippet.&quot; Its example of a bad one is a shop&#x27;s description that&#x27;s only a comma-separated list of things it sells.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It&#x27;s too short to say anything.&lt;/strong&gt; Google&#x27;s example of a bad description is two words, a product name. The better one says what the product does, what it comes with, and the offer.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It doesn&#x27;t summarise the page.&lt;/strong&gt; An opening line that sets a mood but says nothing about the content. Google&#x27;s better version says what the page covers and how long it takes.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The search was more specific than the description.&lt;/strong&gt; No fix needed. If someone asks a narrow question and a paragraph on your page answers it, Google showing that paragraph helps you.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;If the problem is the text Google &lt;em&gt;did&lt;/em&gt; pick (a cookie notice, a &quot;free shipping&quot; banner, a menu label, a sentence you&#x27;d rather not lead with), Step 4 has a way to keep it out.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: fix it&lt;/h2&gt;
+      &lt;h3&gt;Write a description for this one page&lt;/h3&gt;
+      &lt;p&gt;One or two sentences that say what this page is and what someone gets from it, in the words they&#x27;d search. Google&#x27;s page also suggests putting facts in it that are spread across the page: for a product, the price and maker; for an article, the author and date. Its own example for a book lists the author, the illustrator, the price and the page count, separated by commas.&lt;/p&gt;
+      &lt;p&gt;Then put the most important part first, so a phone cutting the end doesn&#x27;t cut the point.&lt;/p&gt;
+
+      &lt;h3&gt;Where to edit it&lt;/h3&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress:&lt;/strong&gt; install an SEO plugin if you don&#x27;t have one; WordPress itself has no description field. In Yoast SEO, open the post, click &lt;em&gt;Search appearance&lt;/em&gt; in the Yoast sidebar (or the &lt;em&gt;SEO&lt;/em&gt; tab in the box under the editor) and type in &lt;em&gt;Meta description&lt;/em&gt;. For pages you won&#x27;t write one by hand, Yoast has templates under &lt;em&gt;Yoast SEO → Settings → Content types&lt;/em&gt;, in &lt;em&gt;Search appearance&lt;/em&gt;. If the tag still doesn&#x27;t show in the page source, Yoast&#x27;s help says to check that your theme calls &lt;code&gt;wp_head()&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Shopify:&lt;/strong&gt; open the product (or page), find &lt;em&gt;Search engine listing&lt;/em&gt;, click the pencil, and fill in &lt;em&gt;Meta description&lt;/em&gt;. Shopify&#x27;s help says over 320 characters may be cut off.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Squarespace:&lt;/strong&gt; in the Pages panel, click the gear icon next to the page, open the &lt;em&gt;SEO&lt;/em&gt; tab and fill in &lt;em&gt;SEO Description&lt;/em&gt;. The field takes up to 400 characters; Squarespace&#x27;s help suggests 50 to 300.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Wix:&lt;/strong&gt; in the editor, click &lt;em&gt;Pages &amp;amp; Menu&lt;/em&gt;, then the &lt;em&gt;More Actions&lt;/em&gt; icon next to the page, then &lt;em&gt;SEO basics&lt;/em&gt;, and fill in the meta description. Wix&#x27;s help suggests 50 to 160 characters.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h3&gt;Keep the wrong text out of the snippet&lt;/h3&gt;
+      &lt;p&gt;Google supports an attribute for exactly this. Wrap the text you never want in a snippet in a &lt;code&gt;div&lt;/code&gt;, &lt;code&gt;span&lt;/code&gt; or &lt;code&gt;section&lt;/code&gt; with &lt;code&gt;data-nosnippet&lt;/code&gt;:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;div data-nosnippet&amp;gt;We use cookies to remember your basket.&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Three rules from Google&#x27;s page. It only works on &lt;code&gt;div&lt;/code&gt;, &lt;code&gt;span&lt;/code&gt; and &lt;code&gt;section&lt;/code&gt;. The element must be closed properly, or everything after it counts as inside. And don&#x27;t add it later with JavaScript: Google may read the page before or after scripts run, so the attribute has to be in the page as it&#x27;s first built.&lt;/p&gt;
+      &lt;p&gt;Two blunter tools exist, and most small sites shouldn&#x27;t use them. &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;nosnippet&quot;&amp;gt;&lt;/code&gt; removes the text snippet entirely, and Google&#x27;s page says it also stops the page being used &quot;as a direct input for AI Overviews and AI Mode.&quot; &lt;code&gt;max-snippet:[number]&lt;/code&gt; caps the length in characters, and it limits AI Overviews and AI Mode too. If you want people and AI assistants to &lt;a href=&quot;/blog/business-website-ai-assistants-can-answer/&quot;&gt;find answers on your page&lt;/a&gt;, these work against you. Both only count if Google is allowed to crawl the page.&lt;/p&gt;
+
+      &lt;h2&gt;How long until the snippet changes&lt;/h2&gt;
+      &lt;p&gt;Google has to read the page again. Squarespace&#x27;s help puts it plainly: new description text won&#x27;t appear right away. To speed up one important page, open Search Console, paste its address into the search bar at the top (URL Inspection), and click &lt;em&gt;Request indexing&lt;/em&gt;. Do it once: Google&#x27;s recrawl page says asking again won&#x27;t get it crawled any faster.&lt;/p&gt;
+      &lt;p&gt;Then repeat Step 1 a week or two later, with the same three searches. Expect your description to win some and lose some. That&#x27;s the system working.&lt;/p&gt;
+      &lt;p&gt;If it&#x27;s the blue title line that&#x27;s wrong rather than the grey text, that has its own causes: see &lt;a href=&quot;/blog/google-shows-wrong-title-for-my-page/&quot;&gt;Google shows a different title for my page&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Search three ways and copy each snippet. Different snippets for different searches are normal.&lt;/li&gt;
+        &lt;li&gt;Pull your meta description (the command above, or &lt;code&gt;Ctrl+U&lt;/code&gt;). Missing is the most common problem, and it&#x27;s usually an inside page.&lt;/li&gt;
+        &lt;li&gt;Check it against Google&#x27;s list: unique to the page, not keywords, not too thin, actually summarises the page.&lt;/li&gt;
+        &lt;li&gt;Write one for this page in your site builder&#x27;s SEO field, the important part first.&lt;/li&gt;
+        &lt;li&gt;Wrap text that should never be a snippet in &lt;code&gt;data-nosnippet&lt;/code&gt;. Leave &lt;code&gt;nosnippet&lt;/code&gt; alone unless you mean it.&lt;/li&gt;
+        &lt;li&gt;Request indexing once, then check again in a week or two.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/appearance/snippet&quot;&gt;Control your snippets in search results&lt;/a&gt; (updated 20 Apr 2026: how snippets are made, different snippets per search, truncation, unique descriptions, keyword lists, the good and bad examples), Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag&quot;&gt;Robots meta tag, data-nosnippet, and X-Robots-Tag specifications&lt;/a&gt; (updated 24 Mar 2026: nosnippet, max-snippet, AI Overviews and AI Mode, data-nosnippet rules), &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl&quot;&gt;Ask Google to recrawl your URLs&lt;/a&gt;, Ahrefs&#x27; &lt;a href=&quot;https://ahrefs.com/blog/meta-description-study/&quot;&gt;How Often Does Google Rewrite Meta Descriptions?&lt;/a&gt; (2020, 20,000 keywords), WordPress&#x27;s &lt;a href=&quot;https://github.com/WordPress/wordpress-develop/blob/trunk/src/wp-includes/default-filters.php&quot;&gt;default-filters.php&lt;/a&gt; (the &lt;code&gt;wp_head&lt;/code&gt; list), Yoast&#x27;s &lt;a href=&quot;https://yoast.com/meta-descriptions/&quot;&gt;meta description&lt;/a&gt;, &lt;a href=&quot;https://yoast.com/help/how-to-modify-default-snippet-templates-in-yoast-seo/&quot;&gt;templates&lt;/a&gt; and &lt;a href=&quot;https://yoast.com/help/im-not-seeing-a-meta-description-in-my-head-section/&quot;&gt;missing description&lt;/a&gt; pages, and the help pages of &lt;a href=&quot;https://help.shopify.com/en/manual/promoting-marketing/seo/adding-keywords&quot;&gt;Shopify&lt;/a&gt;, &lt;a href=&quot;https://support.squarespace.com/hc/en-us/articles/206016198-Adding-SEO-descriptions&quot;&gt;Squarespace&lt;/a&gt; and &lt;a href=&quot;https://support.wix.com/en/article/wix-editor-changing-your-pages-meta-description&quot;&gt;Wix&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Duplicate, Google chose different canonical than user&quot;: what it means and what to do</title>
     <link href="https://taktekbot.com/blog/google-chose-different-canonical/"/>
