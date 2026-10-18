@@ -1,0 +1,79 @@
+<!--
+title: "Duplicate without user-selected canonical" in Search Console: what it means and how to fix it
+description: What "Duplicate without user-selected canonical" means in Search Console, why it so often hits a home page that answers on both www and the bare address, how to check your own site in two minutes, and the redirect and canonical tag that fix it.
+stand: Your page has a twin, and you never said which one is the real one. So Google picked.
+story: duplicate-no-canonical
+-->
+      <p>"Duplicate without user-selected canonical" means Google found two or more addresses that show the same page, and none of them says which address is the main one. So Google chose one itself and left the others out of search results. The excluded address isn't broken, and nothing is penalised. You just didn't get a say in which copy people see.</p>
+      <p>The most common twin I've seen is the home page itself. On 16 October I checked 191 small business websites from a business directory, and 48 of them answered on both <code>https://example.com/</code> and <code>https://www.example.com/</code> without sending one to the other. On 18 October I fetched both copies of those home pages and looked for a canonical tag, the one line that names the main copy. In the morning run, 36 of the 48 had no canonical on either copy, and 1 named a different address on each. A re-run that evening, with 47 of the sites answering, gave the same picture: 35 with none, 1 contradicting itself, 10 naming the same address from both copies. So roughly three in four of those sites leave Google to guess.</p>
+      <p>Below is what the status means, how to find your own twins, and the two fixes, in the order to do them.</p>
+
+      <h2>The words, translated</h2>
+      <ul>
+        <li><strong>Duplicate</strong>: two addresses that serve the same, or nearly the same, page. To Google, <code>example.com/</code>, <code>www.example.com/</code>, <code>example.com/?ref=menu</code> and <code>example.com/index.html</code> are four different addresses, even if you think of them as one page.</li>
+        <li><strong>Canonical</strong>: the address you want shown in search results. Google indexes one copy of each page and folds the others into it.</li>
+        <li><strong>User-selected</strong>: you told Google which one, with a redirect or a <code>rel="canonical"</code> tag. "Without user-selected" means you didn't, so the choice was Google's.</li>
+      </ul>
+      <p>It has three neighbours in the same report. <a href="/blog/alternate-page-with-proper-canonical-tag/">"Alternate page with proper canonical tag"</a> means you did name a main copy and Google agreed: usually fine. <a href="/blog/google-chose-different-canonical/">"Duplicate, Google chose different canonical than user"</a> means you named one and Google disagreed. The one in this guide comes before both: nobody named anything.</p>
+
+      <h2>Is it a problem?</h2>
+      <p>Often not much. If Google picked the address you would have picked, the right page shows in results and the twin just sits in this list.</p>
+      <p>It becomes a problem in three cases:</p>
+      <ul>
+        <li><strong>Google picked the wrong copy.</strong> For example the <code>http://</code> one, or a version with a tracking parameter, or the address you're about to retire.</li>
+        <li><strong>Links are split.</strong> Some people link to www, some to the bare address. Google says it consolidates signals for duplicates, but only once it has worked out they're duplicates, and the copy it keeps may not be the one your ads, business profile and printed cards point to.</li>
+        <li><strong>The list is long.</strong> Hundreds of entries usually mean a pattern (a filter, a sort order, a session parameter in the address) that makes your site look many times bigger than it is, and Google spends visits on copies instead of new pages.</li>
+      </ul>
+
+      <h2>Check which copy Google picked</h2>
+      <ol>
+        <li>In Search Console, open <strong>Indexing → Pages</strong>, scroll to "Why pages aren't indexed" and click <strong>Duplicate without user-selected canonical</strong>.</li>
+        <li>Click one address in the list, then <strong>Inspect URL</strong>.</li>
+        <li>Open <strong>Page indexing</strong>. Read two lines: <em>User-declared canonical</em> will say "None", and <em>Google-selected canonical</em> shows the copy Google kept.</li>
+        <li>If the Google-selected address is the one you want, you can leave it. If not, keep going.</li>
+      </ol>
+
+      <h2>Check your own site for the home page twin</h2>
+      <p>This is the check I ran on the 48 sites, for one site. Open Terminal on a Mac (on Windows, open PowerShell and type <code>curl.exe</code> instead of <code>curl</code>) and run these two lines with your own domain:</p>
+      <pre><code>curl -sL -o /dev/null -w "%{http_code} %{url_effective}\n" https://example.com/
+curl -sL -o /dev/null -w "%{http_code} %{url_effective}\n" https://www.example.com/</code></pre>
+      <p>On Windows, replace <code>/dev/null</code> with <code>NUL</code>. Each line prints the status and the address you ended up on after any redirects.</p>
+      <ul>
+        <li><strong>Both lines end on the same address</strong>: one redirects to the other. Good, the home page has no twin.</li>
+        <li><strong>Each line ends on its own address, both 200</strong>: you have the twin. This was 48 of 180 sites that answered on both.</li>
+        <li><strong>One line fails</strong>: that's a different problem, covered in <a href="/blog/site-works-without-www-not-with-it/">my website works without www but not with it</a>.</li>
+      </ul>
+      <p>Then look for a canonical tag on both copies:</p>
+      <pre><code>curl -sL https://example.com/ | tr "\n" " " | grep -oi '&lt;link[^&gt;]*canonical[^&gt;]*&gt;'
+curl -sL https://www.example.com/ | tr "\n" " " | grep -oi '&lt;link[^&gt;]*canonical[^&gt;]*&gt;'</code></pre>
+      <p>The <code>tr</code> part joins the page into one line first, because some sites split the tag across lines and a plain grep misses it. No output means no canonical tag. If both lines print the same address, you're covered. If they print different addresses, each copy claims to be the real one, which is worse than saying nothing; one of my 48 did that.</p>
+
+      <h2>Fix 1: redirect the twin</h2>
+      <p>A redirect is the strongest signal. Google's own guide on duplicate URLs ranks it first: "Redirects: A strong signal that the target of the redirect should become canonical." It also fixes it for people, not only for Google: anyone who types the other address lands on the right one.</p>
+      <ul>
+        <li><strong>Cloudflare</strong>: Rules → Redirect Rules, create a rule for requests to the twin host, a dynamic redirect to the main host with the same path, status 301, and tick "Preserve query string".</li>
+        <li><strong>WordPress</strong>: make sure both <strong>WordPress Address</strong> and <strong>Site Address</strong> under Settings → General use the host you want. WordPress then redirects the other host to it, as long as the server sends the other host to the same WordPress at all.</li>
+        <li><strong>Hosted builders</strong> (Wix, Squarespace, Shopify): in the domains screen, set one domain as primary. The others redirect to it.</li>
+        <li><strong>Apache or nginx</strong>: a 301 from the twin host to the main one, keeping the path. If you have both a www rule and an http-to-https rule, test that they don't chain into two hops.</li>
+      </ul>
+      <p>Pick one host and use it everywhere: in the redirect, in your sitemap, in your internal links and in your canonical tags. Which one doesn't matter to Google. Mixing them does.</p>
+
+      <h2>Fix 2: a canonical tag on every page</h2>
+      <p>Redirects can't handle twins that have to stay reachable, like a page with <code>?utm_source=</code> on the end, or a product reachable from two categories. For those, put this in the <code>&lt;head&gt;</code> of each page, naming that page's main address:</p>
+      <pre><code>&lt;link rel="canonical" href="https://www.example.com/services/"&gt;</code></pre>
+      <p>Three rules from Google's guide that I see broken most:</p>
+      <ul>
+        <li><strong>Use the full address</strong>, with <code>https://</code> and the host. Google supports short relative paths but recommends absolute ones.</li>
+        <li><strong>Don't use robots.txt or noindex</strong> to hide twins. Google lists both as wrong tools for this: a blocked page can still be indexed, and a noindex page drops out instead of passing its signals on.</li>
+        <li><strong>Each page names itself</strong>, not the home page. A whole site whose canonical says "home page" tells Google every page is a copy of it.</li>
+      </ul>
+      <p>On WordPress, Yoast SEO, Rank Math and All in One SEO all print a self-naming canonical on every page by default. If you have one installed and the check above still printed nothing, a cache or a theme may be stripping the head; clear the cache and check again.</p>
+
+      <h2>After the fix</h2>
+      <ol>
+        <li>Run both checks again and make sure the twin now redirects and the main copy prints its own canonical.</li>
+        <li>In Search Console, inspect the main address and click <strong>Request indexing</strong>.</li>
+        <li>Click <strong>Validate fix</strong> on the status only if every address in its list is a twin you've dealt with. If the list also holds filter or tracking addresses you're keeping, skip validation: one leftover stops it.</li>
+        <li>Give it time. The twins leave this list as Google revisits them, which can take weeks for pages it rarely crawls. Moving into "Page with redirect" or "Alternate page with proper canonical tag" is the good outcome: it means Google now knows which one you meant.</li>
+      </ol>
+      <p>Sources: Google Search Central, <a href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls">How to specify a canonical URL with rel="canonical" and other methods</a>, read on 18 October 2026.</p>
