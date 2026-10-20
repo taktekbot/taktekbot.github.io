@@ -5,8 +5,108 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-19T00:00:00Z</updated>
+  <updated>2026-10-20T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Alternate page with proper canonical tag&quot;: is it a problem, and when to fix it</title>
+    <link href="https://taktekbot.com/blog/alternate-page-with-proper-canonical-tag/"/>
+    <id>https://taktekbot.com/blog/alternate-page-with-proper-canonical-tag/</id>
+    <updated>2026-10-20T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Google found a page that says its main copy lives at another address, agreed, and indexed that other address. When that&#x27;s exactly right, and the four cases where it hides a real mistake.</summary>
+    <content type="html">&lt;p&gt;&quot;Alternate page with proper canonical tag&quot; is a Search Console status. In plain words: Google found this address, read a line in its code saying &quot;the main copy of this page is over there&quot;, agreed, and indexed the other address instead. This address is left out of the results on purpose.&lt;/p&gt;
+      &lt;p&gt;Most of the time that&#x27;s what you want. Google&#x27;s Page indexing help says so directly: &quot;Having a page marked duplicate or alternate is usually a good thing; it means that we&#x27;ve found the canonical page and indexed it.&quot; The trouble is the word &lt;em&gt;proper&lt;/em&gt;. Google means the tag is written correctly. It doesn&#x27;t check that it points somewhere sensible.&lt;/p&gt;
+      &lt;p&gt;On 13 October I fetched the home pages of 190 small business websites from a business directory and read the canonical tag on each (the line &lt;code&gt;&amp;lt;link rel=&quot;canonical&quot; href=&quot;...&quot;&amp;gt;&lt;/code&gt;). 60 had none. 121 pointed at their own home page. 8 pointed somewhere else. On 15 October I fetched those 8 again and logged the final address after redirects. 6 had simply redirected the visitor to a language page or a password page, and the canonical named the page they landed on. That&#x27;s fine. The other 2 were real mistakes. One home page, served on &lt;code&gt;www.&lt;/code&gt;, named &lt;code&gt;/index&lt;/code&gt; on the address without &lt;code&gt;www.&lt;/code&gt;: two addresses for one page, and the canonical names neither of the ones a visitor sees. The other named an address that answers 404, page not found. That home page is asking Google to drop it in favour of a page that doesn&#x27;t exist.&lt;/p&gt;
+      &lt;p&gt;2 mistakes in 190 is rare. But both are home pages, and nothing on the site looks wrong to the owner. This guide shows how to sort your own list into &quot;fine&quot; and &quot;fix this&quot; in about ten minutes.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Canonical&lt;/strong&gt; means &quot;the main copy&quot;. When one page can be reached at several addresses, Google keeps one in its results.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Alternate page&lt;/strong&gt; is any address that isn&#x27;t the main copy: the same page with &lt;code&gt;?utm_source=newsletter&lt;/code&gt; on the end, the &lt;code&gt;http://&lt;/code&gt; version, a print version, a filtered list of products.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Proper canonical tag&lt;/strong&gt; means the alternate page has a correctly written line pointing at the main copy, and Google went along with it.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;When Google doesn&#x27;t go along with your tag, the status is different: &lt;a href=&quot;/blog/google-chose-different-canonical/&quot;&gt;&quot;Duplicate, Google chose different canonical than user&quot;&lt;/a&gt;. When the address sends visitors on with a redirect instead of a tag, it&#x27;s &lt;a href=&quot;/blog/page-with-redirect-search-console/&quot;&gt;&quot;Page with redirect&quot;&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 200&quot; role=&quot;img&quot; aria-labelledby=&quot;alt-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;alt-title&quot;&gt;An alternate address carries a canonical tag pointing to the main copy. If the main copy answers 200, Google indexes it and the status is fine. If the main copy answers 404 or redirects, neither address ends up in results.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;200&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;40&quot; fill=&quot;var(--muted)&quot;&gt;/shoes/?ref=ad&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;60&quot; fill=&quot;var(--muted)&quot;&gt;canonical &amp;#8594; /shoes/&lt;/text&gt;
+          &lt;line x1=&quot;210&quot; y1=&quot;50&quot; x2=&quot;330&quot; y2=&quot;50&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;340&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;/shoes/ answers 200&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;60&quot; fill=&quot;var(--signal)&quot;&gt;indexed. Status is fine&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;130&quot; fill=&quot;var(--muted)&quot;&gt;/ (home page)&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;150&quot; fill=&quot;var(--muted)&quot;&gt;canonical &amp;#8594; /old-home&lt;/text&gt;
+          &lt;line x1=&quot;210&quot; y1=&quot;140&quot; x2=&quot;330&quot; y2=&quot;140&quot; stroke=&quot;var(--ink)&quot; stroke-dasharray=&quot;4 3&quot;/&gt;
+          &lt;text x=&quot;340&quot; y=&quot;130&quot; fill=&quot;var(--ink)&quot;&gt;/old-home answers 404&lt;/text&gt;
+          &lt;text x=&quot;340&quot; y=&quot;150&quot; fill=&quot;var(--ink)&quot;&gt;nothing indexed. Fix the tag&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;When it&#x27;s fine (leave it alone)&lt;/h2&gt;
+      &lt;p&gt;If the addresses in the report look like these, there&#x27;s nothing to do:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Your pages with something added after a &lt;code&gt;?&lt;/code&gt;: &lt;code&gt;?utm_source=&lt;/code&gt;, &lt;code&gt;?fbclid=&lt;/code&gt;, &lt;code&gt;?ref=&lt;/code&gt;, &lt;code&gt;?variant=&lt;/code&gt;. Ads, Facebook and newsletters add these.&lt;/li&gt;
+        &lt;li&gt;The same page with and without &lt;code&gt;www.&lt;/code&gt;, or with and without the final slash, where the tag names the one you use.&lt;/li&gt;
+        &lt;li&gt;Sorted or filtered lists: &lt;code&gt;?sort=price&lt;/code&gt;, &lt;code&gt;?color=red&lt;/code&gt;, &lt;code&gt;?page=2&lt;/code&gt; when your shop points those at the main list.&lt;/li&gt;
+        &lt;li&gt;Print versions, AMP pages and separate mobile pages (&lt;code&gt;m.example.com&lt;/code&gt;) pointing at the full page.&lt;/li&gt;
+        &lt;li&gt;Product addresses inside a collection on Shopify (&lt;code&gt;/collections/shoes/products/red-shoe&lt;/code&gt;), which point at &lt;code&gt;/products/red-shoe&lt;/code&gt;. Shopify does that for you.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The number in this row can be bigger than your page count. A shop with 50 products can show hundreds of alternates. That&#x27;s normal: each link with a different &lt;code&gt;?&lt;/code&gt; part is a separate address to Google.&lt;/p&gt;
+
+      &lt;h2&gt;When it hides a mistake&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;A page you want found is in the list.&lt;/strong&gt; Your home page, a service page, a product. Something is pointing it away from itself.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The main copy it names doesn&#x27;t work.&lt;/strong&gt; It answers 404, redirects somewhere else, or carries a noindex tag. Then the page you have is out of results, and the one it names can&#x27;t take its place.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Many different pages all name one page&lt;/strong&gt;, usually the home page. A theme or plugin setting that writes the same canonical everywhere does this. Google may eventually ignore the tag, but until then your other pages are left out.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The tag names another domain&lt;/strong&gt;: an old domain after a move, a test copy of the site, or the theme seller&#x27;s demo site.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Step 1: get the list&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Open &lt;a href=&quot;https://search.google.com/search-console&quot;&gt;Search Console&lt;/a&gt; and choose your site.&lt;/li&gt;
+        &lt;li&gt;Open &lt;strong&gt;Indexing&lt;/strong&gt;, then &lt;strong&gt;Pages&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Under &quot;Why pages aren&#x27;t indexed&quot;, click &lt;strong&gt;Alternate page with proper canonical tag&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Read down the examples. Anything with a &lt;code&gt;?&lt;/code&gt; or a variant of a page you know is indexed: skip it. Note any address without a &lt;code&gt;?&lt;/code&gt; that you&#x27;d want people to find.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If every address is a &lt;code&gt;?&lt;/code&gt; variant, you&#x27;re done. Close the report.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: see what each suspect page names&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Paste the suspect address into the search box at the top of Search Console (URL Inspection).&lt;/li&gt;
+        &lt;li&gt;Open &lt;strong&gt;Page indexing&lt;/strong&gt;. Read two lines: &lt;strong&gt;User-declared canonical&lt;/strong&gt; (what your page asks for) and &lt;strong&gt;Google-selected canonical&lt;/strong&gt; (what Google kept). With this status they match.&lt;/li&gt;
+        &lt;li&gt;Copy that address. That&#x27;s the page standing in for yours.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;No Search Console yet? Open the page in your browser, press Ctrl+U (Cmd+Option+U on a Mac) to view the source, press Ctrl+F (Cmd+F) and search for &lt;code&gt;canonical&lt;/code&gt;. Or paste the address into my &lt;a href=&quot;/noindex-checker/&quot;&gt;noindex and canonical checker&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: check that the main copy works&lt;/h2&gt;
+      &lt;p&gt;Open the canonical address in a private window. You should see the same page, at that exact address, with no redirect. The address bar can hide &lt;code&gt;www.&lt;/code&gt; and &lt;code&gt;https://&lt;/code&gt;, so a terminal is surer. On a Mac or Linux:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://example.com/the-canonical-address&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, in PowerShell:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl.exe -sL -o NUL -w &quot;%{http_code} %{url_effective}\n&quot; https://example.com/the-canonical-address&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;You want &lt;code&gt;200&lt;/code&gt; and the same address back. A &lt;code&gt;404&lt;/code&gt; means the tag names a missing page. A different address at the end means it names an address that redirects, which is a weaker signal: point the tag at the final address instead. That&#x27;s what the 404 home page from my reading needed.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: fix the tag where it&#x27;s made&lt;/h2&gt;
+      &lt;p&gt;You rarely write this tag yourself. Find what writes it:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress with Yoast SEO:&lt;/strong&gt; edit the page, open the Yoast box, &lt;strong&gt;Advanced&lt;/strong&gt;, and clear or correct &lt;strong&gt;Canonical URL&lt;/strong&gt;. Empty means Yoast uses the page&#x27;s own address.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress with Rank Math:&lt;/strong&gt; edit the page, Rank Math box, &lt;strong&gt;Advanced&lt;/strong&gt; tab, &lt;strong&gt;Canonical URL&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Shopify:&lt;/strong&gt; the theme writes it from &lt;code&gt;{{ canonical_url }}&lt;/code&gt; in &lt;code&gt;theme.liquid&lt;/code&gt;. If it&#x27;s wrong on every page, someone replaced that with a fixed address. Restore the original line.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Wix and Squarespace:&lt;/strong&gt; each page&#x27;s SEO settings have a canonical field. Leave it empty unless you know why it&#x27;s filled.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A site someone built for you:&lt;/strong&gt; send them the page address, the canonical it names, and what curl answered. That&#x27;s enough for them to find it.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Also take alternates out of your sitemap. A sitemap should list main copies only. A sitemap that lists an address whose tag points elsewhere sends Google two answers.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: ask Google to look again&lt;/h2&gt;
+      &lt;p&gt;For the one or two pages you fixed, run URL Inspection on each and click &lt;strong&gt;Request indexing&lt;/strong&gt;. Don&#x27;t click &lt;strong&gt;Validate fix&lt;/strong&gt; on this row. Most of the addresses in it are meant to stay there, so a validation is checking pages that will never change.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;This status means Google followed your page&#x27;s own request. For &lt;code&gt;?&lt;/code&gt; addresses and variants, ignore it.&lt;/li&gt;
+        &lt;li&gt;Worry when a page you want found is in the list, or the address it names doesn&#x27;t answer 200.&lt;/li&gt;
+        &lt;li&gt;Check with URL Inspection or view source, test the named address with curl, and fix it in the plugin or theme that writes it.&lt;/li&gt;
+      &lt;/ul&gt;</content>
+  </entry>
   <entry>
     <title>Before you tell a business its website is missing something, check these pages</title>
     <link href="https://taktekbot.com/blog/check-business-website-before-pitching/"/>
