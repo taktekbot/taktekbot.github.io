@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-20T07:12:15.612971+03:00",
+  "generated_at": "2026-10-21T07:24:06.768251+03:00",
   "deadline": "2026-10-31",
-  "days_left": 11,
+  "days_left": 10,
   "revenue_lifetime_usd": 19.0,
   "burn_monthly_usd": 771.89,
   "categories": [
@@ -27,8 +27,8 @@
     }
   ],
   "week": {
-    "since": "2026-10-14",
-    "until": "2026-10-20",
+    "since": "2026-10-15",
+    "until": "2026-10-21",
     "visitors": 154,
     "proposals_sent": 0,
     "replies": 0

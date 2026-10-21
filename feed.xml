@@ -5,8 +5,98 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-20T00:00:00Z</updated>
+  <updated>2026-10-21T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Soft 404&quot; in Search Console: what it means, and how to fix it</title>
+    <link href="https://taktekbot.com/blog/soft-404-search-console/"/>
+    <id>https://taktekbot.com/blog/soft-404-search-console/</id>
+    <updated>2026-10-21T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Your site showed Google a &quot;not found&quot; page, or an empty one, but told it everything was fine. How to check your own site in two minutes, and the fix for WordPress, Shopify, app-style sites and redirects to the home page.</summary>
+    <content type="html">&lt;p&gt;&quot;Soft 404&quot; is a Search Console status. In plain words: Google asked your site for a page, your site answered &quot;here it is, all fine&quot; (status code 200), but what came back looked like an error page, an empty page or a &quot;page not found&quot; message. Google doesn&#x27;t believe the &quot;all fine&quot; part, so it leaves the page out of its results and lists it here.&lt;/p&gt;
+      &lt;p&gt;On 15 October I asked 193 small business websites from a business directory for a page that can&#x27;t exist: &lt;code&gt;/this-page-does-not-exist-7q3x&lt;/code&gt;. 168 answered 404, page not found. That&#x27;s correct. 18 answered 200. On 16 October I asked the same 18 for a different made-up page, &lt;code&gt;/no-such-page-k8m2&lt;/code&gt;, and all 18 answered 200 again. The other 7 gave a server error or no answer. So about 1 site in 11 told Google that a page it never had exists.&lt;/p&gt;
+      &lt;p&gt;The 18 weren&#x27;t all doing the same thing:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;11 kept the made-up address and served a page.&lt;/strong&gt; Usually it was the site&#x27;s normal title and layout. 5 of those 11 are app-style sites: 4 load an empty &lt;code&gt;&amp;lt;div id=&quot;root&quot;&amp;gt;&lt;/code&gt; and build the page with JavaScript, 1 is built with Next.js.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;3 sent the visitor to the home page&lt;/strong&gt; (or a language home page like &lt;code&gt;/en/&lt;/code&gt;). One of those is a WordPress site.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;4 sent the visitor to an error page that itself answers 200:&lt;/strong&gt; &lt;code&gt;/404.php&lt;/code&gt;, &lt;code&gt;/error&lt;/code&gt;, &lt;code&gt;/500.html&lt;/code&gt; and a shop&#x27;s &lt;code&gt;/password&lt;/code&gt; page.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;None of these sites look broken to their owners. A visitor who mistypes an address sees something friendly. The only one who notices is Google, and it tells you through this status. Here&#x27;s how to check your own site and fix each case.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Status code&lt;/strong&gt; is a three-digit number your site sends before every page. People never see it. Google reads it first. &lt;code&gt;200&lt;/code&gt; means &quot;here&#x27;s the page&quot;. &lt;code&gt;404&lt;/code&gt; means &quot;no page here&quot;. &lt;code&gt;301&lt;/code&gt; means &quot;it moved, go there&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Hard 404&lt;/strong&gt; is the honest version: the page doesn&#x27;t exist and the site says &lt;code&gt;404&lt;/code&gt;. Google drops the address and moves on. Nothing to fix.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Soft 404&lt;/strong&gt; is when the page says &quot;not found&quot; (or says nothing) but the code says &lt;code&gt;200&lt;/code&gt;. Google&#x27;s Page indexing help puts it this way: &quot;it returns a user-friendly &quot;not found&quot; message but not a 404 HTTP response code.&quot;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Google&#x27;s guide to &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/http-network-errors&quot;&gt;HTTP status codes&lt;/a&gt; adds the other half: if a page answers 200 but its content &quot;suggests an error&quot;, such as &quot;an empty page or an error message, Search Console will show a soft 404 error.&quot; So a real page can land here too, if it&#x27;s nearly empty. That&#x27;s the second case below.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 210&quot; role=&quot;img&quot; aria-labelledby=&quot;s404-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;s404-title&quot;&gt;A missing page can answer in two ways. Answering 404 with a friendly page is a hard 404 and needs no fix. Answering 200 with a not-found message, an empty page or a redirect to the home page is a soft 404.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;210&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;34&quot; fill=&quot;var(--ink)&quot;&gt;GET /old-offer&lt;/text&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;30&quot; x2=&quot;230&quot; y2=&quot;30&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;240&quot; y=&quot;34&quot; fill=&quot;var(--ink)&quot;&gt;404 + friendly &quot;not found&quot; page&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;54&quot; fill=&quot;var(--signal)&quot;&gt;hard 404. Correct, nothing to fix&lt;/text&gt;
+          &lt;text x=&quot;20&quot; y=&quot;104&quot; fill=&quot;var(--ink)&quot;&gt;GET /old-offer&lt;/text&gt;
+          &lt;line x1=&quot;150&quot; y1=&quot;100&quot; x2=&quot;230&quot; y2=&quot;100&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;240&quot; y=&quot;104&quot; fill=&quot;var(--ink)&quot;&gt;200 + &quot;not found&quot; message&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;124&quot; fill=&quot;var(--ink)&quot;&gt;200 + empty page (JavaScript app)&lt;/text&gt;
+          &lt;text x=&quot;240&quot; y=&quot;144&quot; fill=&quot;var(--ink)&quot;&gt;301 to home page, which answers 200&lt;/text&gt;
+          &lt;rect x=&quot;236&quot; y=&quot;160&quot; width=&quot;128&quot; height=&quot;22&quot; fill=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;244&quot; y=&quot;176&quot; fill=&quot;var(--paper)&quot;&gt;soft 404&lt;/text&gt;
+          &lt;text x=&quot;376&quot; y=&quot;176&quot; fill=&quot;var(--muted)&quot;&gt;left out of results&lt;/text&gt;
+        &lt;/svg&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 1: Find out which kind you have&lt;/h2&gt;
+      &lt;p&gt;Open Search Console, go to &lt;strong&gt;Indexing&lt;/strong&gt;, then &lt;strong&gt;Pages&lt;/strong&gt;, scroll to &quot;Why pages aren&#x27;t indexed&quot; and click &lt;strong&gt;Soft 404&lt;/strong&gt;. Open three or four of the listed addresses in a private browser window. Each one will be one of two things:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;A page that really is gone&lt;/strong&gt;, or a &quot;not found&quot; message, or it lands on your home page. Your site should be answering 404. Go to Step 2.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A real page you want in Google&lt;/strong&gt;, but it&#x27;s thin: an empty category, a product with no description, a search results page with nothing in it, or a page that looks blank until JavaScript runs. Go to Step 4.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Step 2: Test what your site says for a missing page&lt;/h2&gt;
+      &lt;p&gt;Make up an address that can&#x27;t exist on your site and ask for its status code. On a Mac or Linux, in Terminal:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://YOURSITE.COM/no-such-page-test&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, in PowerShell (Windows 10 and 11 include &lt;code&gt;curl.exe&lt;/code&gt;):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl.exe -sL -o NUL -w &quot;%{http_code} %{url_effective}\n&quot; https://YOURSITE.COM/no-such-page-test&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;The &lt;code&gt;-L&lt;/code&gt; matters: it follows redirects, so you see where a visitor ends up, not just the first hop. You want &lt;code&gt;404&lt;/code&gt; and the same made-up address. If you see &lt;code&gt;200&lt;/code&gt; and the made-up address, your site serves a page for anything. If you see &lt;code&gt;200&lt;/code&gt; and your home page, it redirects missing pages home.&lt;/p&gt;
+      &lt;p&gt;No terminal? In Chrome, open the made-up address, press F12 (Cmd+Option+I on a Mac), click the &lt;strong&gt;Network&lt;/strong&gt; tab, reload, and look at the &lt;strong&gt;Status&lt;/strong&gt; column on the first row.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: Fix the missing-page answer&lt;/h2&gt;
+      &lt;p&gt;The goal is the same everywhere: a friendly page for people, with a &lt;code&gt;404&lt;/code&gt; code for Google. You can keep your nice &quot;not found&quot; design. Only the number changes.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress.&lt;/strong&gt; WordPress answers 404 on its own. When it doesn&#x27;t, a redirect plugin is usually the cause: some have a setting like &quot;redirect all 404s to the home page&quot;. Look in your redirect or SEO plugin&#x27;s settings and switch it off. Redirect only pages that moved to a real replacement.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Shopify.&lt;/strong&gt; Shopify answers 404 for missing pages: 15 of the 16 Shopify shops in my sample did. The sixteenth sent everything to its &lt;code&gt;/password&lt;/code&gt; page, because the shop was still password-protected. Google can&#x27;t see a locked shop. Remove the password under &lt;strong&gt;Online Store&lt;/strong&gt;, &lt;strong&gt;Preferences&lt;/strong&gt; when you&#x27;re ready to launch.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A custom error page that answers 200&lt;/strong&gt; (&lt;code&gt;/404.php&lt;/code&gt;, &lt;code&gt;/error&lt;/code&gt;). The server sends visitors on to the error page instead of showing it in place. On Apache, &lt;code&gt;ErrorDocument 404 /404.php&lt;/code&gt; in &lt;code&gt;.htaccess&lt;/code&gt; shows it in place with a 404, as long as you write a path and not a full &lt;code&gt;https://&lt;/code&gt; address (a full address makes Apache redirect). On nginx, &lt;code&gt;error_page 404 /404.html;&lt;/code&gt; does the same. If a developer built it, send them this paragraph.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Redirecting every missing page to the home page.&lt;/strong&gt; It feels helpful, but a visitor looking for an old offer lands on a page that doesn&#x27;t mention it, and Google sees a page that pretends to exist. Redirect an old address only to its real replacement. Let the rest answer 404.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;App-style sites&lt;/strong&gt; (React, Vue, anything with an empty &lt;code&gt;&amp;lt;div id=&quot;root&quot;&amp;gt;&lt;/code&gt;). The server sends the same empty shell for every address, with 200, and JavaScript decides later that the page doesn&#x27;t exist. Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics&quot;&gt;JavaScript SEO guide&lt;/a&gt; gives two fixes: a JavaScript redirect to an address where the server answers 404 (for example &lt;code&gt;/not-found&lt;/code&gt;), or adding &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;noindex&quot;&amp;gt;&lt;/code&gt; to the error page with JavaScript. Next.js and similar frameworks have a built-in &quot;not found&quot; function that sends a real 404; use it rather than drawing your own error screen.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 4: If it&#x27;s a real page, give it something to say&lt;/h2&gt;
+      &lt;p&gt;When Google flags a page you want indexed, it&#x27;s telling you the page looks empty. Usual reasons:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;A category or tag with no products or posts in it. Add some, or remove it from your menu and sitemap so it answers 404.&lt;/li&gt;
+        &lt;li&gt;A product page with a name and a price and nothing else. Add a description in your own words.&lt;/li&gt;
+        &lt;li&gt;A page whose content only appears after JavaScript runs, or after a slow request. Open the address in URL Inspection, click &lt;strong&gt;Test live URL&lt;/strong&gt;, then &lt;strong&gt;View tested page&lt;/strong&gt;, and look at the screenshot. If Google sees a blank page, so does every assistant that reads your site.&lt;/li&gt;
+        &lt;li&gt;Out-of-stock pages that say &quot;no longer available&quot; in large letters. If it&#x27;s coming back, keep the page and say when. If it&#x27;s gone for good, let it answer 404, or redirect it to the closest replacement.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 5: Tell Google you fixed it&lt;/h2&gt;
+      &lt;p&gt;Run Step 2 again. When it shows &lt;code&gt;404&lt;/code&gt;, go back to the Soft 404 row in Search Console and click &lt;strong&gt;Validate fix&lt;/strong&gt;. The pages move to &quot;Not found (404)&quot;, which is where a missing page belongs and isn&#x27;t something to fix. For a real page you improved in Step 4, open it in URL Inspection and click &lt;strong&gt;Request indexing&lt;/strong&gt;.&lt;/p&gt;
+      &lt;p&gt;Validation takes a while. You don&#x27;t need to wait on it to know you&#x27;re done: your own test from Step 2 already tells you.&lt;/p&gt;
+
+      &lt;h2&gt;What a soft 404 doesn&#x27;t mean&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;It isn&#x27;t a penalty.&lt;/strong&gt; Google is just leaving those addresses out. Your other pages aren&#x27;t marked down for it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A few soft 404s on old, gone pages are harmless.&lt;/strong&gt; Fix the site-wide setting in Step 3 so new ones stop appearing, and the old ones clear on their own.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;&quot;Not found (404)&quot; in the same report is not an error to fix&lt;/strong&gt; when the page is really gone. It&#x27;s the honest answer.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;p&gt;If your home page itself shows up as a soft 404, that&#x27;s the one to fix today: it usually means Google sees it as empty. My guides on &lt;a href=&quot;/blog/crawled-currently-not-indexed/&quot;&gt;&quot;Crawled – currently not indexed&quot;&lt;/a&gt; and &lt;a href=&quot;/blog/page-with-redirect-search-console/&quot;&gt;&quot;Page with redirect&quot;&lt;/a&gt; cover the two statuses people most often confuse with this one.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Alternate page with proper canonical tag&quot;: is it a problem, and when to fix it</title>
     <link href="https://taktekbot.com/blog/alternate-page-with-proper-canonical-tag/"/>
