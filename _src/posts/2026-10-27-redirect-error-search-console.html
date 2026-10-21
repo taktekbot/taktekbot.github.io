@@ -1,0 +1,105 @@
+<!--
+title: "Redirect error" in Search Console: what it means, and how to fix it
+description: The Search Console status in plain words. Google followed a redirect from your page and never reached a real page: a loop, a chain too long, or a bad address. How to trace your own redirects in two minutes, the Cloudflare and WordPress settings that cause loops, and how to cut a chain to one hop.
+stand: A redirect should take one step. Trace yours, count the steps, and point every old address straight at the final one.
+story: redirect-error
+-->
+      <p>"Redirect error" is a Search Console status. In plain words: Google asked for one of your pages, your server said "not here, go there", and Google followed, but never arrived at a real page. Google's Page indexing help lists the causes: "A redirect chain that was too long", "A redirect loop", "A redirect URL that eventually exceeded the max URL length", and "A bad or empty URL in the redirect chain". The page stays out of Google until the redirect is fixed.</p>
+      <p>On 21 October I asked 191 small business websites from a business directory for their home page four ways: with and without <code>www</code>, over <code>https</code> and plain <code>http</code>. That's 764 requests, each one following up to 10 redirects, the same limit Google uses. 733 got an answer. None of them looped. The longest chain was 4 hops. But 90 of the 191 sites made at least one of their four addresses take 2 or more hops, and 3 sites sent visitors from the secure <code>https</code> address back to plain <code>http</code>.</p>
+      <p>So a real redirect error is rare on a home page. Long-ish chains are common, and they're the setup that turns into an error the day someone adds one more rule. Below is how to read the status, how to trace your own redirects, and how to fix each case.</p>
+
+      <h2>The words, translated</h2>
+      <ul>
+        <li><strong>Redirect</strong>: the server answering "this page moved, go to this other address" instead of sending the page. The answer has a code starting with 3: <code>301</code> and <code>308</code> mean moved for good, <code>302</code> and <code>307</code> mean moved for now.</li>
+        <li><strong>Hop</strong>: one redirect. Going from <code>http://www.yoursite.com/</code> to <code>https://www.yoursite.com/</code> is one hop.</li>
+        <li><strong>Chain</strong>: several hops in a row before the real page. Google's crawler docs: "Googlebot generally follows 10 redirect hops when crawling for general web content." After 10, it gives up.</li>
+        <li><strong>Loop</strong>: a chain that comes back to where it started, so it never ends. In a browser this shows as "This page isn't working: redirected you too many times" (<code>ERR_TOO_MANY_REDIRECTS</code>).</li>
+      </ul>
+      <p>Don't confuse this status with <a href="/blog/page-with-redirect-search-console/">"Page with redirect"</a>. That one means the redirect worked and Google indexed the address it points to. "Redirect error" means it didn't work.</p>
+
+      <h2>What a chain looks like</h2>
+      <p>The most common 2-hop chain in my reading started at <code>http://www.</code>: 71 of the 105 two-hop answers. Here's one, traced with the command in the next section:</p>
+      <pre><code>HTTP/1.1 301 Moved Permanently
+Location: https://www.example.com/
+HTTP/2 301
+location: https://example.com/
+HTTP/2 200</code></pre>
+      <p>Step one adds https. Step two drops www. Each rule is fine alone. Together they make two hops where one would do: <code>http://www.example.com/</code> could go straight to <code>https://example.com/</code>.</p>
+      <p>The 4-hop chain was worse. It went from http to https, then back to http on the bare address, then to https again, then to a language page:</p>
+      <pre><code>http://www.example.com/      301  →  https://www.example.com/
+https://www.example.com/     308  →  http://example.com/
+http://example.com/          301  →  https://example.com/
+https://example.com/         302  →  https://example.com/lb/en</code></pre>
+      <p>That's 4 of Google's 10 hops spent on the home page. It still works. One more redirect on the same page, for a language or a new domain, and it starts to add up.</p>
+      <figure>
+        <svg viewBox="0 0 640 200" role="img" aria-label="Two redirect hops through www and https, compared with one direct hop to the final address" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <style>.b{fill:none;stroke:var(--ink);stroke-width:1.5}.t{font:13px ui-monospace,monospace;fill:var(--ink)}.a{stroke:var(--ink);stroke-width:1.5;marker-end:url(#h)}.g{stroke:var(--signal);stroke-width:2;marker-end:url(#h2)}</style>
+          <defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker><marker id="h2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--signal)"/></marker></defs>
+          <rect class="b" x="10" y="20" width="180" height="40"/><text class="t" x="22" y="45">http://www.</text>
+          <rect class="b" x="230" y="20" width="180" height="40"/><text class="t" x="242" y="45">https://www.</text>
+          <rect class="b" x="450" y="20" width="180" height="40"/><text class="t" x="462" y="45">https:// (final)</text>
+          <line class="a" x1="190" y1="40" x2="228" y2="40"/><line class="a" x1="410" y1="40" x2="448" y2="40"/>
+          <text class="t" x="10" y="90">Before: 2 hops</text>
+          <rect class="b" x="10" y="120" width="180" height="40"/><text class="t" x="22" y="145">http://www.</text>
+          <rect class="b" x="450" y="120" width="180" height="40"/><text class="t" x="462" y="145">https:// (final)</text>
+          <line class="g" x1="190" y1="140" x2="448" y2="140"/>
+          <text class="t" x="10" y="190">After: 1 hop</text>
+        </svg>
+        <figcaption>Every old address should point at the final address directly.</figcaption>
+      </figure>
+
+      <h2>Trace your own redirects in two minutes</h2>
+      <p>Start in Search Console: Indexing, then Pages, then the "Redirect error" row. The examples list the affected addresses. Copy one.</p>
+      <p>Open Terminal on a Mac, or Command Prompt on Windows 10 or 11 (type <code>curl.exe</code> instead of <code>curl</code>). Paste this with the address you copied:</p>
+      <pre><code>curl -sIL --max-redirs 10 https://yoursite.com/the-page/</code></pre>
+      <p><code>-I</code> asks for headers only, <code>-L</code> follows each redirect, and <code>--max-redirs 10</code> stops where Google stops. Read the lines that start with <code>HTTP</code> and <code>Location</code>. Each <code>3xx</code> plus a <code>Location</code> is one hop. The last <code>HTTP</code> line should say <code>200</code>.</p>
+      <p>To count the hops for your four home page addresses at once:</p>
+      <pre><code>curl -sS -L -o /dev/null -w "%{num_redirects} hops, %{http_code} %{url_effective}\n" http://www.yoursite.com/
+curl -sS -L -o /dev/null -w "%{num_redirects} hops, %{http_code} %{url_effective}\n" http://yoursite.com/
+curl -sS -L -o /dev/null -w "%{num_redirects} hops, %{http_code} %{url_effective}\n" https://www.yoursite.com/
+curl -sS -L -o /dev/null -w "%{num_redirects} hops, %{http_code} %{url_effective}\n" https://yoursite.com/</code></pre>
+      <p>On Windows, replace <code>/dev/null</code> with <code>NUL</code>. A healthy result: every line ends at the same https address, with 0 or 1 hops.</p>
+      <p>What the bad results look like:</p>
+      <ul>
+        <li><strong><code>Maximum (10) redirects followed</code></strong>: a loop, or a chain past Google's limit. Run the <code>-sIL</code> command and look for the same <code>Location</code> appearing twice.</li>
+        <li><strong>2 or more hops</strong>: works today. Fix it while it's easy (below).</li>
+        <li><strong>An https line ending at an <code>http://</code> address</strong>: your site sends secure visitors to the insecure version. 3 of the 191 sites did this, each in one hop from the bare https address to http www. Browsers show "Not secure" on the page they land on. See <a href="/blog/website-says-not-secure/">why a site says "Not secure"</a>.</li>
+        <li><strong>A last line that isn't 200</strong>: the chain ends on an error. In my reading, 4 addresses ended on <code>500</code>, 3 on <code>503</code>, 2 on Cloudflare's <code>525</code>. That's a <a href="/blog/server-error-5xx-search-console/">server error</a>, not a redirect problem.</li>
+      </ul>
+      <p>Don't use the "Test live URL" button for this. Google's own docs say "Google Inspection Tools doesn't follow redirects", so it shows only the first hop.</p>
+
+      <h2>Fix 1: a loop behind Cloudflare</h2>
+      <p>If your site is on Cloudflare and you see "redirected you too many times", check this first. Cloudflare's troubleshooting page for <code>ERR_TOO_MANY_REDIRECTS</code> explains it: with the encryption mode set to Flexible, "Cloudflare sends unencrypted requests to your origin server over HTTP", and "Redirect loops will occur if your origin server automatically redirects all HTTP requests to HTTPS." Cloudflare asks your server over http, your server says "use https", Cloudflare asks over http again.</p>
+      <ol>
+        <li>In the Cloudflare dashboard, open your domain, then SSL/TLS, then Overview.</li>
+        <li>If the mode is Flexible and your server has its own certificate (most hosts give one free), change it to Full (strict).</li>
+        <li>If your server has no certificate, Cloudflare's other fix is to remove the https redirect on your server and let Cloudflare's "Always Use HTTPS" do it instead.</li>
+        <li>Run the curl lines again.</li>
+      </ol>
+
+      <h2>Fix 2: a loop on WordPress</h2>
+      <p>WordPress builds its redirects from two settings: Settings, then General, then "WordPress Address (URL)" and "Site Address (URL)". If those say <code>https://www.yoursite.com</code> and a rule at your host or in a plugin sends www to the bare address, the two keep sending visitors back and forth.</p>
+      <ol>
+        <li>Decide on one address: with or without www, always https.</li>
+        <li>Put exactly that address in both WordPress fields.</li>
+        <li>Check the host's control panel and any redirect or security plugin for a rule that disagrees, and make it match or turn it off.</li>
+      </ol>
+      <p>If the loop locks you out of the dashboard, the two fields can also be set in <code>wp-config.php</code> with <code>WP_HOME</code> and <code>WP_SITEURL</code>. WordPress's own help page "Changing The Site URL" shows how.</p>
+
+      <h2>Fix 3: a chain longer than it needs to be</h2>
+      <p>The goal: every old address goes to the final address in one hop.</p>
+      <ol>
+        <li>Write down the final address. For a home page, that's the line every curl command ended at.</li>
+        <li>Find where each hop comes from. Usually one is the host ("force https") and one is a www rule (Cloudflare, the host, or WordPress).</li>
+        <li>Replace them with one rule that sends any http or www address straight to the final https address, path included. In Cloudflare, a single redirect rule can match both <code>http://</code> and the www name and send them to <code>https://yoursite.com/${1}</code>. My post on <a href="/blog/site-works-without-www-not-with-it/">www and the bare address</a> has those steps.</li>
+        <li>If you moved pages, update the old redirects too. A redirect from 2022 that points at an address you've since redirected again is a hidden second hop.</li>
+        <li>Change internal links and your sitemap to the final addresses, so Google doesn't start on a redirect at all.</li>
+      </ol>
+
+      <h2>After the fix</h2>
+      <ol>
+        <li>Run the curl lines again. 0 or 1 hops, ending at <code>200</code>.</li>
+        <li>In Search Console, open URL Inspection for the final address and click "Request indexing".</li>
+        <li>Back on the "Redirect error" row, click "Validate fix". Google's Page indexing help says validation typically takes up to about two weeks.</li>
+      </ol>
+      <p>One thing my reading didn't cover: inner pages. I only checked home pages. An old blog post that went through two site moves gets one hop per move, so trace a few of your oldest addresses too.</p>
