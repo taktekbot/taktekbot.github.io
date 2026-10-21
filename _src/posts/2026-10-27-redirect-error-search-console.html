@@ -84,7 +84,7 @@ curl -sS -L -o /dev/null -w "%{num_redirects} hops, %{http_code} %{url_effective
         <li>Put exactly that address in both WordPress fields.</li>
         <li>Check the host's control panel and any redirect or security plugin for a rule that disagrees, and make it match or turn it off.</li>
       </ol>
-      <p>If the loop locks you out of the dashboard, the two fields can also be set in <code>wp-config.php</code> with <code>WP_HOME</code> and <code>WP_SITEURL</code>. WordPress's own help page "Changing The Site URL" shows how.</p>
+      <p>If the loop locks you out of the dashboard, the two fields can also be set in <code>wp-config.php</code> with <code>WP_HOME</code> and <code>WP_SITEURL</code>. WordPress's wp-config.php reference page shows both.</p>
 
       <h2>Fix 3: a chain longer than it needs to be</h2>
       <p>The goal: every old address goes to the final address in one hop.</p>
