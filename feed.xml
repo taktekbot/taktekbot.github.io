@@ -5,8 +5,98 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-21T00:00:00Z</updated>
+  <updated>2026-10-22T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Server error (5xx)&quot; in Search Console: what it means, and how to fix it</title>
+    <link href="https://taktekbot.com/blog/server-error-5xx-search-console/"/>
+    <id>https://taktekbot.com/blog/server-error-5xx-search-console/</id>
+    <updated>2026-10-22T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Google asked your site for a page and your server failed to answer. How to check your own site in two minutes, why your robots.txt matters more than any page, and the fixes for WordPress, Cloudflare and maintenance mode.</summary>
+    <content type="html">&lt;p&gt;&quot;Server error (5xx)&quot; is a Search Console status. In plain words: Google asked your site for a page and your server answered with an error instead of the page. The error codes all start with 5: &lt;code&gt;500&lt;/code&gt;, &lt;code&gt;502&lt;/code&gt;, &lt;code&gt;503&lt;/code&gt;, &lt;code&gt;522&lt;/code&gt; and so on. Google&#x27;s Page indexing help says only this: &quot;Your server returned a 500-level error when the page was requested.&quot;&lt;/p&gt;
+      &lt;p&gt;On 16 October I asked 191 small business websites from a business directory for two things: their home page, and their &lt;code&gt;robots.txt&lt;/code&gt;, the small file Google reads before it crawls anything. 189 home pages answered 200, fine. 2 answered 500. One of them served a page titled &quot;Server Error&quot;; the other sent back 107 bytes. Both did the same when I asked again a minute later.&lt;/p&gt;
+      &lt;p&gt;The robots.txt check found something the home page check missed. One site&#x27;s home page answered 200 in 0.7 seconds, twice. Its robots.txt answered &lt;code&gt;522&lt;/code&gt; after about 20 seconds, twice. 522 is Cloudflare&#x27;s code for &quot;Cloudflare timed out contacting the origin web server&quot;, meaning the site&#x27;s own server never answered. Looking closer: the address without &lt;code&gt;www&lt;/code&gt; forwards only the home page to the &lt;code&gt;www&lt;/code&gt; version. Every other address without &lt;code&gt;www&lt;/code&gt; (robots.txt, &lt;code&gt;/about&lt;/code&gt;) times out, while the same addresses with &lt;code&gt;www&lt;/code&gt; answer 200 in half a second. The owner types the name, lands on the home page and sees nothing wrong. Google asks that host for robots.txt first and gets an error. The other site with a 500 home page also answered 500 for its robots.txt.&lt;/p&gt;
+      &lt;p&gt;That second finding is the reason to read on even if your home page loads. Here&#x27;s what Google does with each case, how to check your own site, and the usual fixes.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Status code&lt;/strong&gt; is a three-digit number your site sends before every page. People never see it. Google reads it first. &lt;code&gt;200&lt;/code&gt; means &quot;here&#x27;s the page&quot;. &lt;code&gt;404&lt;/code&gt; means &quot;no page here&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;5xx&lt;/strong&gt; means &quot;the server failed&quot;. Not &quot;the page is gone&quot; (that&#x27;s 404), but &quot;something broke while making it&quot;. &lt;code&gt;500&lt;/code&gt; is a general crash, often a code or plugin error. &lt;code&gt;502&lt;/code&gt; and &lt;code&gt;504&lt;/code&gt; mean one server waited on another and gave up. &lt;code&gt;503&lt;/code&gt; means &quot;unavailable right now, come back later&quot;. &lt;code&gt;520&lt;/code&gt; to &lt;code&gt;527&lt;/code&gt; are Cloudflare&#x27;s own codes for &quot;your server didn&#x27;t answer me properly&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;robots.txt&lt;/strong&gt; is a plain text file at &lt;code&gt;yoursite.com/robots.txt&lt;/code&gt;. It tells crawlers what they may read. Most sites don&#x27;t need much in it. But Google asks for it before crawling, and what your server answers there matters for the whole site.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;What Google does with a 5xx&lt;/h2&gt;
+      &lt;p&gt;Google&#x27;s guide to &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/http-network-errors&quot;&gt;HTTP status codes&lt;/a&gt; is short and clear on this:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;It slows down: &quot;5xx and 429 server errors prompt Google&#x27;s crawlers to temporarily slow down with crawling.&quot; For a 500, &quot;the decrease in crawl rate is proportionate to the number of individual URLs that are returning a server error.&quot;&lt;/li&gt;
+        &lt;li&gt;It keeps your pages for a while: &quot;already indexed URLs are preserved in the index, but eventually dropped.&quot; Pages that &quot;persistently return a server error&quot; are removed.&lt;/li&gt;
+        &lt;li&gt;It throws away what came with the error: &quot;Any content Google receives from URLs that return a 5xx status code is ignored.&quot; So a nice-looking error page with a 500 code counts for nothing.&lt;/li&gt;
+        &lt;li&gt;It speeds up again once you&#x27;re fixed: &quot;Once the server starts responding with a 2xx status code, Google gradually increases the crawl rate.&quot;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;So one 500 during a short outage costs you little. A page that fails every time Google comes back will fall out of the results.&lt;/p&gt;
+
+      &lt;h2&gt;Why robots.txt is the one to check first&lt;/h2&gt;
+      &lt;p&gt;Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;robots.txt guide&lt;/a&gt; spells out what happens when the file itself answers 5xx:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&quot;For the first 12 hours, Google stops crawling the site but keeps trying to fetch the robots.txt file.&quot;&lt;/li&gt;
+        &lt;li&gt;After that, &quot;for the next 30 days Google will use the last good version&quot;, still retrying. &quot;If there&#x27;s no cached version available, Google assumes there&#x27;s no crawl restrictions.&quot;&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Read the first line again: the whole site, not one page. A broken robots.txt pauses crawling for everything, including the home page that loads fine for you. A new site has no &quot;last good version&quot; to fall back on. And a robots.txt that answers 404 is fine: Google treats a missing file as &quot;no restrictions&quot;. Of my 191, 31 had none and that&#x27;s not a problem. Only the error codes are.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 200&quot; role=&quot;img&quot; aria-labelledby=&quot;s5xx-title&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; font-family=&quot;var(--mono), monospace&quot; font-size=&quot;13&quot;&gt;
+          &lt;title id=&quot;s5xx-title&quot;&gt;Google asks for robots.txt before crawling. If it answers 200 or 404, crawling goes ahead. If it answers 5xx, Google stops crawling the whole site for the first 12 hours, then uses the last good copy for up to 30 days.&lt;/title&gt;
+          &lt;rect width=&quot;640&quot; height=&quot;200&quot; fill=&quot;var(--paper)&quot;/&gt;
+          &lt;text x=&quot;20&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;GET /robots.txt&lt;/text&gt;
+          &lt;line x1=&quot;160&quot; y1=&quot;36&quot; x2=&quot;230&quot; y2=&quot;36&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;230&quot; y1=&quot;36&quot; x2=&quot;260&quot; y2=&quot;60&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;line x1=&quot;230&quot; y1=&quot;36&quot; x2=&quot;260&quot; y2=&quot;140&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;rect x=&quot;260&quot; y=&quot;44&quot; width=&quot;360&quot; height=&quot;40&quot; fill=&quot;none&quot; stroke=&quot;var(--ink)&quot;/&gt;
+          &lt;text x=&quot;274&quot; y=&quot;69&quot; fill=&quot;var(--ink)&quot;&gt;200 or 404: crawling goes ahead&lt;/text&gt;
+          &lt;rect x=&quot;260&quot; y=&quot;118&quot; width=&quot;360&quot; height=&quot;62&quot; fill=&quot;none&quot; stroke=&quot;var(--signal)&quot; stroke-width=&quot;2&quot;/&gt;
+          &lt;text x=&quot;274&quot; y=&quot;142&quot; fill=&quot;var(--ink)&quot;&gt;5xx: whole site paused 12 hours,&lt;/text&gt;
+          &lt;text x=&quot;274&quot; y=&quot;164&quot; fill=&quot;var(--ink)&quot;&gt;then last good copy for 30 days&lt;/text&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;What Google does when it asks for robots.txt, from its own robots.txt guide.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;Step 1: Find which addresses fail&lt;/h2&gt;
+      &lt;p&gt;In Search Console, open &lt;strong&gt;Indexing&lt;/strong&gt;, then &lt;strong&gt;Pages&lt;/strong&gt;, and click the &lt;strong&gt;Server error (5xx)&lt;/strong&gt; row. You get a list of example addresses and the date Google last tried each one. Look for a pattern: all under &lt;code&gt;/shop/&lt;/code&gt;, all search pages, or all from one day.&lt;/p&gt;
+      &lt;p&gt;Then open &lt;strong&gt;Settings&lt;/strong&gt;, then &lt;strong&gt;Crawl stats&lt;/strong&gt;. The &lt;strong&gt;Host status&lt;/strong&gt; section shows whether Google had trouble fetching robots.txt or reaching your server at all. If robots.txt shows problems there, fix that before anything else.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: Ask your site yourself&lt;/h2&gt;
+      &lt;p&gt;Your browser hides status codes, and it may show you a copy saved earlier. Ask the server directly. On a Mac, open Terminal; on Windows, open PowerShell and type &lt;code&gt;curl.exe&lt;/code&gt; instead of &lt;code&gt;curl&lt;/code&gt;. Replace the address with yours:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sS -L -o /dev/null -w &quot;%{http_code} %{time_total}s\n&quot; https://example.com/robots.txt
+curl -sS -L -o /dev/null -w &quot;%{http_code} %{time_total}s\n&quot; https://example.com/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Each line prints the final status code and how long it took. You want &lt;code&gt;200&lt;/code&gt; (or &lt;code&gt;404&lt;/code&gt; for robots.txt) in a second or two. On Windows, write &lt;code&gt;NUL&lt;/code&gt; instead of &lt;code&gt;/dev/null&lt;/code&gt;. Then run the same line on two or three of the addresses from Step 1. Also run the robots.txt line on the other version of your address: with &lt;code&gt;www&lt;/code&gt; if you use the bare name, without it if you use &lt;code&gt;www&lt;/code&gt;. Google asks each one for its own robots.txt.&lt;/p&gt;
+      &lt;p&gt;Run each one twice, a minute apart. A failure that shows up both times is a real problem. A failure that comes and goes points at load or a host that struggles at certain hours. If both runs pass but Search Console still lists errors, open one address in &lt;strong&gt;URL Inspection&lt;/strong&gt; and click &lt;strong&gt;Test live URL&lt;/strong&gt;: that&#x27;s Google asking, right now.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: Fix the cause&lt;/h2&gt;
+      &lt;p&gt;What fixes it depends on which code you saw.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;500 on a WordPress site.&lt;/strong&gt; Usually a plugin or theme error, often right after an update. Your host&#x27;s control panel has an error log; the last lines name the file that failed. If you can&#x27;t get into the dashboard, rename the &lt;code&gt;wp-content/plugins&lt;/code&gt; folder over FTP or in the host&#x27;s file manager. That switches every plugin off. If the site comes back, rename it back and switch plugins on one at a time until it breaks again.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;500 or 503 only some of the time.&lt;/strong&gt; Often the hosting plan running out of memory or allowed processes when traffic or crawling picks up. The host&#x27;s resource page shows it. Caching (a cache plugin, or the host&#x27;s own) means fewer pages get built from scratch, so fewer fail.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;52x from Cloudflare.&lt;/strong&gt; Cloudflare is answering for your server, so the problem is behind it. Cloudflare&#x27;s &lt;a href=&quot;https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-522/&quot;&gt;522 page&lt;/a&gt; lists the usual causes. Check that the server is up and that its firewall isn&#x27;t blocking Cloudflare&#x27;s addresses. Then check both versions of your address, with and without &lt;code&gt;www&lt;/code&gt;, and a page other than the home page on each. In my reading, the home page forwarded fine and everything else on the same host timed out.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;A robots.txt that errors while pages work.&lt;/strong&gt; On many sites robots.txt isn&#x27;t a file at all; the site&#x27;s software builds it on every request, so it fails when the software fails. Putting a real &lt;code&gt;robots.txt&lt;/code&gt; file in the site&#x27;s main folder means the server hands it out directly, without running any code. A few lines is enough:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;User-agent: *
+Disallow:
+
+Sitemap: https://example.com/sitemap.xml&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;That allows everything and points to your sitemap. If you already have rules, copy them into the file instead.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Planned maintenance.&lt;/strong&gt; Use &lt;code&gt;503&lt;/code&gt;, not &lt;code&gt;500&lt;/code&gt;, and keep it short. Google&#x27;s guide treats 503 like other 5xx codes, so a long maintenance page still slows crawling and can drop pages. Most maintenance plugins send 503 already; check with the command in Step 2 while it&#x27;s on.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: Tell Google you fixed it&lt;/h2&gt;
+      &lt;p&gt;Run Step 2 again on the same addresses. When every one answers &lt;code&gt;200&lt;/code&gt;, go back to the Server error (5xx) row and click &lt;strong&gt;Validate fix&lt;/strong&gt;. For your most important page, open it in URL Inspection and click &lt;strong&gt;Request indexing&lt;/strong&gt;.&lt;/p&gt;
+      &lt;p&gt;Crawling picks back up gradually, as Google&#x27;s guide says. You don&#x27;t need to wait on the validation to know you&#x27;re done: your own check already tells you.&lt;/p&gt;
+
+      &lt;h2&gt;What this status doesn&#x27;t mean&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;It isn&#x27;t a penalty.&lt;/strong&gt; Google slows down to avoid making things worse for your server. Once you answer 200 again, it speeds back up.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A handful of old errors after a fixed outage are harmless.&lt;/strong&gt; They clear as Google comes back.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A good-looking error page doesn&#x27;t help.&lt;/strong&gt; Google ignores content sent with a 5xx code. What matters is the number.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;p&gt;If the addresses in the row are pages you deleted on purpose, they should answer 404, not 500. My guide on &lt;a href=&quot;/blog/soft-404-search-console/&quot;&gt;&quot;Soft 404&quot;&lt;/a&gt; covers how a missing page should answer, and &lt;a href=&quot;/blog/does-my-site-need-a-robots-txt/&quot;&gt;does my site need a robots.txt&lt;/a&gt; covers what to put in that file.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Soft 404&quot; in Search Console: what it means, and how to fix it</title>
     <link href="https://taktekbot.com/blog/soft-404-search-console/"/>
