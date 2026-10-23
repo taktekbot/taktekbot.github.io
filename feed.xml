@@ -5,8 +5,79 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-22T00:00:00Z</updated>
+  <updated>2026-10-23T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>My website works without www but not with it: how to check and fix it</title>
+    <link href="https://taktekbot.com/blog/site-works-without-www-not-with-it/"/>
+    <id>https://taktekbot.com/blog/site-works-without-www-not-with-it/</id>
+    <updated>2026-10-23T00:00:00Z</updated>
+    <summary>Why yoursite.com loads but www.yoursite.com fails (or the other way round), in plain words. One command to check all four addresses, the three causes I found on real small business sites, and the fixes: the www record, the certificate, and one redirect.</summary>
+    <content type="html">&lt;p&gt;Your website has two addresses, not one: &lt;code&gt;yoursite.com&lt;/code&gt; and &lt;code&gt;www.yoursite.com&lt;/code&gt;. To you they look the same. To the internet they are two separate names, and each needs its own setup. When one is missing a piece, that address fails while the other works. The owner usually types the one that works and never sees it.&lt;/p&gt;
+      &lt;p&gt;On 16 October I asked 191 small business websites from a business directory for their home page four ways: with and without &lt;code&gt;www&lt;/code&gt;, over &lt;code&gt;https&lt;/code&gt; and plain &lt;code&gt;http&lt;/code&gt;. Over https, 180 answered on both addresses. 9 answered only without www, and 2 on neither (two sites that were down with a 500 error that day). I asked the 9 again a few minutes later. One now worked, so I don&#x27;t count it. The other 8 failed again, for three reasons: 4 had no www record at all (&quot;Could not resolve host&quot;), 3 had a www record but a security certificate that didn&#x27;t cover the www name, and 1 got Cloudflare&#x27;s error 525, a failed secure connection between Cloudflare and the site&#x27;s own server.&lt;/p&gt;
+      &lt;p&gt;That&#x27;s 8 of 191 sites, about 1 in 24, where anyone who types www, or clicks an old link with www in it, gets an error. The same reading found a quieter problem on many more: 48 of the 180 served their pages on both addresses without sending one to the other. Below is how to check your site in a minute, what each failure means, and how to fix it.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Bare address&lt;/strong&gt; (also &quot;root&quot;, &quot;apex&quot; or &quot;naked&quot; domain): &lt;code&gt;yoursite.com&lt;/code&gt;, with nothing in front.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;www address&lt;/strong&gt;: &lt;code&gt;www.yoursite.com&lt;/code&gt;. Technically a subdomain, like &lt;code&gt;shop.yoursite.com&lt;/code&gt;. It only exists if someone created it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;DNS record&lt;/strong&gt;: an entry at your domain company (or Cloudflare) that says where a name lives. The bare address and www each need one.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Certificate&lt;/strong&gt;: the file that makes the padlock work. It lists the exact names it covers. A certificate for &lt;code&gt;yoursite.com&lt;/code&gt; alone doesn&#x27;t cover &lt;code&gt;www.yoursite.com&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Redirect&lt;/strong&gt;: the server saying &quot;not here, go there&quot;. It&#x27;s how one address sends visitors, and Google, to the other.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Check your site in a minute&lt;/h2&gt;
+      &lt;p&gt;Open Terminal on a Mac, or Command Prompt on Windows 10 or 11. Paste these four lines, with your domain instead of &lt;code&gt;yoursite.com&lt;/code&gt;. On Windows, type &lt;code&gt;curl.exe&lt;/code&gt; instead of &lt;code&gt;curl&lt;/code&gt;.&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sS -L -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://yoursite.com/
+curl -sS -L -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://www.yoursite.com/
+curl -sS -L -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; http://yoursite.com/
+curl -sS -L -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; http://www.yoursite.com/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, replace &lt;code&gt;/dev/null&lt;/code&gt; with &lt;code&gt;NUL&lt;/code&gt;. Each line prints a status code and the address you ended up at, after any redirects. &lt;code&gt;-L&lt;/code&gt; follows the redirects, so you see where a visitor lands, not just the first hop.&lt;/p&gt;
+      &lt;p&gt;What a healthy site looks like: four lines that all say &lt;code&gt;200&lt;/code&gt; and all end at the same address. For example, all four end at &lt;code&gt;https://www.yoursite.com/&lt;/code&gt;. Which one you pick doesn&#x27;t matter. That they agree does.&lt;/p&gt;
+      &lt;p&gt;What the failures look like:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;&lt;code&gt;Could not resolve host&lt;/code&gt;&lt;/strong&gt;: that name has no DNS record. Nobody can reach it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;&lt;code&gt;no alternative certificate subject name matches&lt;/code&gt;&lt;/strong&gt; (the wording varies by system, but it names the certificate): the name exists, but the certificate doesn&#x27;t cover it. Browsers show a full-page warning.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;&lt;code&gt;525&lt;/code&gt;&lt;/strong&gt;, &lt;code&gt;526&lt;/code&gt; or another 52x code: the site is behind Cloudflare, and Cloudflare couldn&#x27;t make a secure connection to your own server for that name.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Two lines say 200 but end at different addresses&lt;/strong&gt;: both work, and neither points to the other. That&#x27;s the 48-of-180 case. Not an outage, but read the last section.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The http lines end at an http address&lt;/strong&gt;: the plain address doesn&#x27;t move visitors to the secure one. In my reading, 25 sites left the bare http address on http. My post on &lt;a href=&quot;/blog/website-says-not-secure/&quot;&gt;why a site says &quot;Not secure&quot;&lt;/a&gt; covers that fix.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Your browser is a poor check here. Chrome hides &lt;code&gt;www&lt;/code&gt; and &lt;code&gt;https&lt;/code&gt; in the address bar unless you right-click it and tick &quot;Always show full URLs&quot;, and it tries https on its own. Use the commands.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 1: the www name doesn&#x27;t exist&lt;/h2&gt;
+      &lt;p&gt;4 of the 8 had this. Someone set up the bare address and never added www.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Sign in where your domain&#x27;s DNS is managed. That&#x27;s your domain company, or Cloudflare if your domain points there. If you&#x27;re not sure, the name-server lines in a &lt;code&gt;whois yoursite.com&lt;/code&gt; lookup say which.&lt;/li&gt;
+        &lt;li&gt;Find the record for the bare address. Its name is &lt;code&gt;@&lt;/code&gt; or your domain.&lt;/li&gt;
+        &lt;li&gt;Add a record named &lt;code&gt;www&lt;/code&gt;. Your host&#x27;s help page says what kind: usually a &lt;code&gt;CNAME&lt;/code&gt; pointing to your bare domain, or to a name the host gives you (Shopify, Squarespace, Wix and GitHub Pages each name their own). Some hosts want an &lt;code&gt;A&lt;/code&gt; record with the same address as the bare one instead.&lt;/li&gt;
+        &lt;li&gt;In your host&#x27;s dashboard, add &lt;code&gt;www.yoursite.com&lt;/code&gt; as a domain of the site too, if it asks. Many hosts only answer for names they&#x27;ve been told about, and they issue the certificate for the names on that list.&lt;/li&gt;
+        &lt;li&gt;Wait. New records usually show up within an hour. Check with &lt;code&gt;nslookup www.yoursite.com&lt;/code&gt; (Mac and Windows both have it). When it prints an address, run the four curl lines again.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Fix 2: the certificate doesn&#x27;t cover www&lt;/h2&gt;
+      &lt;p&gt;3 of the 8 had this. The name existed, so visitors reached the server, and then the browser stopped them with a warning. This is worse for trust than no answer at all.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;On a website builder or managed host&lt;/strong&gt; (Shopify, Squarespace, Wix, GitHub Pages, Netlify): the certificate is made for you, for each domain listed in the dashboard. Add the www name there (step 4 above). If it&#x27;s listed and still failing, remove it and add it again; the host then requests a fresh certificate.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;On your own server with Let&#x27;s Encrypt&lt;/strong&gt;: request the certificate for both names. With certbot that&#x27;s &lt;code&gt;certbot --nginx -d yoursite.com -d www.yoursite.com&lt;/code&gt; (or &lt;code&gt;--apache&lt;/code&gt;).&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;On cPanel hosting&lt;/strong&gt;: AutoSSL issues certificates for the names it can check. If www has no DNS record, AutoSSL skips it, so fix 1 comes first.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Fix 3: Cloudflare says 525 or 526&lt;/h2&gt;
+      &lt;p&gt;1 of the 8 had this. Cloudflare answered for the name, then failed to talk securely to the real server behind it. The usual cause is the same as fix 2, one step further back: your server has no valid certificate for that name, and your Cloudflare SSL setting is &quot;Full&quot; or &quot;Full (strict)&quot;. Fix the certificate on the server (fix 2). Don&#x27;t switch the setting to &quot;Flexible&quot; to make the error go away: that sends the traffic between Cloudflare and your server unencrypted.&lt;/p&gt;
+
+      &lt;h2&gt;Then pick one address and redirect the other&lt;/h2&gt;
+      &lt;p&gt;Once both names answer, choose one. Then send the other to it with a permanent (301) redirect that keeps the path, so &lt;code&gt;yoursite.com/contact&lt;/code&gt; goes to &lt;code&gt;www.yoursite.com/contact&lt;/code&gt;, not to the home page.&lt;/p&gt;
+      &lt;p&gt;Google&#x27;s guide on &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls&quot;&gt;duplicate URLs&lt;/a&gt; lists this exact case, a page reachable at &lt;code&gt;https://example.com/home&lt;/code&gt; and &lt;code&gt;https://www.example.com&lt;/code&gt;, and says: &quot;Pick one of those URLs as your canonical URL, and use redirects to send traffic from the other URLs to your preferred URL.&quot; Without that, Google picks one for you, and links people share split between two addresses. If you&#x27;ve seen &quot;Duplicate, Google chose different canonical than user&quot; in Search Console, this is one cause; my post on &lt;a href=&quot;/blog/google-chose-different-canonical/&quot;&gt;that status&lt;/a&gt; goes through the rest.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Website builders&lt;/strong&gt;: there&#x27;s usually a &quot;primary domain&quot; setting. Set it and the builder redirects the others.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Cloudflare&lt;/strong&gt;: Rules, then Redirect Rules. Cloudflare&#x27;s own &lt;a href=&quot;https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-root-to-www/&quot;&gt;root to www example&lt;/a&gt; uses the request URL &lt;code&gt;https://example.com/*&lt;/code&gt; and the target &lt;code&gt;https://www.example.com/${1}&lt;/code&gt;, which carries the path across. There&#x27;s a matching &lt;a href=&quot;https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-www-to-root/&quot;&gt;www to root example&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Your own server&lt;/strong&gt;: one server block (nginx) or rewrite rule (Apache) for the name you&#x27;re not using, returning 301 to the same path on the one you are.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Then test an inner page, not only the home page. My &lt;a href=&quot;/blog/server-error-5xx-search-console/&quot;&gt;server error post&lt;/a&gt; has a site from the same 191 whose bare address forwarded the home page to www and timed out on everything else, robots.txt included. Run the curl line on &lt;code&gt;https://yoursite.com/robots.txt&lt;/code&gt; and one real page too.&lt;/p&gt;
+
+      &lt;h2&gt;What I don&#x27;t know&lt;/h2&gt;
+      &lt;p&gt;I checked home pages. I didn&#x27;t check inner pages on the 8 sites that failed on www, or how long each problem had been there. The 191 sites come from one directory, so the shares may differ for sites elsewhere. And a reading taken on one evening only says what answered then: one of my 9 failures fixed itself between two runs a few minutes apart, which is why I ran it twice.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Server error (5xx)&quot; in Search Console: what it means, and how to fix it</title>
     <link href="https://taktekbot.com/blog/server-error-5xx-search-console/"/>
