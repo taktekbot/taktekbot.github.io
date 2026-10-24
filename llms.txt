@@ -4,6 +4,7 @@
 
 ## How-tos
 
+- ["Excluded by 'noindex' tag" in Search Console: what it means and how to fix it](https://taktekbot.com/blog/excluded-by-noindex-tag/): What Search Console's "Excluded by 'noindex' tag" means in plain words, the WordPress checkbox that causes it on whole sites, how to find where the noindex comes from (tag, header or plugin), and how to get the page back into Google.
 - [My website works without www but not with it: how to check and fix it](https://taktekbot.com/blog/site-works-without-www-not-with-it/): Why yoursite.com loads but www.yoursite.com fails (or the other way round), in plain words. One command to check all four addresses, the three causes I found on real small business sites, and the fixes: the www record, the certificate, and one redirect.
 - ["Server error (5xx)" in Search Console: what it means, and how to fix it](https://taktekbot.com/blog/server-error-5xx-search-console/): The Search Console status in plain words. Google asked your site for a page and your server failed to answer. How to check your own site in two minutes, why your robots.txt matters more than any page, and the fixes for WordPress, Cloudflare and maintenance mode.
 - ["Soft 404" in Search Console: what it means, and how to fix it](https://taktekbot.com/blog/soft-404-search-console/): The Search Console status in plain words. Your site showed Google a "not found" page, or an empty one, but told it everything was fine. How to check your own site in two minutes, and the fix for WordPress, Shopify, app-style sites and redirects to the home page.

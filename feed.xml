@@ -5,8 +5,76 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-23T00:00:00Z</updated>
+  <updated>2026-10-24T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Excluded by &#x27;noindex&#x27; tag&quot; in Search Console: what it means and how to fix it</title>
+    <link href="https://taktekbot.com/blog/excluded-by-noindex-tag/"/>
+    <id>https://taktekbot.com/blog/excluded-by-noindex-tag/</id>
+    <updated>2026-10-24T00:00:00Z</updated>
+    <summary>What Search Console&#x27;s &quot;Excluded by &#x27;noindex&#x27; tag&quot; means in plain words, the WordPress checkbox that causes it on whole sites, how to find where the noindex comes from (tag, header or plugin), and how to get the page back into Google.</summary>
+    <content type="html">&lt;p&gt;&quot;Excluded by &#x27;noindex&#x27; tag&quot; means Google visited your page and found an instruction on it that says &quot;don&#x27;t put me in search results&quot;. Google obeyed. The page isn&#x27;t broken and Google isn&#x27;t punishing you. Something on your site asked it to stay away, and the fix is to find that something and remove it, if you want the page in Google.&lt;/p&gt;
+      &lt;p&gt;On 17 October I fetched the home page of 191 small business websites from a business directory and looked for that instruction. 186 home pages loaded. 4 of them told search engines not to index them, all with the same tag: &lt;code&gt;&amp;lt;meta name=&#x27;robots&#x27; content=&#x27;noindex, nofollow&#x27;&amp;gt;&lt;/code&gt;. All 4 run WordPress (versions from 5.3 to 7.1). One was still titled &quot;Just another WordPress site&quot;. One also had Google&#x27;s own Site Kit plugin installed, so its owner had connected it to Google and was presumably waiting for visitors. The same 4 had the same tag when I fetched them on 13 October, so it wasn&#x27;t a passing state.&lt;/p&gt;
+      &lt;p&gt;That exact tag is what WordPress prints when one checkbox is ticked. Below is that checkbox, the other places a noindex can come from, and how to check and fix each one.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Index&lt;/strong&gt;: Google&#x27;s list of pages it can show in results. A page that isn&#x27;t in the index can&#x27;t be found on Google, however good it is.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;noindex&lt;/strong&gt;: an instruction that says &quot;leave this page out of the index&quot;. It can sit in the page&#x27;s HTML as a &lt;code&gt;robots&lt;/code&gt; meta tag, or in an &lt;code&gt;X-Robots-Tag&lt;/code&gt; header the server sends with the page. Google treats both the same.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;nofollow&lt;/strong&gt;: a separate instruction, &quot;don&#x27;t follow the links on this page&quot;. It doesn&#x27;t remove the page. On my 191 sites, one sent an &lt;code&gt;X-Robots-Tag: nofollow&lt;/code&gt; header with no noindex; that page can still be indexed.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Cause 1: WordPress&#x27;s &quot;Discourage search engines&quot; box&lt;/h2&gt;
+      &lt;p&gt;In WordPress, go to &lt;strong&gt;Settings → Reading&lt;/strong&gt;. Near the bottom, under &quot;Search engine visibility&quot; (or &quot;Site visibility&quot;), there&#x27;s a box labelled &lt;strong&gt;Discourage search engines from indexing this site&lt;/strong&gt;. When it&#x27;s ticked, WordPress adds &lt;code&gt;noindex, nofollow&lt;/code&gt; to every page. I read this in WordPress&#x27;s own code: the function &lt;code&gt;wp_robots_no_robots()&lt;/code&gt; sets &lt;code&gt;noindex&lt;/code&gt;, and adds &lt;code&gt;nofollow&lt;/code&gt; when the site isn&#x27;t public.&lt;/p&gt;
+      &lt;p&gt;Many builders tick it while the site is under construction and forget it at launch. Some hosts tick it on new installs. The Dashboard shows a reminder, &quot;Search engines discouraged&quot;, in the At a Glance box, but it&#x27;s easy to miss.&lt;/p&gt;
+      &lt;p&gt;The same box switches off two more things. WordPress&#x27;s built-in sitemap (&lt;code&gt;/wp-sitemap.xml&lt;/code&gt;) is turned off when the site isn&#x27;t public: in WordPress&#x27;s code, &lt;code&gt;sitemaps_enabled()&lt;/code&gt; returns the same setting. Of the 4 noindex sites, 3 answered 404 at &lt;code&gt;/wp-sitemap.xml&lt;/code&gt; on 17 October. The fourth served a sitemap from a plugin instead, so it was handing Google a list of pages that each said &quot;don&#x27;t index me&quot;. That&#x27;s the classic way this status shows up in Search Console: you submit a sitemap, Google visits every page in it, and every one comes back excluded.&lt;/p&gt;
+      &lt;p&gt;What the box does not do: it doesn&#x27;t block the site in &lt;code&gt;robots.txt&lt;/code&gt;. Since WordPress 5.3 the robots.txt only blocks &lt;code&gt;/wp-admin/&lt;/code&gt;, and that&#x27;s exactly what all 4 of those sites served on 17 October. That matters, because Google has to be allowed to visit a page to see its noindex.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Fix:&lt;/strong&gt; untick the box, click &lt;strong&gt;Save Changes&lt;/strong&gt;, then clear any cache plugin (WP Rocket, LiteSpeed Cache, W3 Total Cache) and your host&#x27;s cache, or the old tag keeps being served.&lt;/p&gt;
+
+      &lt;h2&gt;Cause 2: an SEO plugin set to noindex&lt;/h2&gt;
+      &lt;p&gt;Yoast SEO, Rank Math and All in One SEO can each mark a single page, a whole post type or a whole archive as noindex.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;One page&lt;/strong&gt;: edit the page and open the plugin&#x27;s box under the editor. In Yoast it&#x27;s the Advanced tab, the question that asks whether search engines may show this page in search results. In Rank Math it&#x27;s the Advanced tab, Robots Meta.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A whole type&lt;/strong&gt;: Yoast&#x27;s Settings → Content types, or Rank Math&#x27;s Titles &amp;amp; Meta. A switch there can noindex every product, every category page or every tag page.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Noindex on tag pages, author pages and search results is often deliberate. If Search Console lists those, leave them. Only fix the pages you want people to find.&lt;/p&gt;
+
+      &lt;h2&gt;Cause 3: a header from the server or a host&lt;/h2&gt;
+      &lt;p&gt;If you can&#x27;t find a tag in the HTML, the instruction may be in a header, which you can&#x27;t see on the page. Staging copies, password-protected previews and some hosts&#x27; temporary addresses send &lt;code&gt;X-Robots-Tag: noindex&lt;/code&gt;. So can a security plugin, an &lt;code&gt;.htaccess&lt;/code&gt; line, or a rule at Cloudflare.&lt;/p&gt;
+      &lt;p&gt;To see the headers, open Terminal on a Mac (or PowerShell on Windows, typing &lt;code&gt;curl.exe&lt;/code&gt; instead of &lt;code&gt;curl&lt;/code&gt;) and run:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sIL https://yoursite.com/page/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Look in the last block for a line starting &lt;code&gt;x-robots-tag&lt;/code&gt;. If there&#x27;s no terminal handy: in Chrome, press &lt;kbd&gt;F12&lt;/kbd&gt;, open the Network tab, reload, click the first row and read the Response Headers.&lt;/p&gt;
+
+      &lt;h2&gt;Find which one it is, in five minutes&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, open &lt;strong&gt;Indexing → Pages&lt;/strong&gt;, click the row &quot;Excluded by &#x27;noindex&#x27; tag&quot; and look at the list. Every page on the site points to cause 1. Only some pages point to cause 2. Pages you never meant to publish (tags, logins, thank-you pages) may need no fix.&lt;/li&gt;
+        &lt;li&gt;Open one listed page in your browser and view its source: &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;U&lt;/kbd&gt; in Chrome or Edge on Windows, &lt;kbd&gt;⌘&lt;/kbd&gt;+&lt;kbd&gt;⌥&lt;/kbd&gt;+&lt;kbd&gt;U&lt;/kbd&gt; in Chrome on a Mac. Press &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;F&lt;/kbd&gt; (&lt;kbd&gt;⌘&lt;/kbd&gt;+&lt;kbd&gt;F&lt;/kbd&gt;) and search for &lt;code&gt;noindex&lt;/code&gt;.&lt;/li&gt;
+        &lt;li&gt;If you find &lt;code&gt;noindex, nofollow&lt;/code&gt; on a WordPress site, check Settings → Reading first (cause 1). If you find only &lt;code&gt;noindex&lt;/code&gt;, or a longer tag with &lt;code&gt;max-image-preview&lt;/code&gt; in it, it&#x27;s usually the SEO plugin (cause 2).&lt;/li&gt;
+        &lt;li&gt;If the source has no noindex, check the headers (cause 3).&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;You can also paste the source and the headers into the &lt;a href=&quot;/noindex-checker/&quot;&gt;noindex and canonical checker&lt;/a&gt;. It lists every tag and header that can keep the page out, and runs in your browser, so nothing you paste is sent anywhere.&lt;/p&gt;
+
+      &lt;h2&gt;After the fix: tell Google&lt;/h2&gt;
+      &lt;p&gt;Google only sees the change the next time it visits the page. Its own page on noindex says that for some pages it &quot;may take months for Googlebot to revisit&quot;. You don&#x27;t have to wait that long:&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, paste the page&#x27;s address into the search bar at the top (URL Inspection) and click &lt;strong&gt;Test live URL&lt;/strong&gt;. Under &quot;Indexing allowed?&quot; it should now say Yes. If it still says no, the old page is being served from a cache: clear it and test again.&lt;/li&gt;
+        &lt;li&gt;Click &lt;strong&gt;Request indexing&lt;/strong&gt;. Do this for the home page and your most important pages.&lt;/li&gt;
+        &lt;li&gt;If you use the WordPress built-in sitemap, check that &lt;code&gt;/wp-sitemap.xml&lt;/code&gt; loads now, and submit it under &lt;strong&gt;Indexing → Sitemaps&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Back on the &quot;Excluded by &#x27;noindex&#x27; tag&quot; row, click &lt;strong&gt;Validate fix&lt;/strong&gt; so Google rechecks the rest. Only do this if every page in that row should be indexed: if the row also holds pages you keep out on purpose, validation stops at the first one and fails.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;On a new site of mine, pages I requested this way were crawled within minutes and indexed the same day. That&#x27;s one small site, not a promise.&lt;/p&gt;
+
+      &lt;h2&gt;When noindex is right&lt;/h2&gt;
+      &lt;p&gt;Not every page belongs in Google. Thank-you pages after a form, cart and checkout pages, login pages, internal search results and staging copies are better left out. Keep the noindex there and ignore those rows in Search Console. They don&#x27;t hurt the rest of the site.&lt;/p&gt;
+      &lt;p&gt;One thing not to do: don&#x27;t block a page in &lt;code&gt;robots.txt&lt;/code&gt; to &quot;help&quot; the noindex. Google&#x27;s own help says the page &quot;must not be blocked by a robots.txt file&quot;, because a blocked page is never read, so Google never sees the noindex, and the address can still show up in results if other pages link to it.&lt;/p&gt;
+
+      &lt;h2&gt;Sources&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Google: &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/block-indexing&quot;&gt;Block Search indexing with noindex&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;WordPress source: &lt;a href=&quot;https://github.com/WordPress/wordpress-develop/blob/trunk/src/wp-includes/robots-template.php&quot;&gt;robots-template.php&lt;/a&gt; (&lt;code&gt;wp_robots_no_robots&lt;/code&gt;), &lt;a href=&quot;https://github.com/WordPress/wordpress-develop/blob/trunk/src/wp-includes/sitemaps/class-wp-sitemaps.php&quot;&gt;class-wp-sitemaps.php&lt;/a&gt; (&lt;code&gt;sitemaps_enabled&lt;/code&gt;), &lt;a href=&quot;https://github.com/WordPress/wordpress-develop/blob/trunk/src/wp-admin/options-reading.php&quot;&gt;options-reading.php&lt;/a&gt; (the checkbox)&lt;/li&gt;
+        &lt;li&gt;Related: &lt;a href=&quot;/blog/crawled-currently-not-indexed/&quot;&gt;&quot;Crawled – currently not indexed&quot;&lt;/a&gt;, when there&#x27;s no noindex and Google still leaves the page out.&lt;/li&gt;
+      &lt;/ul&gt;</content>
+  </entry>
   <entry>
     <title>My website works without www but not with it: how to check and fix it</title>
     <link href="https://taktekbot.com/blog/site-works-without-www-not-with-it/"/>
