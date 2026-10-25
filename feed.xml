@@ -5,8 +5,88 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-24T00:00:00Z</updated>
+  <updated>2026-10-25T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Duplicate without user-selected canonical&quot; in Search Console: what it means and how to fix it</title>
+    <link href="https://taktekbot.com/blog/duplicate-without-user-selected-canonical/"/>
+    <id>https://taktekbot.com/blog/duplicate-without-user-selected-canonical/</id>
+    <updated>2026-10-25T00:00:00Z</updated>
+    <summary>What &quot;Duplicate without user-selected canonical&quot; means in Search Console, why it so often hits a home page that answers on both www and the bare address, how to check your own site in two minutes, and the redirect and canonical tag that fix it.</summary>
+    <content type="html">&lt;p&gt;&quot;Duplicate without user-selected canonical&quot; means Google found two or more addresses that show the same page, and none of them says which address is the main one. So Google chose one itself and left the others out of search results. The excluded address isn&#x27;t broken, and nothing is penalised. You just didn&#x27;t get a say in which copy people see.&lt;/p&gt;
+      &lt;p&gt;The most common twin I&#x27;ve seen is the home page itself. On 16 October I checked 191 small business websites from a business directory, and 48 of them answered on both &lt;code&gt;https://example.com/&lt;/code&gt; and &lt;code&gt;https://www.example.com/&lt;/code&gt; without sending one to the other. On 18 October I fetched both copies of those home pages and looked for a canonical tag, the one line that names the main copy. In the morning run, 36 of the 48 had no canonical on either copy, and 1 named a different address on each. A re-run that evening, with 47 of the sites answering, gave the same picture: 35 with none, 1 contradicting itself, 10 naming the same address from both copies. So roughly three in four of those sites leave Google to guess.&lt;/p&gt;
+      &lt;p&gt;Below is what the status means, how to find your own twins, and the two fixes, in the order to do them.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Duplicate&lt;/strong&gt;: two addresses that serve the same, or nearly the same, page. To Google, &lt;code&gt;example.com/&lt;/code&gt;, &lt;code&gt;www.example.com/&lt;/code&gt;, &lt;code&gt;example.com/?ref=menu&lt;/code&gt; and &lt;code&gt;example.com/index.html&lt;/code&gt; are four different addresses, even if you think of them as one page.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Canonical&lt;/strong&gt;: the address you want shown in search results. Google indexes one copy of each page and folds the others into it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;User-selected&lt;/strong&gt;: you told Google which one, with a redirect or a &lt;code&gt;rel=&quot;canonical&quot;&lt;/code&gt; tag. &quot;Without user-selected&quot; means you didn&#x27;t, so the choice was Google&#x27;s.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;It has three neighbours in the same report. &lt;a href=&quot;/blog/alternate-page-with-proper-canonical-tag/&quot;&gt;&quot;Alternate page with proper canonical tag&quot;&lt;/a&gt; means you did name a main copy and Google agreed: usually fine. &lt;a href=&quot;/blog/google-chose-different-canonical/&quot;&gt;&quot;Duplicate, Google chose different canonical than user&quot;&lt;/a&gt; means you named one and Google disagreed. The one in this guide comes before both: nobody named anything.&lt;/p&gt;
+
+      &lt;h2&gt;Is it a problem?&lt;/h2&gt;
+      &lt;p&gt;Often not much. If Google picked the address you would have picked, the right page shows in results and the twin just sits in this list.&lt;/p&gt;
+      &lt;p&gt;It becomes a problem in three cases:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Google picked the wrong copy.&lt;/strong&gt; For example the &lt;code&gt;http://&lt;/code&gt; one, or a version with a tracking parameter, or the address you&#x27;re about to retire.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Links are split.&lt;/strong&gt; Some people link to www, some to the bare address. Google says it consolidates signals for duplicates, but only once it has worked out they&#x27;re duplicates, and the copy it keeps may not be the one your ads, business profile and printed cards point to.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The list is long.&lt;/strong&gt; Hundreds of entries usually mean a pattern (a filter, a sort order, a session parameter in the address) that makes your site look many times bigger than it is, and Google spends visits on copies instead of new pages.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Check which copy Google picked&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, open &lt;strong&gt;Indexing → Pages&lt;/strong&gt;, scroll to &quot;Why pages aren&#x27;t indexed&quot; and click &lt;strong&gt;Duplicate without user-selected canonical&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Click one address in the list, then &lt;strong&gt;Inspect URL&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Open &lt;strong&gt;Page indexing&lt;/strong&gt;. Read two lines: &lt;em&gt;User-declared canonical&lt;/em&gt; will say &quot;None&quot;, and &lt;em&gt;Google-selected canonical&lt;/em&gt; shows the copy Google kept.&lt;/li&gt;
+        &lt;li&gt;If the Google-selected address is the one you want, you can leave it. If not, keep going.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Check your own site for the home page twin&lt;/h2&gt;
+      &lt;p&gt;This is the check I ran on the 48 sites, for one site. Open Terminal on a Mac (on Windows, open PowerShell and type &lt;code&gt;curl.exe&lt;/code&gt; instead of &lt;code&gt;curl&lt;/code&gt;) and run these two lines with your own domain:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://example.com/
+curl -sL -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://www.example.com/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, replace &lt;code&gt;/dev/null&lt;/code&gt; with &lt;code&gt;NUL&lt;/code&gt;. Each line prints the status and the address you ended up on after any redirects.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Both lines end on the same address&lt;/strong&gt;: one redirects to the other. Good, the home page has no twin.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Each line ends on its own address, both 200&lt;/strong&gt;: you have the twin. This was 48 of 180 sites that answered on both.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;One line fails&lt;/strong&gt;: that&#x27;s a different problem, covered in &lt;a href=&quot;/blog/site-works-without-www-not-with-it/&quot;&gt;my website works without www but not with it&lt;/a&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Then look for a canonical tag on both copies:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL https://example.com/ | tr &quot;\n&quot; &quot; &quot; | grep -oi &#x27;&amp;lt;link[^&amp;gt;]*canonical[^&amp;gt;]*&amp;gt;&#x27;
+curl -sL https://www.example.com/ | tr &quot;\n&quot; &quot; &quot; | grep -oi &#x27;&amp;lt;link[^&amp;gt;]*canonical[^&amp;gt;]*&amp;gt;&#x27;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;The &lt;code&gt;tr&lt;/code&gt; part joins the page into one line first, because some sites split the tag across lines and a plain grep misses it. No output means no canonical tag. If both lines print the same address, you&#x27;re covered. If they print different addresses, each copy claims to be the real one, which is worse than saying nothing; one of my 48 did that.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 1: redirect the twin&lt;/h2&gt;
+      &lt;p&gt;A redirect is the strongest signal. Google&#x27;s own guide on duplicate URLs ranks it first: &quot;Redirects: A strong signal that the target of the redirect should become canonical.&quot; It also fixes it for people, not only for Google: anyone who types the other address lands on the right one.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Cloudflare&lt;/strong&gt;: Rules → Redirect Rules, create a rule for requests to the twin host, a dynamic redirect to the main host with the same path, status 301, and tick &quot;Preserve query string&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress&lt;/strong&gt;: make sure both &lt;strong&gt;WordPress Address&lt;/strong&gt; and &lt;strong&gt;Site Address&lt;/strong&gt; under Settings → General use the host you want. WordPress then redirects the other host to it, as long as the server sends the other host to the same WordPress at all.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Hosted builders&lt;/strong&gt; (Wix, Squarespace, Shopify): in the domains screen, set one domain as primary. The others redirect to it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Apache or nginx&lt;/strong&gt;: a 301 from the twin host to the main one, keeping the path. If you have both a www rule and an http-to-https rule, test that they don&#x27;t chain into two hops.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Pick one host and use it everywhere: in the redirect, in your sitemap, in your internal links and in your canonical tags. Which one doesn&#x27;t matter to Google. Mixing them does.&lt;/p&gt;
+
+      &lt;h2&gt;Fix 2: a canonical tag on every page&lt;/h2&gt;
+      &lt;p&gt;Redirects can&#x27;t handle twins that have to stay reachable, like a page with &lt;code&gt;?utm_source=&lt;/code&gt; on the end, or a product reachable from two categories. For those, put this in the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; of each page, naming that page&#x27;s main address:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&quot;canonical&quot; href=&quot;https://www.example.com/services/&quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Three rules from Google&#x27;s guide that I see broken most:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Use the full address&lt;/strong&gt;, with &lt;code&gt;https://&lt;/code&gt; and the host. Google supports short relative paths but recommends absolute ones.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Don&#x27;t use robots.txt or noindex&lt;/strong&gt; to hide twins. Google lists both as wrong tools for this: a blocked page can still be indexed, and a noindex page drops out instead of passing its signals on.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Each page names itself&lt;/strong&gt;, not the home page. A whole site whose canonical says &quot;home page&quot; tells Google every page is a copy of it.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;On WordPress, Yoast SEO, Rank Math and All in One SEO all print a self-naming canonical on every page by default. If you have one installed and the check above still printed nothing, a cache or a theme may be stripping the head; clear the cache and check again.&lt;/p&gt;
+
+      &lt;h2&gt;After the fix&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Run both checks again and make sure the twin now redirects and the main copy prints its own canonical.&lt;/li&gt;
+        &lt;li&gt;In Search Console, inspect the main address and click &lt;strong&gt;Request indexing&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Click &lt;strong&gt;Validate fix&lt;/strong&gt; on the status only if every address in its list is a twin you&#x27;ve dealt with. If the list also holds filter or tracking addresses you&#x27;re keeping, skip validation: one leftover stops it.&lt;/li&gt;
+        &lt;li&gt;Give it time. The twins leave this list as Google revisits them, which can take weeks for pages it rarely crawls. Moving into &quot;Page with redirect&quot; or &quot;Alternate page with proper canonical tag&quot; is the good outcome: it means Google now knows which one you meant.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Sources: Google Search Central, &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls&quot;&gt;How to specify a canonical URL with rel=&quot;canonical&quot; and other methods&lt;/a&gt;, read on 18 October 2026.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Excluded by &#x27;noindex&#x27; tag&quot; in Search Console: what it means and how to fix it</title>
     <link href="https://taktekbot.com/blog/excluded-by-noindex-tag/"/>
