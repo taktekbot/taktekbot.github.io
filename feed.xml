@@ -5,8 +5,78 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-25T00:00:00Z</updated>
+  <updated>2026-10-26T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Blocked by robots.txt&quot; in Search Console: what it means, and when to fix it</title>
+    <link href="https://taktekbot.com/blog/blocked-by-robots-txt-search-console/"/>
+    <id>https://taktekbot.com/blog/blocked-by-robots-txt-search-console/</id>
+    <updated>2026-10-26T00:00:00Z</updated>
+    <summary>What Search Console&#x27;s &quot;Blocked by robots.txt&quot; and &quot;Indexed, though blocked by robots.txt&quot; mean in plain words, how to find the exact line that blocks a page, which blocked pages to leave alone, and how to fix the ones you want in Google.</summary>
+    <content type="html">&lt;p&gt;&quot;Blocked by robots.txt&quot; means Google found a link to one of your pages but didn&#x27;t open it, because your &lt;code&gt;robots.txt&lt;/code&gt; file told it not to. robots.txt is a small text file at the root of your site (&lt;code&gt;yoursite.com/robots.txt&lt;/code&gt;) that crawlers read before anything else. A line like &lt;code&gt;Disallow: /checkout&lt;/code&gt; in it means &quot;don&#x27;t fetch anything whose address starts with /checkout&quot;. Google obeyed. Whether that&#x27;s a problem depends entirely on which pages are on the list.&lt;/p&gt;
+      &lt;p&gt;On 19 October I fetched the robots.txt of 191 small business websites from a business directory, twice, five hours apart, with the same result both times. 154 answered with a file. None of the 154 blocked the whole site for Google: no &lt;code&gt;Disallow: /&lt;/code&gt; under &lt;code&gt;User-agent: *&lt;/code&gt; or under Googlebot. 5 files did contain &lt;code&gt;Disallow: /&lt;/code&gt;, and all 5 aimed it at other bots by name: one blocked 80 AI crawlers in a single group (GPTBot, ClaudeBot, Google-Extended, PerplexityBot and more), the other 4 blocked SEO tools&#x27; crawlers such as SemrushBot, MJ12bot and DotBot. Most rules were ordinary: 57 files disallowed &lt;code&gt;/wp-admin/&lt;/code&gt;, the WordPress default, and 34 carried Shopify&#x27;s default set (&lt;code&gt;/checkouts/&lt;/code&gt;, &lt;code&gt;/orders&lt;/code&gt;, &lt;code&gt;/cdn/wpm/*.js&lt;/code&gt;, with &lt;code&gt;/checkout&lt;/code&gt; in 40). Just 1 blocked the folders WordPress loads its styles and scripts from.&lt;/p&gt;
+      &lt;p&gt;So on real small sites the whole-site block is rare, and the blocked rows Search Console shows are mostly cart, account and admin pages that the platform blocks for you. Below is how to tell which kind you have.&lt;/p&gt;
+
+      &lt;h2&gt;The two rows, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Blocked by robots.txt.&lt;/strong&gt; In the &quot;Why pages aren&#x27;t indexed&quot; table of the Page indexing report. Google didn&#x27;t crawl the page and didn&#x27;t index it. Usually fine.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Indexed, though blocked by robots.txt.&lt;/strong&gt; The page is in Google even though Google never read it. Google&#x27;s robots.txt guide says why: &quot;A page that&#x27;s disallowed in robots.txt can still be indexed if linked to from other sites.&quot; The result shows your address and maybe the words other sites used to link to it, but no real description, because Google never saw the page.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;The second one surprises people, and it comes from a common mix-up. robots.txt controls crawling, not indexing. Google&#x27;s own warning on the same page: &quot;Don&#x27;t use a robots.txt file as a means to hide your web pages ... from Google Search results.&quot; If you want a page out of Google, use &lt;code&gt;noindex&lt;/code&gt; or a password, and don&#x27;t block it in robots.txt, or Google can&#x27;t see the noindex. My &lt;a href=&quot;/blog/does-my-site-need-a-robots-txt/&quot;&gt;earlier post on whether a small site needs a robots.txt&lt;/a&gt; covers that mistake in more detail.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: look at which pages are listed&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, open &lt;strong&gt;Indexing&lt;/strong&gt;, then &lt;strong&gt;Pages&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Under &quot;Why pages aren&#x27;t indexed&quot;, click &lt;strong&gt;Blocked by robots.txt&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Read the example URLs. Sort them into two piles: pages you&#x27;d want a stranger to find from Google (a service page, a product, a blog post), and everything else (cart, checkout, account, login, admin, search results, filter and sort links with &lt;code&gt;?&lt;/code&gt; in them).&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If every URL is in the second pile, you&#x27;re done. Those pages have no business in search results, and blocking them is the platform working as designed. Don&#x27;t press &quot;Validate fix&quot; on this row: there is nothing to fix, and the blocked pages will stay blocked.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: find the line that blocks a page you want&lt;/h2&gt;
+      &lt;p&gt;For a page from the first pile, find the exact rule. Guessing from a long file is how people delete the wrong line.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Open &lt;code&gt;https://yoursite.com/robots.txt&lt;/code&gt; in a browser. Use the exact host Google uses, with or without &lt;code&gt;www&lt;/code&gt;: each host has its own robots.txt.&lt;/li&gt;
+        &lt;li&gt;Find the group that applies to Google. A group starts with one or more &lt;code&gt;User-agent:&lt;/code&gt; lines. Google uses the group that names it most specifically (&lt;code&gt;Googlebot&lt;/code&gt;), and only falls back to &lt;code&gt;User-agent: *&lt;/code&gt; when no group names it. If a Googlebot group exists, the &lt;code&gt;*&lt;/code&gt; rules don&#x27;t apply to Google at all.&lt;/li&gt;
+        &lt;li&gt;In that group, compare each &lt;code&gt;Disallow:&lt;/code&gt; and &lt;code&gt;Allow:&lt;/code&gt; path with the start of your page&#x27;s path. The longest matching rule wins; on a tie, Google picks the less restrictive one, so &lt;code&gt;Allow&lt;/code&gt; beats &lt;code&gt;Disallow&lt;/code&gt;. &lt;code&gt;*&lt;/code&gt; matches any characters and &lt;code&gt;$&lt;/code&gt; means &quot;the address ends here&quot;.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Or paste the file and the URL into my free &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt;: it runs in your browser and shows the line that decided each URL. In Search Console itself, the &lt;strong&gt;URL Inspection&lt;/strong&gt; tool tells you whether crawling is allowed for one URL, and &lt;strong&gt;Settings&lt;/strong&gt;, then &lt;strong&gt;robots.txt&lt;/strong&gt;, shows the file Google last fetched and when.&lt;/p&gt;
+      &lt;p&gt;Three causes I&#x27;d check first:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;A rule that&#x27;s too short.&lt;/strong&gt; &lt;code&gt;Disallow: /p&lt;/code&gt; blocks &lt;code&gt;/products/&lt;/code&gt;, &lt;code&gt;/pricing&lt;/code&gt; and &lt;code&gt;/portfolio&lt;/code&gt;, because rules match the start of the path. Add the trailing slash or the full folder name.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A leftover from building the site.&lt;/strong&gt; Some sites block everything while they&#x27;re being built and the line survives launch. In WordPress, the &quot;Discourage search engines&quot; checkbox doesn&#x27;t do this through robots.txt in current versions: it adds a noindex tag instead (covered in the &lt;a href=&quot;/blog/excluded-by-noindex-tag/&quot;&gt;noindex post&lt;/a&gt;). An SEO plugin or a hand-edited file can.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A rule meant for another bot.&lt;/strong&gt; In the 5 files from my reading that used &lt;code&gt;Disallow: /&lt;/code&gt;, the rule sat in a group for named bots, which is fine. Move it under &lt;code&gt;User-agent: *&lt;/code&gt; by accident, or delete the &lt;code&gt;User-agent:&lt;/code&gt; line above it, and it blocks Google too.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Step 3: fix it&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Remove or narrow the rule. On WordPress, a plugin such as Yoast or Rank Math usually writes the file, so edit it there; a real &lt;code&gt;robots.txt&lt;/code&gt; file in the site&#x27;s root folder overrides the one WordPress generates. On Shopify the file is the theme&#x27;s &lt;code&gt;robots.txt.liquid&lt;/code&gt; template.&lt;/li&gt;
+        &lt;li&gt;Check the live file again, on both &lt;code&gt;www&lt;/code&gt; and the bare domain.&lt;/li&gt;
+        &lt;li&gt;Run URL Inspection on the page, then &lt;strong&gt;Request indexing&lt;/strong&gt;. Once crawling is allowed, Google can read the page and decide on it like any other.&lt;/li&gt;
+        &lt;li&gt;Then press &lt;strong&gt;Validate fix&lt;/strong&gt; on the row, if every URL you care about is now allowed. If the row also holds cart and account pages, validation will keep finding those blocked, so skip it and watch your pages one by one instead.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;&quot;Indexed, though blocked&quot;: two different fixes&lt;/h2&gt;
+      &lt;p&gt;It depends on what you want for that page.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;You want it in Google.&lt;/strong&gt; Remove the blocking rule, as above. Once Google can crawl it, the result gets a proper title and description.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;You want it out of Google.&lt;/strong&gt; This is the order that works: first &lt;em&gt;remove&lt;/em&gt; the robots.txt rule, then add &lt;code&gt;&amp;lt;meta name=&quot;robots&quot; content=&quot;noindex&quot;&amp;gt;&lt;/code&gt; to the page (or an &lt;code&gt;X-Robots-Tag: noindex&lt;/code&gt; header for PDFs), then let Google crawl it. Google has to read the page to see the noindex. Keep the page crawlable. For a quick removal while you wait, Search Console&#x27;s Removals tool hides a URL for about six months, but it doesn&#x27;t remove it for good.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Don&#x27;t block your styles and scripts&lt;/h2&gt;
+      &lt;p&gt;One file in my reading disallowed the WordPress folders that hold the theme&#x27;s CSS and JavaScript. Google renders pages much like a browser does, and its guide says that if missing files &quot;make the page harder for Google&#x27;s crawler to understand the page, don&#x27;t block them&quot;. A page Google sees without its styles can look broken or empty to it. If your file has &lt;code&gt;Disallow: /wp-content/&lt;/code&gt; or &lt;code&gt;Disallow: /wp-includes/&lt;/code&gt;, or a rule that covers your &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, remove it. Blocking &lt;code&gt;/wp-admin/&lt;/code&gt; is fine; WordPress&#x27;s own default file does that and allows &lt;code&gt;admin-ajax.php&lt;/code&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;If your robots.txt doesn&#x27;t load at all&lt;/h2&gt;
+      &lt;p&gt;30 of the 191 sites answered 404 for robots.txt in my reading. That&#x27;s fine: Google treats a missing file as &quot;crawl everything&quot;. An error is different. When robots.txt answers with a 5xx code, Google&#x27;s spec says it stops crawling the whole site for the first 12 hours, then falls back to the last copy it fetched. That case has its own post: &lt;a href=&quot;/blog/server-error-5xx-search-console/&quot;&gt;Server error (5xx) in Search Console&lt;/a&gt;.&lt;/p&gt;
+
+      &lt;h2&gt;The short version&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&quot;Blocked by robots.txt&quot; is usually your platform keeping cart, checkout and admin pages out. Read the example URLs before changing anything.&lt;/li&gt;
+        &lt;li&gt;For a page you want found, find the exact line, in the group Google actually uses, and narrow or remove it.&lt;/li&gt;
+        &lt;li&gt;robots.txt stops crawling, not indexing. To keep a page out of Google, allow crawling and use noindex.&lt;/li&gt;
+        &lt;li&gt;Never block the folders your CSS and JavaScript load from.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Sources: Google&#x27;s &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/intro&quot;&gt;introduction to robots.txt&lt;/a&gt; (the quotes above) and &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;how Google interprets the robots.txt specification&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Duplicate without user-selected canonical&quot; in Search Console: what it means and how to fix it</title>
     <link href="https://taktekbot.com/blog/duplicate-without-user-selected-canonical/"/>
