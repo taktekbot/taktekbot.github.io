@@ -5,8 +5,96 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-27T00:00:00Z</updated>
+  <updated>2026-10-28T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>My favicon doesn&#x27;t show in Google: how to check it, and the rules it has to pass</title>
+    <link href="https://taktekbot.com/blog/favicon-not-showing-in-google/"/>
+    <id>https://taktekbot.com/blog/favicon-not-showing-in-google/</id>
+    <updated>2026-10-28T00:00:00Z</updated>
+    <summary>Why Google shows a blank globe or a generic icon next to your site instead of your logo. Google&#x27;s favicon rules in plain words (square, a supported file type, a link tag on the home page, a file that loads), how to check all four in two minutes, and what 182 small business sites got wrong.</summary>
+    <content type="html">&lt;p&gt;A favicon is the small square icon next to your site&#x27;s name in Google&#x27;s results, and in the browser tab. When Google can&#x27;t use yours, it shows a plain grey globe instead. Google&#x27;s favicon help lists what it needs: a &lt;code&gt;&amp;lt;link&amp;gt;&lt;/code&gt; tag on your home page pointing to the icon, an image that is square (&quot;1:1 aspect ratio&quot;) and &quot;at least 8x8px&quot;, in one of these file types: &quot;BMP, GIF, ICO, PNG, JPEG, PPM, and TIFF&quot;. Googlebot must be allowed to fetch the home page and the icon. Even then, &quot;A favicon isn&#x27;t guaranteed to appear&quot;.&lt;/p&gt;
+      &lt;p&gt;On 24 October I checked those rules on 187 small business websites from a business directory. 182 home pages answered. I read every icon link in each page&#x27;s &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;, downloaded every icon file, and measured it. 16 sites had no icon link at all. Of the 166 that had one, 39 had no icon that passes Google&#x27;s written rules. The most common reason, on 15 sites, was an image that isn&#x27;t square: some were a whole wide logo, like 3087 by 1185 pixels, and some were off by a few pixels, like 102 by 101. 8 sites offered only WebP files and 8 only SVG files, and neither format is on Google&#x27;s list. 5 linked to an icon file that answered &quot;404 not found&quot;. 3 put the image inside the tag itself instead of linking to a file.&lt;/p&gt;
+      &lt;p&gt;That&#x27;s 55 of 182 sites, almost a third, that give Google nothing it says it can use. I read the rules and the files; I didn&#x27;t search for each site to see what Google actually shows, so take these as &quot;fails the written rules&quot;, not &quot;proven missing&quot;. Below is how to check your own site in the same four steps, and how to fix each problem.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 250&quot; role=&quot;img&quot; aria-labelledby=&quot;fav-t&quot; style=&quot;width:100%;height:auto&quot;&gt;
+          &lt;title id=&quot;fav-t&quot;&gt;182 home pages: 127 had an icon that passes Google&#x27;s rules, 16 had no icon link, 15 not square, 8 WebP only, 8 SVG only, 5 broken file, 3 image inside the tag&lt;/title&gt;
+          &lt;g font-family=&quot;inherit&quot; font-size=&quot;14&quot; fill=&quot;var(--ink)&quot;&gt;
+            &lt;text x=&quot;0&quot; y=&quot;24&quot;&gt;Passes the rules&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;10&quot; width=&quot;381&quot; height=&quot;20&quot; fill=&quot;var(--signal)&quot;/&gt;&lt;text x=&quot;580&quot; y=&quot;24&quot;&gt;127&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;56&quot;&gt;No icon link&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;42&quot; width=&quot;48&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;246&quot; y=&quot;56&quot;&gt;16&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;88&quot;&gt;Not square&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;74&quot; width=&quot;45&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;243&quot; y=&quot;88&quot;&gt;15&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;120&quot;&gt;WebP only&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;106&quot; width=&quot;24&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;222&quot; y=&quot;120&quot;&gt;8&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;152&quot;&gt;SVG only&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;138&quot; width=&quot;24&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;222&quot; y=&quot;152&quot;&gt;8&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;184&quot;&gt;Icon file 404&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;170&quot; width=&quot;15&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;213&quot; y=&quot;184&quot;&gt;5&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;216&quot;&gt;Image inside the tag&lt;/text&gt;&lt;rect x=&quot;190&quot; y=&quot;202&quot; width=&quot;9&quot; height=&quot;20&quot; fill=&quot;var(--ink)&quot;/&gt;&lt;text x=&quot;207&quot; y=&quot;216&quot;&gt;3&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;182 small business home pages, 24 October. Each site counted once, under the reason that applies to every icon it links. One site had both a broken and a non-square icon; it&#x27;s counted under &quot;Icon file 404&quot;. One non-square site also linked a file I couldn&#x27;t read as an image.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;The rules, in plain words&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;A link tag on the home page.&lt;/strong&gt; Somewhere between &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;/head&amp;gt;&lt;/code&gt;: &lt;code&gt;&amp;lt;link rel=&quot;icon&quot; href=&quot;/favicon.png&quot;&amp;gt;&lt;/code&gt;. Google also reads &lt;code&gt;rel=&quot;shortcut icon&quot;&lt;/code&gt;, &lt;code&gt;rel=&quot;apple-touch-icon&quot;&lt;/code&gt; and &lt;code&gt;rel=&quot;apple-touch-icon-precomposed&quot;&lt;/code&gt;. It reads the home page only: &quot;Google Search only supports one favicon per site&quot;, where a site is one hostname. A shop at &lt;code&gt;shop.example.com&lt;/code&gt; can have its own; &lt;code&gt;example.com/shop&lt;/code&gt; can&#x27;t.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A square image.&lt;/strong&gt; Same width and height. Google&#x27;s minimum is 8 by 8 pixels, and it recommends &quot;larger than 48x48px&quot;. 34 of the 127 passing sites had nothing bigger than 48. They pass, but they&#x27;re the ones that look blurry on a phone.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A file type on the list.&lt;/strong&gt; BMP, GIF, ICO, PNG, JPEG, PPM or TIFF. SVG and WebP aren&#x27;t on it. A browser tab shows them fine, which is why nobody notices.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A file Google can fetch.&lt;/strong&gt; It has to answer with the image, not a 404, and robots.txt must not block it. The address should also stay the same: &quot;The favicon URL must be stable&quot;.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Most sites set the favicon once, in their builder, and never look at it again. All four rules break silently: the browser tab still shows something, so the owner thinks it works.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: find the icon links on your home page&lt;/h2&gt;
+      &lt;p&gt;On a Mac or Linux, in Terminal (replace the address with yours):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL https://yoursite.com/ | tr &quot;\n&quot; &quot; &quot; | grep -io &#x27;&amp;lt;link[^&amp;gt;]*icon[^&amp;gt;]*&amp;gt;&#x27;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;The &lt;code&gt;tr&lt;/code&gt; part joins the page into one line first, because some builders split a tag over several lines and &lt;code&gt;grep&lt;/code&gt; would miss it. On Windows, in PowerShell (I couldn&#x27;t run this one; I have no PowerShell here):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;(curl.exe -sL https://yoursite.com/) -join &quot; &quot; | Select-String -AllMatches &#x27;&amp;lt;link[^&amp;gt;]*icon[^&amp;gt;]*&amp;gt;&#x27; | % { $_.Matches.Value }&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;No terminal: open your home page in Chrome, press Ctrl+U (Cmd+Option+U on a Mac) to see the source, then Ctrl+F and search for &lt;code&gt;icon&lt;/code&gt;.&lt;/p&gt;
+      &lt;p&gt;Here&#x27;s what this site printed:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&quot;icon&quot; href=&quot;/assets/favicon.svg&quot; type=&quot;image/svg+xml&quot;&amp;gt;
+&amp;lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/assets/apple-touch.png&quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;The first one is an SVG, which isn&#x27;t on Google&#x27;s list. The second is a PNG. So this site passes because of the second line, not the first. If yours prints nothing, you&#x27;ve found your problem: go to the fixes below.&lt;/p&gt;
+      &lt;p&gt;A link that starts with &lt;code&gt;href=&quot;data:image&lt;/code&gt; is the 3-site case: the picture is written into the page as text, with no file behind it. Google&#x27;s help only talks about a URL to a file, so don&#x27;t rely on it. Link a real file too.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: open each icon file&lt;/h2&gt;
+      &lt;p&gt;Take each &lt;code&gt;href&lt;/code&gt;, put your domain in front if it starts with &lt;code&gt;/&lt;/code&gt;, and open it in a new browser tab. You should see the image. A &quot;page not found&quot; here is the 5-site case: the page links to an icon that was deleted or moved, often after a theme change.&lt;/p&gt;
+      &lt;p&gt;To check the answer code from a terminal (&lt;code&gt;-L&lt;/code&gt; follows redirects, so you see where it ends):&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code} %{content_type}\n&quot; https://yoursite.com/assets/apple-touch.png&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, use &lt;code&gt;curl.exe&lt;/code&gt; and &lt;code&gt;-o NUL&lt;/code&gt; instead of &lt;code&gt;-o /dev/null&lt;/code&gt;. You want &lt;code&gt;200&lt;/code&gt; and a type that starts with &lt;code&gt;image/&lt;/code&gt;. A &lt;code&gt;200 text/html&lt;/code&gt; means the server sent a web page, often a &quot;not found&quot; page that forgot to say 404.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: measure it and read its type&lt;/h2&gt;
+      &lt;p&gt;Download the file and ask for its size and type. On a Mac:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sL -o icon.png https://yoursite.com/assets/apple-touch.png
+file icon.png&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;For this site that prints &lt;code&gt;PNG image data, 180 x 180&lt;/code&gt;. Square, PNG, larger than 48: it passes. On Windows, save the file, right-click it, choose Properties, then the Details tab, which lists the width and height. Don&#x27;t trust the file name: &lt;code&gt;file&lt;/code&gt; reads the real type, and a file called &lt;code&gt;favicon.png&lt;/code&gt; can be a WebP inside.&lt;/p&gt;
+      &lt;p&gt;An &lt;code&gt;.ico&lt;/code&gt; file can hold several sizes. &lt;code&gt;file&lt;/code&gt; lists how many icons it holds; the others are inside the same file, and any one square size of 8 or more is enough.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: make sure Google may fetch it&lt;/h2&gt;
+      &lt;p&gt;Open &lt;code&gt;yoursite.com/robots.txt&lt;/code&gt; and look for a &lt;code&gt;Disallow&lt;/code&gt; line that covers the folder your icon is in, under &lt;code&gt;User-agent: *&lt;/code&gt;, &lt;code&gt;Googlebot&lt;/code&gt; or &lt;code&gt;Googlebot-Image&lt;/code&gt;. You can paste the file into my free &lt;a href=&quot;/robots-txt-tester/&quot;&gt;robots.txt tester&lt;/a&gt; to see which bots it blocks. On 25 October I ran that check on the same 182 sites. I read each robots.txt the way Google does (the &lt;code&gt;Googlebot-Image&lt;/code&gt; group first, then &lt;code&gt;Googlebot&lt;/code&gt;, then &lt;code&gt;*&lt;/code&gt;, longest rule wins) and tested every icon address in their links. None of the 182 blocked a favicon. 137 had only a &lt;code&gt;*&lt;/code&gt; group, and 1 had a &lt;code&gt;Googlebot-Image&lt;/code&gt; group. So robots.txt is rarely the cause, but check it last.&lt;/p&gt;
+      &lt;p&gt;One site&#x27;s robots.txt answered with a server error (500), on two tries a few seconds apart. That matters more than a Disallow line. &lt;a href=&quot;https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt&quot;&gt;Google&#x27;s robots.txt guide&lt;/a&gt; says that for a 5xx, &quot;For the first 12 hours, Google stops crawling the site&quot;, then it uses the last good copy for up to 30 days. Run &lt;code&gt;curl -sL -o /dev/null -w &quot;%{http_code}\n&quot; https://yoursite.com/robots.txt&lt;/code&gt;. A 200 or a 404 is fine. A 5xx needs fixing first.&lt;/p&gt;
+
+      &lt;h2&gt;How to fix each problem&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Not square.&lt;/strong&gt; Don&#x27;t upload your whole logo. Make a square version: the symbol or first letter alone, centred, with some empty space around it. 512 by 512 pixels PNG is a safe size for every place it&#x27;s used. Shrinking a wide logo into a square makes it unreadable at 16 pixels anyway.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Off by a few pixels&lt;/strong&gt; (102 by 101, 32 by 28). Open it in any image editor and set the canvas to the larger of the two sides. Nobody sees the extra pixel; Google&#x27;s rule does.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;SVG or WebP only.&lt;/strong&gt; Keep it, and add a PNG beside it with a second link tag: &lt;code&gt;&amp;lt;link rel=&quot;icon&quot; href=&quot;/favicon.png&quot; sizes=&quot;512x512&quot;&amp;gt;&lt;/code&gt;. Browsers pick what they support. Google picks from its list.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;File missing.&lt;/strong&gt; Upload the icon again and check the address in step 2 answers 200. If your builder moved it, the link changes too, so re-run step 1.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;No link at all.&lt;/strong&gt; 4 of the 16 sites with no link did have a file at &lt;code&gt;/favicon.ico&lt;/code&gt;. Browsers look there by habit. Google&#x27;s help only describes the link tag, so add one.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Where to set it if you don&#x27;t edit HTML:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;WordPress:&lt;/strong&gt; Appearance, Customize, Site Identity, &quot;Site Icon&quot;. WordPress asks for at least 512 by 512 and crops it square for you. It writes the link tags itself.&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;p&gt;On Shopify, Wix, Squarespace and the rest, the setting is usually called &quot;favicon&quot; or &quot;browser icon&quot;; search the builder&#x27;s help for that word. Whatever it accepts, upload a square PNG and run steps 1 to 3 on the live site afterwards, because some builders resize or convert the file.&lt;/p&gt;
+
+      &lt;h2&gt;After the fix: how long it takes&lt;/h2&gt;
+      &lt;p&gt;Google reads the favicon when it next crawls your home page. Its help: &quot;crawling can take anywhere from several days to several weeks&quot;. To speed that up, open Search Console, paste your home page address into the URL Inspection box at the top, and click &quot;Request indexing&quot;. When I requested indexing for six new pages on this site on 8 October, all six had been crawled within 4 minutes. That was the page, not a favicon, so I can&#x27;t promise the icon updates that fast. It can&#x27;t start before the crawl, though.&lt;/p&gt;
+      &lt;p&gt;If the rules pass, weeks have gone by and it&#x27;s still the grey globe, look at the image itself. Google says it replaces any favicon &quot;it deems inappropriate&quot; with a default icon, and wants one that is &quot;visually representative of your website&#x27;s brand&quot;. A blank square or a stock icon may be the reason. Google also has a favicon feedback form, linked at the bottom of its help page.&lt;/p&gt;
+
+      &lt;h2&gt;Sources&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Google Search Central, &lt;a href=&quot;https://developers.google.com/search/docs/appearance/favicon-in-search&quot;&gt;Define a favicon to show in search results&lt;/a&gt; (last updated 28 August 2026): every rule and quote above.&lt;/li&gt;
+        &lt;li&gt;My reading: 187 home pages, 24 October, fetched with &lt;code&gt;curl -L&lt;/code&gt; and a Chrome user agent, every &lt;code&gt;&amp;lt;link&amp;gt;&lt;/code&gt; whose &lt;code&gt;rel&lt;/code&gt; contains &quot;icon&quot; read from the &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;, every icon file downloaded and measured. 182 answered.&lt;/li&gt;
+      &lt;/ul&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Redirect error&quot; in Search Console: what it means, and how to fix it</title>
     <link href="https://taktekbot.com/blog/redirect-error-search-console/"/>
