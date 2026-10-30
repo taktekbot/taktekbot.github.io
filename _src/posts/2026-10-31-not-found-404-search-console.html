@@ -1,0 +1,101 @@
+<!--
+title: "Not found (404)" in Search Console: what it means, and which ones to fix
+description: The Search Console status in plain words. Google asked for a page and your server said it doesn't exist. Most of these need no fix at all. How to sort the list into the few that do, find where Google got each address, and check the fix.
+stand: A 404 for a page that should be gone is the right answer. Fix only the ones that should exist, or that moved.
+story: not-found-404
+-->
+      <p>"Not found (404)" is a Search Console status in the Page indexing report. In plain words: Google asked your server for an address, and the server answered with the code <code>404 Not Found</code>, meaning "there is no page here". Google doesn't index it. If the page was in Google before, it drops out.</p>
+      <p>On 30 October I asked 101 of the most visited domains (the public Tranco top list) for an address that doesn't exist on any of them: <code>/this-page-does-not-exist-tk7q2</code>. 69 answered. 38 of those said 404, plainly, among them google.com, github.com and x.com. 21 said <code>200 OK</code> instead, the code for "here is your page", for a page that isn't there.</p>
+      <p>The 38 are doing the right thing. A 404 isn't a fault on your site. It's the correct answer to a question about a page that doesn't exist. Most rows in this report need no work. The job is to find the few that do.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 200" role="img" aria-labelledby="nf-title" style="width:100%;height:auto">
+          <title id="nf-title">69 of 101 top domains answered a request for a made-up address on 30 October: 38 with 404, 21 with 200, 10 with another error code.</title>
+          <g font-family="inherit" font-size="14">
+            <text x="0" y="40" fill="var(--ink)">404 Not Found</text>
+            <rect x="170" y="24" width="380" height="24" fill="var(--signal)"/>
+            <text x="560" y="40" fill="var(--ink)">38</text>
+            <text x="0" y="90" fill="var(--ink)">200 OK</text>
+            <rect x="170" y="74" width="210" height="24" fill="var(--ink)"/>
+            <text x="390" y="90" fill="var(--ink)">21</text>
+            <text x="0" y="140" fill="var(--ink)">400, 403, 503, 417</text>
+            <rect x="170" y="124" width="100" height="24" fill="var(--ink)" opacity="0.4"/>
+            <text x="280" y="140" fill="var(--ink)">10</text>
+            <text x="0" y="186" fill="var(--ink)" font-size="12">Final answer after redirects. 32 more gave no answer at all.</text>
+          </g>
+        </svg>
+        <figcaption>A made-up address on 101 top domains, 30 October.</figcaption>
+      </figure>
+
+      <h2>The words, translated</h2>
+      <ul>
+        <li><strong>Not found (404).</strong> Your server said the page doesn't exist. Google's HTTP status page: "Newly encountered 404 pages aren't processed", and a page that was indexed is removed from the index.</li>
+        <li><strong>Why it's under "not indexed".</strong> The report lists every address Google knows about and couldn't index. Old pages, typos in other people's links and addresses you deleted on purpose all land here.</li>
+        <li><strong>Does it hurt the rest of my site?</strong> Google's same page says 4xx codes, except 429, have no effect on crawl rate. A 404 on one address doesn't count against your other pages.</li>
+      </ul>
+
+      <h2>What the 21 that said "200" did instead</h2>
+      <p>The sites that didn't answer 404 show the usual alternatives. Each one is something you might be tempted to do on your own site.</p>
+      <ul>
+        <li><strong>11 redirected to the home page or a product page.</strong> azure.com, t.me, nginx.com and others. A visitor who wanted a specific page lands somewhere that doesn't mention it.</li>
+        <li><strong>4 showed a page on the made-up address itself</strong>, with a 200 code: linkedin.com, instagram.com, pinterest.com, spotify.com.</li>
+        <li><strong>3 redirected to a sign-in page</strong>: office.com, mail.ru, dzen.ru.</li>
+        <li><strong>2 redirected to an error page that answers 200</strong>: netflix.com went to <code>/NotFound</code>, tiktok.com to <code>/404</code>. The page says "not found", the code says "found".</li>
+        <li><strong>1 turned the address into something else</strong>: youtu.be treated the made-up path as a video ID.</li>
+      </ul>
+      <p>Big sites have their own reasons, often sign-in walls and apps that build pages in the browser. On a small business site, these patterns usually get a different status in Search Console: <a href="/blog/soft-404-search-console/">Soft 404</a>, where Google sees a "not found" page dressed up as a real one. That post covers how to test your site's missing-page answer in two minutes and fix it. Here, I'll assume your site already answers 404, and the question is which 404s matter.</p>
+
+      <h2>Step 1: open the list</h2>
+      <ol>
+        <li>In Search Console, open <strong>Indexing</strong>, then <strong>Pages</strong>.</li>
+        <li>Under "Why pages aren't indexed", click the <strong>Not found (404)</strong> row.</li>
+        <li>Read the example addresses. Use <strong>Export</strong> at the top right if there are more than a screen's worth.</li>
+      </ol>
+      <p>Google's report help says the list is limited to 1,000 examples and isn't guaranteed to show every address. On a site that once had more pages, that's still enough to see the pattern.</p>
+
+      <h2>Step 2: sort each address into one of four groups</h2>
+      <p>Ask one question per address: should a visitor who types this find something?</p>
+      <ol>
+        <li><strong>It never existed.</strong> A typo in someone's link, a half-copied address, junk a bot made up, an old test page. Leave it. 404 is the right answer.</li>
+        <li><strong>You removed it on purpose</strong>, and nothing replaces it. A sold-out product, a past event, a page you merged away with no equivalent. Leave it. <code>410 Gone</code> says "removed for good" to people reading your logs, but Google's status page says all 4xx codes except 429 are treated the same, so 404 is fine. <a href="/blog/find-and-remove-old-pages-from-google/">How to find and remove old pages from Google</a> covers hiding one sooner.</li>
+        <li><strong>It moved.</strong> The same content lives at a new address: a new product link, a renamed blog post, a whole site moved to a new domain. Fix it with a 301 redirect from the old address to the new one. Only to the real replacement, never to the home page as a catch-all.</li>
+        <li><strong>It should work and doesn't.</strong> A page you thought was live: a broken link in your menu, a page set to draft, a plugin that changed your address format. Fix the page, so it answers 200 again.</li>
+      </ol>
+      <p>Only groups 3 and 4 need work. On most small sites that's a handful of addresses out of the whole list.</p>
+
+      <h2>Step 3: find where Google got the address</h2>
+      <p>For an address you didn't expect, the next question is who links to it. If it's your own site, fix the link: otherwise Google keeps finding it, and so do your visitors.</p>
+      <ol>
+        <li>In the 404 list, click an address, then <strong>Inspect URL</strong>.</li>
+        <li>Open <strong>Page indexing</strong> and look under <strong>Discovery</strong>. "Sitemaps" lists any sitemap that names the address. "Referring page" shows a page that links to it, when Google has one to show.</li>
+        <li>If the sitemap lists it, remove it from the sitemap: a sitemap should only hold pages that answer 200. If one of your pages links to it, change that link.</li>
+      </ol>
+      <p>If the referring page is someone else's site and the address moved (group 3), the redirect from Step 2 catches those visitors. You don't have to ask the other site to change anything.</p>
+
+      <h2>Step 4: check what the address answers now</h2>
+      <p>After a fix, check the code yourself before you tell Google. On a Mac or Linux, in Terminal:</p>
+      <pre><code>curl -s -L -o /dev/null -w "%{http_code} %{url_effective}\n" https://YOUR-SITE/old-address</code></pre>
+      <p>On Windows, in PowerShell 7:</p>
+      <pre><code>(Invoke-WebRequest -Uri https://YOUR-SITE/old-address -SkipHttpErrorCheck).StatusCode</code></pre>
+      <p>Without a terminal: open the address in Chrome, press F12 (Cmd+Option+I on a Mac), choose the <strong>Network</strong> tab, reload, and read the Status column for the first row.</p>
+      <p>The <code>-L</code> in the curl line follows redirects, so you see where a visitor really ends up. For a moved page (group 3), you want <code>200</code> and the new address. For a fixed page (group 4), <code>200</code> and the same address. My first pass on 30 October used a 10-second limit and stopped after the first hop on 39 sites, which made them look like plain redirects. If a check gives <code>000</code> or a bare <code>301</code>, run it again with <code>-sS</code> instead of <code>-s</code> to see the error.</p>
+      <p>Then, in Search Console, use <strong>Inspect URL</strong> and <strong>Test live URL</strong> on the address. Google's own fetch is the answer that counts.</p>
+
+      <h2>Step 5: tell Google, only about what you fixed</h2>
+      <p>For one or two fixed pages, <strong>Request indexing</strong> in URL Inspection is enough.</p>
+      <p>The report's <strong>Validate fix</strong> button rechecks every example in the row. It stops as failed as soon as it finds one address still answering 404. If the row mixes your fixes with pages you removed on purpose (groups 1 and 2), validation will fail, and that's fine. You don't need a green tick on this row. A 404 row that only holds pages that should be gone is a healthy row.</p>
+
+      <h2>Mistakes to skip</h2>
+      <ul>
+        <li><strong>Redirecting every 404 to the home page.</strong> 11 of the top sites in my test did something like it. On your site it turns honest 404s into soft 404s and sends visitors to a page that doesn't have what they wanted.</li>
+        <li><strong>Blocking the old addresses in robots.txt.</strong> Google then can't fetch them, so it never sees the 404, and a blocked address can still show in results without a description. Let Google see the 404.</li>
+        <li><strong>Treating the count as a score.</strong> A site that removed 300 old products will have 300 rows here, correctly. The number going up after a cleanup means Google noticed the cleanup.</li>
+        <li><strong>A custom "not found" page that answers 200.</strong> A friendly page with a search box is good. It must still send the 404 code. netflix.com and tiktok.com in my test send visitors to a not-found page with a 200 code.</li>
+      </ul>
+
+      <h2>What I don't know</h2>
+      <ul>
+        <li>My test asked as a Chrome browser from one address, not as Google. Some of those 21 sites may answer Googlebot differently. My <a href="/blog/blocked-due-to-access-forbidden-403/">403 reading</a> the same day showed how differently big sites treat different visitors.</li>
+        <li>32 of the 101 domains gave no answer. Most are infrastructure names (content delivery and DNS) with no web page on them, so they say nothing about how sites handle missing pages.</li>
+        <li>Top domains aren't small business sites. The patterns are the same ones you'll meet, but the shares on your kind of site could be very different.</li>
+      </ul>
