@@ -1,0 +1,81 @@
+<!--
+title: "Blocked due to access forbidden (403)" in Search Console: what it means, and how to fix it
+description: The Search Console status in plain words. Your server told Google "you may not see this page". Usually a firewall, a bot filter or a password, not the page itself. Why testing it yourself with a fake Googlebot proves nothing, and the four places to look instead.
+stand: A 403 is your server's choice. Find which layer made it: the host's firewall, a security plugin, a password, or a country block.
+story: forbidden-403
+-->
+      <p>"Blocked due to access forbidden (403)" is a Search Console status. In plain words: Google asked your server for a page, and the server answered with the code <code>403 Forbidden</code>, which means "I understood you, and you may not have this". Google doesn't index a page that answers 403, and a page already in Google that starts answering 403 drops out over time. Google's own HTTP status page says so for every 4xx code except 429.</p>
+      <p>On 30 October I asked the home pages of 101 of the most visited domains (the public Tranco top list) three times each: once as a normal Chrome browser, once with Googlebot's name in the request, and once as plain <code>curl</code>. As a browser, 4 answered 403. As "Googlebot", 12 did. 8 big sites, among them wikipedia.org, x.com, tiktok.com, wordpress.com and office.com, served the page to the browser and refused the fake Googlebot.</p>
+      <p>That isn't those sites blocking Google. They are blocking me pretending to be Google: my requests came from an address that isn't Google's, so their filters treated the name as a lie. It's the right behaviour, and it's the main thing to understand about this status. A 403 is a decision by some layer in front of your page, based on who is asking and from where. Below is how to find which layer, and why the obvious test misleads.</p>
+
+      <h2>The words, translated</h2>
+      <ul>
+        <li><strong>403 Forbidden</strong>: the server got the request and refuses to serve it. Not "missing" (that's 404), not "broken" (that's 5xx).</li>
+        <li><strong>401 Unauthorized</strong>: the near twin. The server wants a login. Search Console shows it as a separate status, "Blocked due to unauthorized request (401)". Most fixes below apply to both.</li>
+        <li><strong>User agent</strong>: the name a visitor gives in each request. Chrome sends a long string with "Chrome" in it, Google's crawler sends one with "Googlebot". Anyone can type any name.</li>
+        <li><strong>Firewall</strong> (or WAF, web application firewall): a filter in front of your site that decides who gets through. Cloudflare, your host, and security plugins all run one.</li>
+      </ul>
+      <p>This is different from <a href="/blog/blocked-by-robots-txt-search-console/">"Blocked by robots.txt"</a>. There, your robots.txt file asks Google not to fetch the page, and Google obeys without asking. With a 403, Google did ask, and the server said no.</p>
+
+      <h2>Why "test it as Googlebot" proves nothing</h2>
+      <p>The common advice is to send a request with Googlebot's user agent and see what comes back. My reading shows both ways it goes wrong:</p>
+      <ul>
+        <li><strong>A 403 to your fake Googlebot doesn't mean Google is blocked.</strong> Good firewalls check the address too. Google publishes how: a real Googlebot address looks up to a name ending in <code>googlebot.com</code>, <code>google.com</code> or <code>googleusercontent.com</code>, and Google lists its crawler addresses in public JSON files. Your laptop fails that check, so you get the 403 and the real crawler doesn't.</li>
+        <li><strong>A 200 to your fake Googlebot doesn't mean Google gets in.</strong> A rule that blocks a country, or a cloud network, or too many requests in a minute, can pass your request and stop Google's.</li>
+      </ul>
+      <p>The answers also disagreed in a third way. facebook.com, whatsapp.com and wa.me answered <code>400</code> to my browser-like request and <code>200</code> to plain curl. A request that claims to be Chrome but doesn't behave like Chrome looks suspicious. Filters judge the whole request, not only the name.</p>
+      <p>So the only test that counts is one that comes from Google.</p>
+
+      <h2>Step 1: ask Google to fetch the page</h2>
+      <ol>
+        <li>In Search Console, open <strong>Indexing → Pages</strong>, click the "Blocked due to access forbidden (403)" row, and copy one of the example addresses.</li>
+        <li>Paste it into the search bar at the top (URL Inspection) and press Enter.</li>
+        <li>Click <strong>Test live URL</strong>. Google fetches the page now, from its own addresses.</li>
+        <li>Open <strong>View tested page → More info</strong>. It shows the status code Google got.</li>
+      </ol>
+      <p>If the live test now passes, the block was temporary or already fixed: click <strong>Request indexing</strong> and go back to the report to start validation. If it still says 403, carry on.</p>
+      <p>Then open the page yourself in a private browser window, logged out. If you also get "403 Forbidden" or "Access denied", the block hits everyone and it's a settings problem, not a bot problem. Jump to Step 3.</p>
+
+      <h2>Step 2: find the layer that said no</h2>
+      <p>The 403 page itself usually signs its name. Open the page in a private window, or look at what Google saw under <strong>View tested page → HTML</strong>, and look for:</p>
+      <ul>
+        <li><strong>Cloudflare</strong>: "Sorry, you have been blocked", a Ray ID at the bottom, or the response header <code>server: cloudflare</code>.</li>
+        <li><strong>Your host's firewall</strong>: a plain page with the host's name, or "Mod_Security" / "Not Acceptable".</li>
+        <li><strong>A WordPress security plugin</strong> (Wordfence, iThemes/Solid Security, All In One WP Security): a page naming the plugin, or "Your access to this site has been limited".</li>
+        <li><strong>The web server itself</strong>: a bare "403 Forbidden" with "nginx" or "Apache" under it. That's file permissions or a rule in the server's config.</li>
+      </ul>
+      <p>To see the headers yourself, run this in a terminal (Mac, Linux or Windows 10 and later; on Windows type <code>curl.exe</code> instead of <code>curl</code>). Change the address to yours:</p>
+      <pre><code>curl -sIL https://www.example.com/the-page/</code></pre>
+      <p>Look at the first line of each block for the code, and at <code>server:</code> for who answered. No terminal: any online "HTTP header checker" shows the same lines.</p>
+
+      <h2>Step 3: fix it at that layer</h2>
+      <h3>Cloudflare</h3>
+      <ol>
+        <li>In the dashboard, open your site, then <strong>Security → Events</strong>. Filter by the page address. Each blocked request shows which rule blocked it.</li>
+        <li>If the visitor was a verified Google crawler, Cloudflare labels it as a known bot. A custom rule that blocks "all bots", or blocks a country, or challenges every visitor, catches it anyway.</li>
+        <li>Edit that rule so it skips known bots: in the rule's expression, add <em>Known Bots</em> equals off, or add a separate skip rule above it for verified bots.</li>
+      </ol>
+      <p>Cloudflare's "Under Attack" mode and "Bot Fight Mode" are the usual suspects when a site suddenly gets this status after a scare. Turn them off and run the live test again.</p>
+      <h3>A WordPress security plugin</h3>
+      <ol>
+        <li>Open the plugin's log of blocked visitors and search for "Googlebot".</li>
+        <li>If you see blocks, find the setting that verifies crawlers. The name differs by plugin and version: look under its firewall or blocking options for crawlers or search engines, and make sure it checks real crawlers by address instead of blocking by name.</li>
+        <li>Remove any country block that covers the United States: most Googlebot visits come from US addresses.</li>
+      </ol>
+      <h3>Your host</h3>
+      <p>Shared hosts run their own firewall that you can't see. Send their support the page address, the time Google tried (URL Inspection shows the last crawl time), and ask them to check their firewall log for Googlebot. Ask them to allow Google's published crawler addresses rather than one IP.</p>
+      <h3>A password or a members-only area</h3>
+      <p>If the page is meant to be private (a client area, a staging copy, an account page), the 403 is correct. Google will stop asking about it over time. Stop it showing up in the report by removing it from your sitemap and from links on public pages. If the page should be public, remove the password or the "members only" setting.</p>
+      <h3>The web server</h3>
+      <p>A bare nginx or Apache 403 on everyone usually means the folder has no index page and directory listing is off, or the files can't be read. Ask whoever set up the server, or your host, to check file permissions on that folder.</p>
+
+      <h2>Step 4: tell Google it's fixed</h2>
+      <ol>
+        <li>Run <strong>Test live URL</strong> again on the example address. It should now show a 200.</li>
+        <li>Back in <strong>Indexing → Pages</strong>, open the 403 row and click <strong>Validate fix</strong>. Google rechecks the listed pages over the next days.</li>
+        <li>Check a few days later. Pages that pass move to "Indexed" or to another status with its own reason.</li>
+      </ol>
+
+      <h2>What I don't know</h2>
+      <p>My reading was 101 home pages of very large sites, from one server, on one day. It shows how firewalls treat a fake crawler. It doesn't show how often small business sites block the real one: I can't test that, because only Google can send a real Googlebot request. If your site answers 403 to Google and you can't find the rule, the firewall log at Step 3 is the place that knows.</p>
+      <p>Sources: Google's <a href="https://developers.google.com/search/docs/crawling-indexing/http-network-errors">HTTP status codes and Google Search</a>, <a href="https://developers.google.com/search/docs/crawling-indexing/verifying-googlebot">Verifying Googlebot and other Google crawlers</a>, and <a href="https://support.google.com/webmasters/answer/7440203">Page indexing report</a> help.</p>
