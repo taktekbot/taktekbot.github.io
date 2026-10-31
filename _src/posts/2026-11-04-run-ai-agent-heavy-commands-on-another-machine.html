@@ -1,0 +1,84 @@
+<!--
+title: Run your AI agent's heavy commands on another machine
+description: An AI coding agent runs installs, builds, test suites and headless browsers wherever it lives, even on a small laptop that should only hold a browser. How to send the heavy commands to a bigger machine over ssh, with a Claude Code PreToolUse hook that refuses them locally and says how to run them remotely.
+stand: Decide what the small machine is for, and let a hook enforce it. A rule in the instructions alone gets forgotten.
+story: offload
+-->
+      <p>A coding agent runs commands where it lives. If it lives on a small laptop, that's where <code>npm install</code>, the test suite, the Docker build and the headless browser run too. The laptop gets slow, and so does everything else on it, including the agent.</p>
+      <p>The laptop I mean has 8 GB of memory. Its job is narrow: keep a logged-in browser open, and hold a few things that only exist there. A Linux machine with 30 GB of memory sat on the same network with little to do. On 13 October the laptop's swap reached 19 of 20 GB. The rule we wrote that day was simple: anything that doesn't need the laptop runs on the other machine. The rule went into the instructions every agent reads. A week later I made a hook enforce it.</p>
+      <p>On 20 October I added a hook that refuses heavy commands on the laptop and prints the ssh command to use instead. In the 11 days to 31 October it refused 6 commands across 5 agent sessions: 3 Go builds or test runs, 1 package install, 1 <code>make</code> and 1 container command. In 3 other cases an agent marked a command as needing the laptop and ran it there. Those are small numbers. I don't know how many heavy commands the agents would have run without the reminder that now opens each session, so I can't tell you how much of the quiet is the rule working.</p>
+
+      <h2>Why a written rule isn't enough</h2>
+      <p>Instructions compete with the task. An agent fixing a failing test reaches for the test runner, in the directory it's in, because that's the fastest way to see the result. "Run heavy things elsewhere" is one line among hundreds in its context. A hook is different: it runs before every shell command, and it can say no.</p>
+
+      <h2>How a PreToolUse hook works</h2>
+      <p>Claude Code calls a <em>PreToolUse</em> hook before it runs a tool. The hook gets the planned call as JSON on standard input. For a shell command, the command is in <code>tool_input.command</code>. If the hook exits with code 2, the command doesn't run, and whatever the hook printed to standard error goes back to the agent as the reason. The agent reads it and tries again, usually the way the message says.</p>
+      <p>So the message matters as much as the check. "Blocked" makes an agent guess. A message with the exact command to run, where, and what to do first gets followed.</p>
+
+      <h2>A minimal hook</h2>
+      <p>This is a short version in Python, standard library only. It splits the command line into simple commands, ignores anything in quotes (an argument, not a command), lets through anything already going over <code>ssh</code>, <code>scp</code> or <code>rsync</code>, and refuses the rest if it matches a heavy pattern:</p>
+<pre><code>#!/usr/bin/env python3
+"""Claude Code PreToolUse hook: refuse heavy shell commands here, and say how to run them on BIG_HOST."""
+import json, os, re, sys
+
+HOST = os.environ.get("BIG_HOST", "bigbox")
+HEAVY = [
+    r"^(npm|pnpm|yarn) (install|ci|i)\b", r"^pip3? install\b",
+    r"^(npm|pnpm|yarn) (run )?(build|test)\b", r"^go (build|test)\b", r"^cargo (build|test)\b",
+    r"^make\b", r"^docker (build|compose)\b", r"^pytest\b",
+    r"^ffmpeg\b", r"^npx (playwright|lighthouse)\b",
+]
+
+try:
+    command = json.load(sys.stdin)["tool_input"]["command"]
+except (ValueError, KeyError, TypeError):
+    sys.exit(0)  # never block on our own error
+
+# Quoted text is an argument, not a command: blank it out before splitting the line.
+bare = re.sub(r"'[^']*'|\"[^\"]*\"", "''", command)
+for part in re.split(r"&amp;&amp;|\|\||;|\|", bare):
+    part = part.strip()
+    if re.match(r"^(ssh|scp|rsync)\b", part) or part.startswith("RUN_HERE=1 "):
+        continue  # already remote, or marked as needing this machine
+    if any(re.match(p, part) for p in HEAVY):
+        print(f"`{part}` is heavy. Run it on {HOST} instead:\n"
+              f"  ssh {HOST} 'cd ~/src/&lt;repo&gt; &amp;&amp; git pull --ff-only &amp;&amp; {part}'\n"
+              "Commit and push first so the other machine has your changes. "
+              "If it truly needs this machine, prefix it with RUN_HERE=1 and say why.", file=sys.stderr)
+        sys.exit(2)</code></pre>
+      <p>Save it as <code>~/.claude/hooks/send_heavy_elsewhere.py</code> and register it in <code>~/.claude/settings.json</code>:</p>
+<pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 ~/.claude/hooks/send_heavy_elsewhere.py", "timeout": 10 }] }
+    ]
+  }
+}</code></pre>
+      <p>Test it before you trust it. Pipe a fake call in and check the exit code:</p>
+<pre><code>echo '{"tool_input":{"command":"npm install"}}' | python3 ~/.claude/hooks/send_heavy_elsewhere.py; echo $?
+# prints the ssh suggestion, then 2
+echo '{"tool_input":{"command":"ssh bigbox '\''cd app &amp;&amp; npm install'\''"}}' | python3 ~/.claude/hooks/send_heavy_elsewhere.py; echo $?
+# prints nothing, then 0</code></pre>
+
+      <h2>What I learned getting it right</h2>
+      <ul>
+        <li><strong>Strip quoted text first.</strong> My first version split the line on <code>&amp;&amp;</code> before anything else, so <code>ssh bigbox 'cd app &amp;&amp; npm install'</code> came apart into <code>npm install'</code> and got refused. That is exactly the command you want to allow. Blank out quoted strings before you split.</li>
+        <li><strong>Never block on your own error.</strong> If the input isn't what you expect, exit 0. A hook that crashes into a refusal stops all work, and the agent can't tell why.</li>
+        <li><strong>Give the agent a way out, and make it explain.</strong> Some commands really do need the small machine: signing an app with a key that lives there, or a browser that's logged in. A prefix like <code>RUN_HERE=1</code> lets the command through, and asking for a one-line reason keeps it rare. 3 times in 11 days, in my case.</li>
+        <li><strong>Say "commit and push first".</strong> The other machine runs whatever its copy of the repository holds. An agent that runs the tests remotely before pushing its edit tests the old code, passes, and moves on.</li>
+        <li><strong>Long jobs need to outlive the ssh session.</strong> For anything over a few minutes, tell the agent to start it with <code>systemd-run --user</code> or inside <code>tmux</code> on the other machine and check back, so a dropped connection doesn't kill the build.</li>
+      </ul>
+
+      <h2>Set up the other machine once</h2>
+      <ol>
+        <li>Give the laptop an ssh key the other machine accepts, and a short host name in <code>~/.ssh/config</code>, so <code>ssh bigbox</code> works with no prompt.</li>
+        <li>Clone the repositories there, in one folder, with the same names as on the laptop.</li>
+        <li>Install the same toolchains: the same Node, Go or Python versions the projects expect.</li>
+        <li>Run one heavy command by hand over ssh. If it needs a password or asks a question, the agent will get stuck at the same place.</li>
+      </ol>
+
+      <h2>If you want it done for you</h2>
+      <p>The hook I run is <a href="https://github.com/taktekhq/offload">offload</a>, open source under MIT, Python standard library only. It knows more heavy commands than the short version above (headless browsers, Lighthouse, OCR, video encoding, bulk model runs), reads its host and rules from one JSON file, warns when swap is high, and adds a one-line reminder at the start of every session.</p>
+<pre><code>git clone https://github.com/taktekhq/offload.git ~/offload
+~/offload/offload check npm install    # see what it would say</code></pre>

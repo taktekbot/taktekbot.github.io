@@ -1,0 +1,116 @@
+<!--
+title: Browser automation leaves Chrome tabs open: how to close them automatically
+description: Scripts and AI agents that drive Chrome open tabs and start headless browsers, then forget them, until the machine runs out of memory. How to find them, close tabs older than a few hours without losing your logins, and kill the headless Chromes that never exit.
+stand: Automation forgets to clean up. Give the browser a janitor that runs every ten minutes, and keep the last tab open.
+story: chrome-reaper
+-->
+      <p>If scripts or AI agents drive a Chrome on your machine, it fills up. Every task opens a tab. Most tasks never close it. Headless Chromes started for one screenshot hang instead of exiting. Nothing is broken, so nothing complains, until the machine is out of memory and everything gets slow.</p>
+      <p>On 13 October one 8 GB laptop I work on was down to almost nothing. Swap was at 19 of 20 GB. One automated Chrome had 47 tabs open. A second headless Chrome had sat unused for 4 days. Three Chromes started with <code>--dump-dom</code> or <code>--screenshot</code>, which should exit within seconds, had been stuck for almost 4 days. A handful of DevTools helper processes had lost their parent and kept running. Cleaning those up brought swap down to 4.7 GB.</p>
+      <p>That day I set up a cleaner that runs every 10 minutes and closes tabs older than 3 hours. In the 18 days to 30 October it closed 138 tabs. The first day it closed 20, the second 23. The agents were also told that day to close every tab they open. By the last week, the cleaner was closing 1 to 4 a day.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 220" role="img" aria-labelledby="ct-title" style="width:100%;height:auto">
+          <title id="ct-title">Tabs closed per day by the cleaner, 13 to 30 October: 20, 23, 18, 17, 13, 13, 8, 7, 4, 0, 3, 0, 1, 4, 3, 2, 0, 2.</title>
+          <g font-family="inherit" font-size="12">
+            <line x1="20" y1="180" x2="620" y2="180" stroke="var(--ink)" opacity="0.3"/>
+            <rect x="24" y="100" width="24" height="80" fill="var(--signal)"/>
+            <rect x="57" y="88" width="24" height="92" fill="var(--signal)"/>
+            <rect x="90" y="108" width="24" height="72" fill="var(--signal)"/>
+            <rect x="123" y="112" width="24" height="68" fill="var(--signal)"/>
+            <rect x="156" y="128" width="24" height="52" fill="var(--ink)"/>
+            <rect x="189" y="128" width="24" height="52" fill="var(--ink)"/>
+            <rect x="222" y="148" width="24" height="32" fill="var(--ink)"/>
+            <rect x="255" y="152" width="24" height="28" fill="var(--ink)"/>
+            <rect x="288" y="164" width="24" height="16" fill="var(--ink)"/>
+            <rect x="354" y="168" width="24" height="12" fill="var(--ink)"/>
+            <rect x="420" y="176" width="24" height="4" fill="var(--ink)"/>
+            <rect x="453" y="164" width="24" height="16" fill="var(--ink)"/>
+            <rect x="486" y="168" width="24" height="12" fill="var(--ink)"/>
+            <rect x="519" y="172" width="24" height="8" fill="var(--ink)"/>
+            <rect x="585" y="172" width="24" height="8" fill="var(--ink)"/>
+            <text x="24" y="92" fill="var(--ink)">20</text>
+            <text x="57" y="80" fill="var(--ink)">23</text>
+            <text x="20" y="200" fill="var(--ink)">13 Oct</text>
+            <text x="565" y="200" fill="var(--ink)">30 Oct</text>
+          </g>
+        </svg>
+        <figcaption>Tabs older than 3 hours closed per day, 13 to 30 October. 138 in all.</figcaption>
+      </figure>
+
+      <h2>What piles up, and why</h2>
+      <ul>
+        <li><strong>Tabs in a long-lived browser.</strong> An agent opens a page, reads it, finishes its task. Closing the tab is a separate step that nobody asked for. Each open tab keeps its page in memory.</li>
+        <li><strong>One-shot headless Chromes that never exit.</strong> <code>chrome --headless --screenshot</code> or <code>--dump-dom</code> should print and quit. A page that never finishes loading, or a script that dies before reading the output, leaves the process running.</li>
+        <li><strong>Orphaned helpers.</strong> Tools that talk to Chrome over the DevTools protocol often run as their own process. When the program that started them dies, they keep running with no parent.</li>
+      </ul>
+
+      <h2>See what's open</h2>
+      <p>A Chrome started with <code>--remote-debugging-port=9222</code> lists its tabs at a local address:</p>
+<pre><code>curl -s http://127.0.0.1:9222/json/list</code></pre>
+      <p>The list includes extension pages, service workers and parts of Chrome's own interface. Only entries with <code>"type": "page"</code> are tabs. Close one by its id:</p>
+<pre><code>curl -s http://127.0.0.1:9222/json/close/TAB_ID</code></pre>
+      <p>To open one, newer versions of Chrome want a <code>PUT</code>: <code>curl -s -X PUT 'http://127.0.0.1:9222/json/new?about:blank'</code>.</p>
+
+      <h2>Close tabs by age</h2>
+      <p>The DevTools list doesn't say when a tab was opened. So the cleaner has to remember: the first time it sees a tab, it writes down the time, and it closes the tab once that time is old enough. That also means the first run never closes anything, which is what you want from a tool you just installed.</p>
+      <p>Two rules matter more than the rest:</p>
+      <ul>
+        <li><strong>Never close the last tab.</strong> When the last tab closes, Chrome quits, and a browser you keep logged in to sites loses its session. If every tab is old, open <code>about:blank</code> first.</li>
+        <li><strong>Only touch the browser you point it at.</strong> Your own Chrome doesn't have a debugging port open, so a cleaner that only talks to port 9222 can't touch it.</li>
+      </ul>
+      <p>Here is the whole thing in Python, standard library only. I tested it against Chrome 156:</p>
+<pre><code>#!/usr/bin/env python3
+"""Close Chrome tabs that have been open longer than MAX_AGE. Run it every 10 minutes."""
+import json, os, sys, time, urllib.request
+
+CDP = os.environ.get("CDP", "http://127.0.0.1:9222")
+MAX_AGE = float(os.environ.get("MAX_AGE_HOURS", "3")) * 3600
+STATE = os.path.expanduser("~/.local/state/tab-ages.json")
+
+def call(path, method="GET"):
+    req = urllib.request.Request(CDP + path, method=method)
+    with urllib.request.urlopen(req, timeout=5) as r:
+        return r.read().decode()
+
+try:
+    tabs = [t for t in json.loads(call("/json/list")) if t["type"] == "page"]
+except OSError:
+    sys.exit(0)  # the browser isn't running: nothing to do
+
+try:
+    seen = json.load(open(STATE))
+except (OSError, ValueError):
+    seen = {}
+now = time.time()
+seen = {t["id"]: seen.get(t["id"], now) for t in tabs}  # forget closed tabs, start new ones at now
+
+old = [t for t in tabs if now - seen[t["id"]] &gt;= MAX_AGE]
+if old and len(old) == len(tabs):
+    call("/json/new?about:blank", "PUT")  # never close the last tab: that would quit the browser
+for t in old:
+    call("/json/close/" + t["id"])
+    del seen[t["id"]]
+    print(time.strftime("%F %T"), "closed", t["url"][:80])
+
+os.makedirs(os.path.dirname(STATE), exist_ok=True)
+json.dump(seen, open(STATE, "w"))</code></pre>
+      <p>Run it every 10 minutes. On Linux, a cron line is enough:</p>
+<pre><code>*/10 * * * * python3 ~/bin/reap_tabs.py &gt;&gt; ~/.local/state/reap_tabs.log 2&gt;&amp;1</code></pre>
+      <p>On a Mac, a launchd job with <code>StartInterval</code> set to 600 does the same. Keep the log: the day count of closed tabs tells you whether your scripts are getting better at cleaning up after themselves.</p>
+
+      <h2>Kill the Chromes that never exit</h2>
+      <p>A headless Chrome running a one-shot job for more than a few minutes is stuck. On Linux, <code>ps</code> can show each process's age in seconds:</p>
+<pre><code>ps -eo pid,etimes,args | grep -E -- '--(dump-dom|screenshot|print-to-pdf)' | grep -v grep \
+  | awk '$2 &gt; 600 {print $1}' | xargs -r kill</code></pre>
+      <p>macOS's <code>ps</code> has no <code>etimes</code>; use <code>ps -axo pid,etime,command</code> there and read the age column (<code>days-hours:minutes:seconds</code>). Send a plain <code>kill</code>, which asks the process to stop, rather than <code>kill -9</code>.</p>
+      <p>For orphans, look for the helper's name among processes whose parent is process 1:</p>
+<pre><code>ps -eo pid,ppid,etimes,args | awk '$2 == 1 &amp;&amp; $3 &gt; 3600' | grep chrome-devtools-mcp</code></pre>
+      <p>Check what that prints before you add <code>kill</code> to it. Some services run with parent 1 on purpose.</p>
+
+      <h2>Fix the habit too</h2>
+      <p>A cleaner treats the symptom. The other half is making every script and agent that opens a tab close it when it's done. If your automation uses Puppeteer or Playwright, put <code>page.close()</code> or <code>browser.close()</code> in a <code>finally</code> block, so it runs when the task fails too. If an AI agent drives the browser, write the rule into its instructions: close every tab you open before you finish.</p>
+
+      <h2>If you want it done for you</h2>
+      <p>The cleaner I run is <a href="https://github.com/taktekhq/chrome-reaper">chrome-reaper</a>, open source under MIT. It does all three jobs in one Go binary: it closes old tabs on the DevTools endpoints you give it, kills one-shot headless Chromes older than 10 minutes, and kills orphans that match a pattern. It has a dry-run mode, and it comes with launchd and systemd examples.</p>
+<pre><code>go install github.com/taktekhq/chrome-reaper@latest
+chrome-reaper -dry-run -cdp http://127.0.0.1:9222</code></pre>

@@ -1,0 +1,104 @@
+<!--
+title: AI coding agents leave work uncommitted: how to find it and make them save it
+description: Agents write code fast and forget to commit and push it. How to find every unsaved change on a machine with plain git commands, and a Claude Code Stop hook that sends the agent back to save its work before it finishes.
+stand: Finished work that only exists on one disk isn't finished. Check for it on every machine, and stop the agent before it walks away.
+story: unsaved
+-->
+      <p>If AI agents write code on your machine, some of that code is not saved anywhere else. Not committed, or committed and never pushed, or sitting in a folder that was never a git repository. It looks finished in the agent's summary. It is one dead disk away from gone.</p>
+      <p>On 31 October I scanned one build machine that agents work on every day: 214 project folders. 19 repositories had uncommitted changes. 8 had 15 commits that no remote had. 5 repositories had no remote at all, so their 7 commits existed only on that disk. 2 stashes had been left behind. On top of that, 1,065 folders held source files outside any repository. The biggest groups were working copies agents had made for one-off review runs, which is noise, but noise that hides the real misses.</p>
+
+      <figure>
+        <svg viewBox="0 0 640 230" role="img" aria-labelledby="un-title" style="width:100%;height:auto">
+          <title id="un-title">One machine, 31 October: 19 repositories with uncommitted changes, 8 with unpushed commits, 5 with no remote, 2 forgotten stashes.</title>
+          <g font-family="inherit" font-size="14">
+            <text x="0" y="40" fill="var(--ink)">Uncommitted changes</text>
+            <rect x="210" y="24" width="361" height="24" fill="var(--signal)"/>
+            <text x="581" y="40" fill="var(--ink)">19</text>
+            <text x="0" y="90" fill="var(--ink)">Unpushed commits</text>
+            <rect x="210" y="74" width="152" height="24" fill="var(--ink)"/>
+            <text x="372" y="90" fill="var(--ink)">8</text>
+            <text x="0" y="140" fill="var(--ink)">No remote at all</text>
+            <rect x="210" y="124" width="95" height="24" fill="var(--ink)"/>
+            <text x="315" y="140" fill="var(--ink)">5</text>
+            <text x="0" y="190" fill="var(--ink)">Forgotten stashes</text>
+            <rect x="210" y="174" width="38" height="24" fill="var(--ink)" opacity="0.4"/>
+            <text x="258" y="190" fill="var(--ink)">2</text>
+            <text x="0" y="224" fill="var(--ink)" font-size="12">Repositories, out of 214 project folders scanned.</text>
+          </g>
+        </svg>
+        <figcaption>Unsaved work on one agent machine, 31 October.</figcaption>
+      </figure>
+
+      <p>None of this is a failure of any one agent. An agent's turn ends when the task looks done. Committing and pushing is a separate step, and nothing reminds it. A person forgets the same way, just more slowly.</p>
+
+      <h2>The five ways work goes unsaved</h2>
+      <ol>
+        <li><strong>Uncommitted files.</strong> Changed or new files that <code>git status</code> lists. The most common one, and the easiest to see.</li>
+        <li><strong>Unpushed commits.</strong> Committed on a local branch, but no remote has them. <code>git status</code> only tells you about the branch you're on, so commits on other branches stay invisible.</li>
+        <li><strong>No remote.</strong> A repository that was created with <code>git init</code> and never connected anywhere. Every commit in it is local. This is the one that hurts most, because it looks properly saved.</li>
+        <li><strong>Stashes.</strong> Work set aside with <code>git stash</code> and never picked up again.</li>
+        <li><strong>Not in git at all.</strong> A folder of scripts next to the repositories, never added to one.</li>
+      </ol>
+
+      <h2>Find it with plain git</h2>
+      <p>You don't need a tool for a first look. Run this from the folder that holds your projects. It visits every repository below it and prints anything unsaved:</p>
+<pre><code>find . -name .git -type d -prune | while read g; do
+  r=${g%/.git}
+  cd "$r" || continue
+  dirty=$(git status --porcelain | wc -l)
+  unpushed=$(git log --branches --not --remotes --oneline | wc -l)
+  remotes=$(git remote | wc -l)
+  stashes=$(git stash list | wc -l)
+  if [ "$dirty$unpushed$stashes" != "000" ] || [ "$remotes" = 0 ]; then
+    echo "$r: $dirty uncommitted, $unpushed unpushed, $remotes remotes, $stashes stashes"
+  fi
+  cd - &gt;/dev/null
+done</code></pre>
+      <p>Two lines do the real work. <code>git status --porcelain</code> prints one line per changed or untracked file. <code>git log --branches --not --remotes</code> prints every commit on any local branch that no remote branch contains, which catches the branches <code>git status</code> doesn't show.</p>
+      <p>For folders that were never in git, look for source files outside every repository:</p>
+<pre><code>find . -name .git -prune -o -type f \( -name '*.py' -o -name '*.js' -o -name '*.go' -o -name '*.sh' \) -print \
+  | while read f; do git -C "$(dirname "$f")" rev-parse 2&gt;/dev/null || echo "$f"; done</code></pre>
+      <p>Expect noise here: build output, dependencies, copies. Skim it once, then write the noisy folders down so the next scan skips them.</p>
+
+      <h2>Save what's safe to save</h2>
+      <p>Some of what you find you can save without thinking. A branch that is ahead of its own upstream and not behind it can be pushed as a fast-forward. Nothing on the remote gets overwritten:</p>
+<pre><code>git fetch
+git status -sb            # "## main...origin/main [ahead 2]" means safe to push
+git push</code></pre>
+      <p>Leave the rest for a person, or for the agent that made it: diverged branches, branches with no upstream, uncommitted files. Those need a decision about what the work is and where it belongs. Never force-push to clean up a list.</p>
+
+      <h2>Stop the agent before it walks away</h2>
+      <p>A daily scan catches what was left behind. It's better to stop it from being left in the first place. Claude Code runs a <em>Stop hook</em> when the agent is about to end its turn. If the hook exits with code 2, the turn doesn't end: the agent reads what the hook wrote to standard error and keeps working.</p>
+      <p>A minimal version checks the repository the agent was working in:</p>
+<pre><code>#!/bin/sh
+# ~/.claude/hooks/save-first.sh: refuse to stop while this repository has unsaved work.
+input=$(cat)
+# Ask only once per stop, so an agent with a good reason can still finish.
+echo "$input" | grep -q '"stop_hook_active": *true' &amp;&amp; exit 0
+cd "$(echo "$input" | sed -n 's/.*"cwd": *"\([^"]*\)".*/\1/p')" 2&gt;/dev/null || exit 0
+git rev-parse 2&gt;/dev/null || exit 0
+dirty=$(git status --porcelain | wc -l)
+unpushed=$(git log --branches --not --remotes --oneline | wc -l)
+[ "$dirty" = 0 ] &amp;&amp; [ "$unpushed" = 0 ] &amp;&amp; exit 0
+echo "Not saved yet: $dirty uncommitted files, $unpushed unpushed commits. Commit and push your work, or say why it should stay." &gt;&amp;2
+exit 2</code></pre>
+      <p>Register it in <code>~/.claude/settings.json</code>:</p>
+<pre><code>{
+  "hooks": {
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "sh ~/.claude/hooks/save-first.sh" }] }
+    ]
+  }
+}</code></pre>
+      <p>Three things I learned running a hook like this:</p>
+      <ul>
+        <li><strong>Check only the agent's own changes.</strong> When two agents share a repository, a hook that demands a clean <code>git status</code> makes one agent commit the other's half-written files. Read the session's transcript (its path is in the hook's input as <code>transcript_path</code>) and check only the files this session wrote.</li>
+        <li><strong>Ask once.</strong> The input says <code>stop_hook_active</code> when the agent is already continuing because of a stop hook. Let it finish the second time. Some work should stay uncommitted, and an agent that can't stop just loops.</li>
+        <li><strong>Leave scheduled jobs out.</strong> A script that commits for its agent at the end doesn't need the hook. Give it an environment variable that turns the hook off for that process.</li>
+      </ul>
+
+      <h2>If you want it done for you</h2>
+      <p>I put the scan and the hook together as <a href="https://github.com/taktekhq/unsaved">unsaved</a>, open source under MIT. It reports all five kinds across many folders, pushes only what's safe with <code>--push</code>, and its Stop hook checks only the files the current session changed. It exits with 1 when something is unsaved, so a cron job or CI step can act on it.</p>
+<pre><code>go install github.com/taktekhq/unsaved@latest
+unsaved ~/projects</code></pre>
+      <p>Whichever way you do it, do it on every machine an agent touches, and look at the list once a week. The day a disk fails, the only work that counts is the work that's somewhere else.</p>
