@@ -5,8 +5,110 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-10-30T00:00:00Z</updated>
+  <updated>2026-10-31T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Not found (404)&quot; in Search Console: what it means, and which ones to fix</title>
+    <link href="https://taktekbot.com/blog/not-found-404-search-console/"/>
+    <id>https://taktekbot.com/blog/not-found-404-search-console/</id>
+    <updated>2026-10-31T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Google asked for a page and your server said it doesn&#x27;t exist. Most of these need no fix at all. How to sort the list into the few that do, find where Google got each address, and check the fix.</summary>
+    <content type="html">&lt;p&gt;&quot;Not found (404)&quot; is a Search Console status in the Page indexing report. In plain words: Google asked your server for an address, and the server answered with the code &lt;code&gt;404 Not Found&lt;/code&gt;, meaning &quot;there is no page here&quot;. Google doesn&#x27;t index it. If the page was in Google before, it drops out.&lt;/p&gt;
+      &lt;p&gt;On 30 October I asked 101 of the most visited domains (the public Tranco top list) for an address that doesn&#x27;t exist on any of them: &lt;code&gt;/this-page-does-not-exist-tk7q2&lt;/code&gt;. 69 answered. 38 of those said 404, plainly, among them google.com, github.com and x.com. 21 said &lt;code&gt;200 OK&lt;/code&gt; instead, the code for &quot;here is your page&quot;, for a page that isn&#x27;t there.&lt;/p&gt;
+      &lt;p&gt;The 38 are doing the right thing. A 404 isn&#x27;t a fault on your site. It&#x27;s the correct answer to a question about a page that doesn&#x27;t exist. Most rows in this report need no work. The job is to find the few that do.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 200&quot; role=&quot;img&quot; aria-labelledby=&quot;nf-title&quot; style=&quot;width:100%;height:auto&quot;&gt;
+          &lt;title id=&quot;nf-title&quot;&gt;69 of 101 top domains answered a request for a made-up address on 30 October: 38 with 404, 21 with 200, 10 with another error code.&lt;/title&gt;
+          &lt;g font-family=&quot;inherit&quot; font-size=&quot;14&quot;&gt;
+            &lt;text x=&quot;0&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;404 Not Found&lt;/text&gt;
+            &lt;rect x=&quot;170&quot; y=&quot;24&quot; width=&quot;380&quot; height=&quot;24&quot; fill=&quot;var(--signal)&quot;/&gt;
+            &lt;text x=&quot;560&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;38&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;90&quot; fill=&quot;var(--ink)&quot;&gt;200 OK&lt;/text&gt;
+            &lt;rect x=&quot;170&quot; y=&quot;74&quot; width=&quot;210&quot; height=&quot;24&quot; fill=&quot;var(--ink)&quot;/&gt;
+            &lt;text x=&quot;390&quot; y=&quot;90&quot; fill=&quot;var(--ink)&quot;&gt;21&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;140&quot; fill=&quot;var(--ink)&quot;&gt;400, 403, 503, 417&lt;/text&gt;
+            &lt;rect x=&quot;170&quot; y=&quot;124&quot; width=&quot;100&quot; height=&quot;24&quot; fill=&quot;var(--ink)&quot; opacity=&quot;0.4&quot;/&gt;
+            &lt;text x=&quot;280&quot; y=&quot;140&quot; fill=&quot;var(--ink)&quot;&gt;10&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;186&quot; fill=&quot;var(--ink)&quot; font-size=&quot;12&quot;&gt;Final answer after redirects. 32 more gave no answer at all.&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;A made-up address on 101 top domains, 30 October.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Not found (404).&lt;/strong&gt; Your server said the page doesn&#x27;t exist. Google&#x27;s HTTP status page: &quot;Newly encountered 404 pages aren&#x27;t processed&quot;, and a page that was indexed is removed from the index.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Why it&#x27;s under &quot;not indexed&quot;.&lt;/strong&gt; The report lists every address Google knows about and couldn&#x27;t index. Old pages, typos in other people&#x27;s links and addresses you deleted on purpose all land here.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Does it hurt the rest of my site?&lt;/strong&gt; Google&#x27;s same page says 4xx codes, except 429, have no effect on crawl rate. A 404 on one address doesn&#x27;t count against your other pages.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;What the 21 that said &quot;200&quot; did instead&lt;/h2&gt;
+      &lt;p&gt;The sites that didn&#x27;t answer 404 show the usual alternatives. Each one is something you might be tempted to do on your own site.&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;11 redirected to the home page or a product page.&lt;/strong&gt; azure.com, t.me, nginx.com and others. A visitor who wanted a specific page lands somewhere that doesn&#x27;t mention it.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;4 showed a page on the made-up address itself&lt;/strong&gt;, with a 200 code: linkedin.com, instagram.com, pinterest.com, spotify.com.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;3 redirected to a sign-in page&lt;/strong&gt;: office.com, mail.ru, dzen.ru.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;2 redirected to an error page that answers 200&lt;/strong&gt;: netflix.com went to &lt;code&gt;/NotFound&lt;/code&gt;, tiktok.com to &lt;code&gt;/404&lt;/code&gt;. The page says &quot;not found&quot;, the code says &quot;found&quot;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;1 turned the address into something else&lt;/strong&gt;: youtu.be treated the made-up path as a video ID.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Big sites have their own reasons, often sign-in walls and apps that build pages in the browser. On a small business site, these patterns usually get a different status in Search Console: &lt;a href=&quot;/blog/soft-404-search-console/&quot;&gt;Soft 404&lt;/a&gt;, where Google sees a &quot;not found&quot; page dressed up as a real one. That post covers how to test your site&#x27;s missing-page answer in two minutes and fix it. Here, I&#x27;ll assume your site already answers 404, and the question is which 404s matter.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: open the list&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, open &lt;strong&gt;Indexing&lt;/strong&gt;, then &lt;strong&gt;Pages&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Under &quot;Why pages aren&#x27;t indexed&quot;, click the &lt;strong&gt;Not found (404)&lt;/strong&gt; row.&lt;/li&gt;
+        &lt;li&gt;Read the example addresses. Use &lt;strong&gt;Export&lt;/strong&gt; at the top right if there are more than a screen&#x27;s worth.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Google&#x27;s report help says the list is limited to 1,000 examples and isn&#x27;t guaranteed to show every address. On a site that once had more pages, that&#x27;s still enough to see the pattern.&lt;/p&gt;
+
+      &lt;h2&gt;Step 2: sort each address into one of four groups&lt;/h2&gt;
+      &lt;p&gt;Ask one question per address: should a visitor who types this find something?&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;It never existed.&lt;/strong&gt; A typo in someone&#x27;s link, a half-copied address, junk a bot made up, an old test page. Leave it. 404 is the right answer.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;You removed it on purpose&lt;/strong&gt;, and nothing replaces it. A sold-out product, a past event, a page you merged away with no equivalent. Leave it. &lt;code&gt;410 Gone&lt;/code&gt; says &quot;removed for good&quot; to people reading your logs, but Google&#x27;s status page says all 4xx codes except 429 are treated the same, so 404 is fine. &lt;a href=&quot;/blog/find-and-remove-old-pages-from-google/&quot;&gt;How to find and remove old pages from Google&lt;/a&gt; covers hiding one sooner.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It moved.&lt;/strong&gt; The same content lives at a new address: a new product link, a renamed blog post, a whole site moved to a new domain. Fix it with a 301 redirect from the old address to the new one. Only to the real replacement, never to the home page as a catch-all.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;It should work and doesn&#x27;t.&lt;/strong&gt; A page you thought was live: a broken link in your menu, a page set to draft, a plugin that changed your address format. Fix the page, so it answers 200 again.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Only groups 3 and 4 need work. On most small sites that&#x27;s a handful of addresses out of the whole list.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: find where Google got the address&lt;/h2&gt;
+      &lt;p&gt;For an address you didn&#x27;t expect, the next question is who links to it. If it&#x27;s your own site, fix the link: otherwise Google keeps finding it, and so do your visitors.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In the 404 list, click an address, then &lt;strong&gt;Inspect URL&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Open &lt;strong&gt;Page indexing&lt;/strong&gt; and look under &lt;strong&gt;Discovery&lt;/strong&gt;. &quot;Sitemaps&quot; lists any sitemap that names the address. &quot;Referring page&quot; shows a page that links to it, when Google has one to show.&lt;/li&gt;
+        &lt;li&gt;If the sitemap lists it, remove it from the sitemap: a sitemap should only hold pages that answer 200. If one of your pages links to it, change that link.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;If the referring page is someone else&#x27;s site and the address moved (group 3), the redirect from Step 2 catches those visitors. You don&#x27;t have to ask the other site to change anything.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: check what the address answers now&lt;/h2&gt;
+      &lt;p&gt;After a fix, check the code yourself before you tell Google. On a Mac or Linux, in Terminal:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -s -L -o /dev/null -w &quot;%{http_code} %{url_effective}\n&quot; https://YOUR-SITE/old-address&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;On Windows, in PowerShell 7:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;(Invoke-WebRequest -Uri https://YOUR-SITE/old-address -SkipHttpErrorCheck).StatusCode&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Without a terminal: open the address in Chrome, press F12 (Cmd+Option+I on a Mac), choose the &lt;strong&gt;Network&lt;/strong&gt; tab, reload, and read the Status column for the first row.&lt;/p&gt;
+      &lt;p&gt;The &lt;code&gt;-L&lt;/code&gt; in the curl line follows redirects, so you see where a visitor really ends up. For a moved page (group 3), you want &lt;code&gt;200&lt;/code&gt; and the new address. For a fixed page (group 4), &lt;code&gt;200&lt;/code&gt; and the same address. My first pass on 30 October used a 10-second limit and stopped after the first hop on 39 sites, which made them look like plain redirects. If a check gives &lt;code&gt;000&lt;/code&gt; or a bare &lt;code&gt;301&lt;/code&gt;, run it again with &lt;code&gt;-sS&lt;/code&gt; instead of &lt;code&gt;-s&lt;/code&gt; to see the error.&lt;/p&gt;
+      &lt;p&gt;Then, in Search Console, use &lt;strong&gt;Inspect URL&lt;/strong&gt; and &lt;strong&gt;Test live URL&lt;/strong&gt; on the address. Google&#x27;s own fetch is the answer that counts.&lt;/p&gt;
+
+      &lt;h2&gt;Step 5: tell Google, only about what you fixed&lt;/h2&gt;
+      &lt;p&gt;For one or two fixed pages, &lt;strong&gt;Request indexing&lt;/strong&gt; in URL Inspection is enough.&lt;/p&gt;
+      &lt;p&gt;The report&#x27;s &lt;strong&gt;Validate fix&lt;/strong&gt; button rechecks every example in the row. It stops as failed as soon as it finds one address still answering 404. If the row mixes your fixes with pages you removed on purpose (groups 1 and 2), validation will fail, and that&#x27;s fine. You don&#x27;t need a green tick on this row. A 404 row that only holds pages that should be gone is a healthy row.&lt;/p&gt;
+
+      &lt;h2&gt;Mistakes to skip&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Redirecting every 404 to the home page.&lt;/strong&gt; 11 of the top sites in my test did something like it. On your site it turns honest 404s into soft 404s and sends visitors to a page that doesn&#x27;t have what they wanted.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Blocking the old addresses in robots.txt.&lt;/strong&gt; Google then can&#x27;t fetch them, so it never sees the 404, and a blocked address can still show in results without a description. Let Google see the 404.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Treating the count as a score.&lt;/strong&gt; A site that removed 300 old products will have 300 rows here, correctly. The number going up after a cleanup means Google noticed the cleanup.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A custom &quot;not found&quot; page that answers 200.&lt;/strong&gt; A friendly page with a search box is good. It must still send the 404 code. netflix.com and tiktok.com in my test send visitors to a not-found page with a 200 code.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;What I don&#x27;t know&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;My test asked as a Chrome browser from one address, not as Google. Some of those 21 sites may answer Googlebot differently. My &lt;a href=&quot;/blog/blocked-due-to-access-forbidden-403/&quot;&gt;403 reading&lt;/a&gt; the same day showed how differently big sites treat different visitors.&lt;/li&gt;
+        &lt;li&gt;32 of the 101 domains gave no answer. Most are infrastructure names (content delivery and DNS) with no web page on them, so they say nothing about how sites handle missing pages.&lt;/li&gt;
+        &lt;li&gt;Top domains aren&#x27;t small business sites. The patterns are the same ones you&#x27;ll meet, but the shares on your kind of site could be very different.&lt;/li&gt;
+      &lt;/ul&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Blocked due to access forbidden (403)&quot; in Search Console: what it means, and how to fix it</title>
     <link href="https://taktekbot.com/blog/blocked-due-to-access-forbidden-403/"/>
