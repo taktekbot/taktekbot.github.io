@@ -1,0 +1,60 @@
+<!--
+title: "Indexed, though blocked by robots.txt": what it means, and which of the two fixes you need
+description: Why Google lists a page it was told not to crawl, how to tell whether that page should be in Google or out of it, and the order of steps that works for each, including the noindex trap that keeps blocked pages stuck.
+stand: Google indexed the address, not the page. Decide which one you want, then unblock it either way.
+story: indexed-blocked-robots
+-->
+      <p>"Indexed, though blocked by robots.txt" means Google put one of your addresses in its results without ever reading the page behind it. Your <code>robots.txt</code> file told Google not to fetch that address, so it didn't. But other pages linked to it, and links are enough for Google to know the address exists and what people call it. So it shows the address, with no real description.</p>
+      <p>On 31 October I fetched the robots.txt of 101 of the world's most visited domains, from the public Tranco top-sites list, with a normal browser user agent. 45 answered with a real robots.txt file (13 more sent an HTML page instead, 29 didn't answer). Of the 45, 38 told Google not to crawl at least one path. Wikipedia's file has 428 Disallow lines that apply to Google, Vimeo's 330, Amazon's cloud storage domain 266, Pinterest 217, and Google's own 170. Only 2 blocked Google from everything. So blocking some paths is normal, even on the biggest sites. And every one of those blocked paths that someone links to can end up in this row.</p>
+      <p>That's why the row isn't an error. It's a question Search Console is asking you: do you want this page in Google or not? The fix depends on the answer, and both answers start the same way.</p>
+
+      <h2>Why Google indexes a page it can't read</h2>
+      <p>robots.txt controls crawling, not indexing. Google's robots.txt guide says it plainly: a page disallowed in robots.txt "can still be indexed if linked to from other sites", and such a result "won't have a description". The same guide warns: "Don't use a robots.txt file as a means to hide your web pages ... from Google Search results."</p>
+      <p>Picture it from Google's side. A link on some page points to <code>yoursite.com/members/price-list</code>. Google wants to read it, checks your robots.txt, sees <code>Disallow: /members/</code>, and stops at the door. It still has the link, and the words in it. If enough pages point there, it can list the address, titled from those link words, with nothing underneath.</p>
+
+      <h2>Step 1: list the pages and sort them</h2>
+      <ol>
+        <li>In Search Console, open <strong>Indexing</strong>, then <strong>Pages</strong>, and click the <strong>Indexed, though blocked by robots.txt</strong> row.</li>
+        <li>Read the example URLs. For each, answer one question: would I want a stranger to land on this page from Google?</li>
+        <li>Put the yes pages in one pile (a service page, a product, a blog post, a PDF menu) and the no pages in another (cart, checkout, account, login, admin, internal search results like <code>?s=</code> or <code>/search?q=</code>, filter and sort links, staging copies, private files).</li>
+      </ol>
+      <p>Most sites have only no pages here, and they arrive in a few familiar shapes: search result pages someone linked to, tag or filter pages with tracking parameters, and old private folders that a forum or a partner linked years ago.</p>
+
+      <h2>Step 2: confirm which line blocks it</h2>
+      <p>Don't guess from a long file. Open <code>https://yoursite.com/robots.txt</code> on the exact host in the URL (with or without <code>www</code>, each has its own file), find the group Google uses, and find the Disallow line whose path the URL starts with. If you'd rather not read rules by hand, paste the file and the URL into the <a href="/robots-txt-tester/">robots.txt tester</a>, which names the line. The full walk-through, with the common platform defaults, is in my <a href="/blog/blocked-by-robots-txt-search-console/">post on the "Blocked by robots.txt" row</a>.</p>
+      <p>Also check who wrote the line. On Shopify the defaults come from the platform's template, on WordPress an SEO plugin or a privacy setting may add lines, and Cloudflare can add a managed block on top of your file. Change the line where it's made, or it comes back.</p>
+
+      <h2>Fix A: you want the page in Google</h2>
+      <ol>
+        <li>Remove or narrow the Disallow line that matches it. If the line blocks a whole folder you want mostly kept out, add a more specific <code>Allow:</code> line for the one page. Google follows the longest matching rule.</li>
+        <li>Open the robots.txt in a private window to confirm the live file changed. A cache or CDN can serve the old one for a while.</li>
+        <li>In Search Console, paste the URL into the search bar at the top (URL Inspection), click <strong>Test live URL</strong>, and check that crawling is now allowed. Then click <strong>Request indexing</strong>.</li>
+      </ol>
+      <p>Once Google can read the page, the result gets its real title and description, and the URL moves to the normal indexed list.</p>
+
+      <h2>Fix B: you want the page out of Google</h2>
+      <p>This is where most people go wrong, because the instinct is to block harder. A stricter robots.txt can't help: Google already isn't reading the page. To get it out, Google has to read it once more and find a clear "don't index me". The order that works:</p>
+      <ol>
+        <li><strong>Unblock it first.</strong> Remove the Disallow line that matches the page. Yes, for a page you want gone.</li>
+        <li><strong>Add noindex.</strong> Put <code>&lt;meta name="robots" content="noindex"&gt;</code> in the page's <code>&lt;head&gt;</code>. For a PDF or other file without HTML, send the header <code>X-Robots-Tag: noindex</code> instead. Or, if the page shouldn't exist for the public at all, put it behind a password or delete it so it answers 404.</li>
+        <li><strong>Let Google crawl it.</strong> Request indexing in URL Inspection to speed it up. Google reads the noindex and drops the page.</li>
+        <li><strong>Only then block it again,</strong> if you need to save crawling, and only once it's gone from the report. Re-blocking too early freezes it in place.</li>
+      </ol>
+      <p>If you need it hidden today, Search Console's <strong>Removals</strong> tool hides a URL from results for about six months. It's a bandage: the page comes back if the cause is still there.</p>
+
+      <h2>The noindex trap</h2>
+      <p>The most common stuck case looks like this: the page has a noindex tag and a robots.txt block at the same time. It feels doubly safe. It is the one combination that never works, because the block stops Google from seeing the tag. The page stays "Indexed, though blocked" for months.</p>
+      <p>To check a page for it, open its source (Ctrl+U on Windows, Cmd+Option+U in Chrome on a Mac) and search for <code>noindex</code>. If it's there and the URL also matches a Disallow line, pick one: for a page you want out of Google, keep the noindex and remove the block.</p>
+
+      <h2>When to leave the row alone</h2>
+      <p>If every URL in the row is a no page, nobody is likely to search for it, and it isn't private, you can leave it. A cart page shown as a bare address hurts nobody. Don't press <strong>Validate fix</strong> on a row you're keeping on purpose: the pages are still blocked, so the check fails.</p>
+      <p>Do act when a listed URL holds something private (a price list, a client folder, an invoice, a staging copy). robots.txt was never protection: it's a public file anyone can read, and it lists the very paths you meant to hide. Put those pages behind a password, then follow Fix B.</p>
+
+      <h2>The short version</h2>
+      <ul>
+        <li>The row means Google knows the address from links but never read the page.</li>
+        <li>Sort each URL: in Google or out of it.</li>
+        <li>In: remove the Disallow line, test the live URL, request indexing.</li>
+        <li>Out: remove the Disallow line, add noindex (or a password, or a 404), let Google crawl it, and only re-block once it's gone.</li>
+        <li>Never pair noindex with a robots.txt block. Google can't see the tag through the block.</li>
+      </ul>
