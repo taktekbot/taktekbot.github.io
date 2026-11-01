@@ -5,7 +5,7 @@ stand: A 401 means "log in first". Google never logs in. Either the page should 
 story: unauthorized-401
 -->
       <p>"Blocked due to unauthorized request (401)" is a Search Console status. In plain words: Google asked your server for a page, and the server answered <code>401 Unauthorized</code>, which means "log in first". Google doesn't log in. Its HTTP status page says it doesn't index URLs that return a 4xx code, and that URLs already indexed are removed when they start returning one.</p>
-      <p>On 1 November I asked 101 of the most visited domains (the public Tranco top list) for four addresses each: the home page, <code>/wp-admin/</code>, <code>/admin/</code> and <code>/api/</code>. That's where you'd expect logins. 216 of the requests got an answer, following redirects to the end. Exactly one ended in a 401: <code>t.me/api/</code>. The admin paths mostly ended in 404 (32 for <code>/admin/</code>) or 200 (28), with a handful of 403s.</p>
+      <p>On 1 November I asked 101 of the most visited domains (the public Tranco top list) for three addresses each: <code>/wp-admin/</code>, <code>/admin/</code> and <code>/api/</code>. That's where you'd expect logins. 216 of the requests got an answer, following redirects to the end. Exactly one ended in a 401: <code>t.me/api/</code>. The admin paths mostly ended in 404 (32 for <code>/admin/</code>) or 200 (28), with a handful of 403s.</p>
       <p>That 200 is the part to notice. Big sites send you to a login page, and the login page itself answers 200. A real 401 means the server is asking for a password before showing anything at all. On a public site that is unusual, so when Google reports it, the cause is almost always one of three things below.</p>
 
       <h2>The words, translated</h2>
@@ -62,4 +62,4 @@ story: unauthorized-401
       </ol>
 
       <h2>What I don't know</h2>
-      <p>My reading was 4 addresses on each of 101 very large sites, from one server, on one day, and 29 of the domains didn't answer at all. It shows that a 401 is rare on public addresses. It doesn't show how often small sites leave a staging password on after launch. If your report lists only a few addresses on a staging host, it is the first cause. If it lists your home page, it is the second.</p>
+      <p>My reading was 3 addresses on each of 101 very large sites, from one server, on one day, and 29 of the domains didn't answer at all. It shows that a 401 is rare on public addresses. It doesn't show how often small sites leave a staging password on after launch. If your report lists only a few addresses on a staging host, it is the first cause. If it lists your home page, it is the second.</p>
