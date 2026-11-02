@@ -5,8 +5,113 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-11-01T00:00:00Z</updated>
+  <updated>2026-11-02T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>AI coding agents leave work uncommitted: how to find it and make them save it</title>
+    <link href="https://taktekbot.com/blog/ai-agents-leave-work-uncommitted/"/>
+    <id>https://taktekbot.com/blog/ai-agents-leave-work-uncommitted/</id>
+    <updated>2026-11-02T00:00:00Z</updated>
+    <summary>Agents write code fast and forget to commit and push it. How to find every unsaved change on a machine with plain git commands, and a Claude Code Stop hook that sends the agent back to save its work before it finishes.</summary>
+    <content type="html">&lt;p&gt;If AI agents write code on your machine, some of that code is not saved anywhere else. Not committed, or committed and never pushed, or sitting in a folder that was never a git repository. It looks finished in the agent&#x27;s summary. It is one dead disk away from gone.&lt;/p&gt;
+      &lt;p&gt;On 31 October I scanned one build machine that agents work on every day: 214 project folders. 19 repositories had uncommitted changes. 8 had 15 commits that no remote had. 5 repositories had no remote at all, so their 7 commits existed only on that disk. 2 stashes had been left behind. On top of that, 1,065 folders held source files outside any repository. The biggest groups were working copies agents had made for one-off review runs, which is noise, but noise that hides the real misses.&lt;/p&gt;
+
+      &lt;figure&gt;
+        &lt;svg viewBox=&quot;0 0 640 230&quot; role=&quot;img&quot; aria-labelledby=&quot;un-title&quot; style=&quot;width:100%;height:auto&quot;&gt;
+          &lt;title id=&quot;un-title&quot;&gt;One machine, 31 October: 19 repositories with uncommitted changes, 8 with unpushed commits, 5 with no remote, 2 forgotten stashes.&lt;/title&gt;
+          &lt;g font-family=&quot;inherit&quot; font-size=&quot;14&quot;&gt;
+            &lt;text x=&quot;0&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;Uncommitted changes&lt;/text&gt;
+            &lt;rect x=&quot;210&quot; y=&quot;24&quot; width=&quot;361&quot; height=&quot;24&quot; fill=&quot;var(--signal)&quot;/&gt;
+            &lt;text x=&quot;581&quot; y=&quot;40&quot; fill=&quot;var(--ink)&quot;&gt;19&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;90&quot; fill=&quot;var(--ink)&quot;&gt;Unpushed commits&lt;/text&gt;
+            &lt;rect x=&quot;210&quot; y=&quot;74&quot; width=&quot;152&quot; height=&quot;24&quot; fill=&quot;var(--ink)&quot;/&gt;
+            &lt;text x=&quot;372&quot; y=&quot;90&quot; fill=&quot;var(--ink)&quot;&gt;8&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;140&quot; fill=&quot;var(--ink)&quot;&gt;No remote at all&lt;/text&gt;
+            &lt;rect x=&quot;210&quot; y=&quot;124&quot; width=&quot;95&quot; height=&quot;24&quot; fill=&quot;var(--ink)&quot;/&gt;
+            &lt;text x=&quot;315&quot; y=&quot;140&quot; fill=&quot;var(--ink)&quot;&gt;5&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;190&quot; fill=&quot;var(--ink)&quot;&gt;Forgotten stashes&lt;/text&gt;
+            &lt;rect x=&quot;210&quot; y=&quot;174&quot; width=&quot;38&quot; height=&quot;24&quot; fill=&quot;var(--ink)&quot; opacity=&quot;0.4&quot;/&gt;
+            &lt;text x=&quot;258&quot; y=&quot;190&quot; fill=&quot;var(--ink)&quot;&gt;2&lt;/text&gt;
+            &lt;text x=&quot;0&quot; y=&quot;224&quot; fill=&quot;var(--ink)&quot; font-size=&quot;12&quot;&gt;Repositories, out of 214 project folders scanned.&lt;/text&gt;
+          &lt;/g&gt;
+        &lt;/svg&gt;
+        &lt;figcaption&gt;Unsaved work on one agent machine, 31 October.&lt;/figcaption&gt;
+      &lt;/figure&gt;
+
+      &lt;p&gt;None of this is a failure of any one agent. An agent&#x27;s turn ends when the task looks done. Committing and pushing is a separate step, and nothing reminds it. A person forgets the same way, just more slowly.&lt;/p&gt;
+
+      &lt;h2&gt;The five ways work goes unsaved&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;Uncommitted files.&lt;/strong&gt; Changed or new files that &lt;code&gt;git status&lt;/code&gt; lists. The most common one, and the easiest to see.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Unpushed commits.&lt;/strong&gt; Committed on a local branch, but no remote has them. &lt;code&gt;git status&lt;/code&gt; only tells you about the branch you&#x27;re on, so commits on other branches stay invisible.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;No remote.&lt;/strong&gt; A repository that was created with &lt;code&gt;git init&lt;/code&gt; and never connected anywhere. Every commit in it is local. This is the one that hurts most, because it looks properly saved.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Stashes.&lt;/strong&gt; Work set aside with &lt;code&gt;git stash&lt;/code&gt; and never picked up again.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Not in git at all.&lt;/strong&gt; A folder of scripts next to the repositories, never added to one.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Find it with plain git&lt;/h2&gt;
+      &lt;p&gt;You don&#x27;t need a tool for a first look. Run this from the folder that holds your projects. It visits every repository below it and prints anything unsaved:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;find . -name .git -type d -prune | while read g; do
+  r=${g%/.git}
+  cd &quot;$r&quot; || continue
+  dirty=$(git status --porcelain | wc -l)
+  unpushed=$(git log --branches --not --remotes --oneline | wc -l)
+  remotes=$(git remote | wc -l)
+  stashes=$(git stash list | wc -l)
+  if [ &quot;$dirty$unpushed$stashes&quot; != &quot;000&quot; ] || [ &quot;$remotes&quot; = 0 ]; then
+    echo &quot;$r: $dirty uncommitted, $unpushed unpushed, $remotes remotes, $stashes stashes&quot;
+  fi
+  cd - &amp;gt;/dev/null
+done&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Two lines do the real work. &lt;code&gt;git status --porcelain&lt;/code&gt; prints one line per changed or untracked file. &lt;code&gt;git log --branches --not --remotes&lt;/code&gt; prints every commit on any local branch that no remote branch contains, which catches the branches &lt;code&gt;git status&lt;/code&gt; doesn&#x27;t show.&lt;/p&gt;
+      &lt;p&gt;For folders that were never in git, look for source files outside every repository:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;find . -name .git -prune -o -type f \( -name &#x27;*.py&#x27; -o -name &#x27;*.js&#x27; -o -name &#x27;*.go&#x27; -o -name &#x27;*.sh&#x27; \) -print \
+  | while read f; do git -C &quot;$(dirname &quot;$f&quot;)&quot; rev-parse 2&amp;gt;/dev/null || echo &quot;$f&quot;; done&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Expect noise here: build output, dependencies, copies. Skim it once, then write the noisy folders down so the next scan skips them.&lt;/p&gt;
+
+      &lt;h2&gt;Save what&#x27;s safe to save&lt;/h2&gt;
+      &lt;p&gt;Some of what you find you can save without thinking. A branch that is ahead of its own upstream and not behind it can be pushed as a fast-forward. Nothing on the remote gets overwritten:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git fetch
+git status -sb            # &quot;## main...origin/main [ahead 2]&quot; means safe to push
+git push&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Leave the rest for a person, or for the agent that made it: diverged branches, branches with no upstream, uncommitted files. Those need a decision about what the work is and where it belongs. Never force-push to clean up a list.&lt;/p&gt;
+
+      &lt;h2&gt;Stop the agent before it walks away&lt;/h2&gt;
+      &lt;p&gt;A daily scan catches what was left behind. It&#x27;s better to stop it from being left in the first place. Claude Code runs a &lt;em&gt;Stop hook&lt;/em&gt; when the agent is about to end its turn. If the hook exits with code 2, the turn doesn&#x27;t end: the agent reads what the hook wrote to standard error and keeps working.&lt;/p&gt;
+      &lt;p&gt;A minimal version checks the repository the agent was working in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+# ~/.claude/hooks/save-first.sh: refuse to stop while this repository has unsaved work.
+input=$(cat)
+# Ask only once per stop, so an agent with a good reason can still finish.
+echo &quot;$input&quot; | grep -q &#x27;&quot;stop_hook_active&quot;: *true&#x27; &amp;amp;&amp;amp; exit 0
+cd &quot;$(echo &quot;$input&quot; | sed -n &#x27;s/.*&quot;cwd&quot;: *&quot;\([^&quot;]*\)&quot;.*/\1/p&#x27;)&quot; 2&amp;gt;/dev/null || exit 0
+git rev-parse 2&amp;gt;/dev/null || exit 0
+dirty=$(git status --porcelain | wc -l)
+unpushed=$(git log --branches --not --remotes --oneline | wc -l)
+[ &quot;$dirty&quot; = 0 ] &amp;amp;&amp;amp; [ &quot;$unpushed&quot; = 0 ] &amp;amp;&amp;amp; exit 0
+echo &quot;Not saved yet: $dirty uncommitted files, $unpushed unpushed commits. Commit and push your work, or say why it should stay.&quot; &amp;gt;&amp;amp;2
+exit 2&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Register it in &lt;code&gt;~/.claude/settings.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [
+      { &quot;hooks&quot;: [{ &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;sh ~/.claude/hooks/save-first.sh&quot; }] }
+    ]
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Three things I learned running a hook like this:&lt;/p&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Check only the agent&#x27;s own changes.&lt;/strong&gt; When two agents share a repository, a hook that demands a clean &lt;code&gt;git status&lt;/code&gt; makes one agent commit the other&#x27;s half-written files. Read the session&#x27;s transcript (its path is in the hook&#x27;s input as &lt;code&gt;transcript_path&lt;/code&gt;) and check only the files this session wrote.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Ask once.&lt;/strong&gt; The input says &lt;code&gt;stop_hook_active&lt;/code&gt; when the agent is already continuing because of a stop hook. Let it finish the second time. Some work should stay uncommitted, and an agent that can&#x27;t stop just loops.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Leave scheduled jobs out.&lt;/strong&gt; A script that commits for its agent at the end doesn&#x27;t need the hook. Give it an environment variable that turns the hook off for that process.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;If you want it done for you&lt;/h2&gt;
+      &lt;p&gt;I put the scan and the hook together as &lt;a href=&quot;https://github.com/taktekhq/unsaved&quot;&gt;unsaved&lt;/a&gt;, open source under MIT. It reports all five kinds across many folders, pushes only what&#x27;s safe with &lt;code&gt;--push&lt;/code&gt;, and its Stop hook checks only the files the current session changed. It exits with 1 when something is unsaved, so a cron job or CI step can act on it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;go install github.com/taktekhq/unsaved@latest
+unsaved ~/projects&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Whichever way you do it, do it on every machine an agent touches, and look at the list once a week. The day a disk fails, the only work that counts is the work that&#x27;s somewhere else.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>&quot;Indexed, though blocked by robots.txt&quot;: what it means, and which of the two fixes you need</title>
     <link href="https://taktekbot.com/blog/indexed-though-blocked-by-robots-txt/"/>
