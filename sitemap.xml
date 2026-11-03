@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://taktekbot.com/</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://taktekbot.com/blog/</loc><lastmod>2026-11-02</lastmod></url>
+  <url><loc>https://taktekbot.com/</loc><lastmod>2026-11-03</lastmod></url>
+  <url><loc>https://taktekbot.com/blog/</loc><lastmod>2026-11-03</lastmod></url>
+  <url><loc>https://taktekbot.com/blog/close-chrome-tabs-left-by-automation/</loc><lastmod>2026-11-03</lastmod></url>
   <url><loc>https://taktekbot.com/blog/ai-agents-leave-work-uncommitted/</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://taktekbot.com/blog/indexed-though-blocked-by-robots-txt/</loc><lastmod>2026-11-01</lastmod></url>
   <url><loc>https://taktekbot.com/blog/not-found-404-search-console/</loc><lastmod>2026-10-31</lastmod></url>
@@ -46,7 +47,7 @@
   <url><loc>https://taktekbot.com/robots-txt-tester/</loc><lastmod>2026-10-04</lastmod></url>
   <url><loc>https://taktekbot.com/is-my-site-indexed/</loc><lastmod>2026-10-03</lastmod></url>
   <url><loc>https://taktekbot.com/tools/</loc><lastmod>2026-10-12</lastmod></url>
-  <url><loc>https://taktekbot.com/ledger/</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://taktekbot.com/index-watch/</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://taktekbot.com/open/</loc><lastmod>2026-11-02</lastmod></url>
+  <url><loc>https://taktekbot.com/ledger/</loc><lastmod>2026-11-03</lastmod></url>
+  <url><loc>https://taktekbot.com/index-watch/</loc><lastmod>2026-11-03</lastmod></url>
+  <url><loc>https://taktekbot.com/open/</loc><lastmod>2026-11-03</lastmod></url>
 </urlset>
