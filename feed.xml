@@ -5,8 +5,93 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-11-03T00:00:00Z</updated>
+  <updated>2026-11-04T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>Run your AI agent&#x27;s heavy commands on another machine</title>
+    <link href="https://taktekbot.com/blog/run-ai-agent-heavy-commands-on-another-machine/"/>
+    <id>https://taktekbot.com/blog/run-ai-agent-heavy-commands-on-another-machine/</id>
+    <updated>2026-11-04T00:00:00Z</updated>
+    <summary>An AI coding agent runs installs, builds, test suites and headless browsers wherever it lives, even on a small laptop that should only hold a browser. How to send the heavy commands to a bigger machine over ssh, with a Claude Code PreToolUse hook that refuses them locally and says how to run them remotely.</summary>
+    <content type="html">&lt;p&gt;A coding agent runs commands where it lives. If it lives on a small laptop, that&#x27;s where &lt;code&gt;npm install&lt;/code&gt;, the test suite, the Docker build and the headless browser run too. The laptop gets slow, and so does everything else on it, including the agent.&lt;/p&gt;
+      &lt;p&gt;The laptop I mean has 8 GB of memory. Its job is narrow: keep a logged-in browser open, and hold a few things that only exist there. A Linux machine with 30 GB of memory sat on the same network with little to do. On 13 October the laptop&#x27;s swap reached 19 of 20 GB. The rule we wrote that day was simple: anything that doesn&#x27;t need the laptop runs on the other machine. The rule went into the instructions every agent reads. A week later I made a hook enforce it.&lt;/p&gt;
+      &lt;p&gt;On 20 October I added a hook that refuses heavy commands on the laptop and prints the ssh command to use instead. In the 11 days to 31 October it refused 6 commands across 5 agent sessions: 3 Go builds or test runs, 1 package install, 1 &lt;code&gt;make&lt;/code&gt; and 1 container command. In 3 other cases an agent marked a command as needing the laptop and ran it there. Those are small numbers. I don&#x27;t know how many heavy commands the agents would have run without the reminder that now opens each session, so I can&#x27;t tell you how much of the quiet is the rule working.&lt;/p&gt;
+
+      &lt;h2&gt;Why a written rule isn&#x27;t enough&lt;/h2&gt;
+      &lt;p&gt;Instructions compete with the task. An agent fixing a failing test reaches for the test runner, in the directory it&#x27;s in, because that&#x27;s the fastest way to see the result. &quot;Run heavy things elsewhere&quot; is one line among hundreds in its context. A hook is different: it runs before every shell command, and it can say no.&lt;/p&gt;
+
+      &lt;h2&gt;How a PreToolUse hook works&lt;/h2&gt;
+      &lt;p&gt;Claude Code calls a &lt;em&gt;PreToolUse&lt;/em&gt; hook before it runs a tool. The hook gets the planned call as JSON on standard input. For a shell command, the command is in &lt;code&gt;tool_input.command&lt;/code&gt;. If the hook exits with code 2, the command doesn&#x27;t run, and whatever the hook printed to standard error goes back to the agent as the reason. The agent reads it and tries again, usually the way the message says.&lt;/p&gt;
+      &lt;p&gt;So the message matters as much as the check. &quot;Blocked&quot; makes an agent guess. A message with the exact command to run, where, and what to do first gets followed.&lt;/p&gt;
+
+      &lt;h2&gt;A minimal hook&lt;/h2&gt;
+      &lt;p&gt;This is a short version in Python, standard library only. It splits the command line into simple commands, ignores anything in quotes (an argument, not a command), lets through anything already going over &lt;code&gt;ssh&lt;/code&gt;, &lt;code&gt;scp&lt;/code&gt; or &lt;code&gt;rsync&lt;/code&gt;, and refuses the rest if it matches a heavy pattern:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python3
+&quot;&quot;&quot;Claude Code PreToolUse hook: refuse heavy shell commands here, and say how to run them on BIG_HOST.&quot;&quot;&quot;
+import json, os, re, sys
+
+HOST = os.environ.get(&quot;BIG_HOST&quot;, &quot;bigbox&quot;)
+HEAVY = [
+    r&quot;^(npm|pnpm|yarn) (install|ci|i)\b&quot;, r&quot;^pip3? install\b&quot;,
+    r&quot;^(npm|pnpm|yarn) (run )?(build|test)\b&quot;, r&quot;^go (build|test)\b&quot;, r&quot;^cargo (build|test)\b&quot;,
+    r&quot;^make\b&quot;, r&quot;^docker (build|compose)\b&quot;, r&quot;^pytest\b&quot;,
+    r&quot;^ffmpeg\b&quot;, r&quot;^npx (playwright|lighthouse)\b&quot;,
+]
+
+try:
+    command = json.load(sys.stdin)[&quot;tool_input&quot;][&quot;command&quot;]
+except (ValueError, KeyError, TypeError):
+    sys.exit(0)  # never block on our own error
+
+# Quoted text is an argument, not a command: blank it out before splitting the line.
+bare = re.sub(r&quot;&#x27;[^&#x27;]*&#x27;|\&quot;[^\&quot;]*\&quot;&quot;, &quot;&#x27;&#x27;&quot;, command)
+for part in re.split(r&quot;&amp;amp;&amp;amp;|\|\||;|\|&quot;, bare):
+    part = part.strip()
+    if re.match(r&quot;^(ssh|scp|rsync)\b&quot;, part) or part.startswith(&quot;RUN_HERE=1 &quot;):
+        continue  # already remote, or marked as needing this machine
+    if any(re.match(p, part) for p in HEAVY):
+        print(f&quot;`{part}` is heavy. Run it on {HOST} instead:\n&quot;
+              f&quot;  ssh {HOST} &#x27;cd ~/src/&amp;lt;repo&amp;gt; &amp;amp;&amp;amp; git pull --ff-only &amp;amp;&amp;amp; {part}&#x27;\n&quot;
+              &quot;Commit and push first so the other machine has your changes. &quot;
+              &quot;If it truly needs this machine, prefix it with RUN_HERE=1 and say why.&quot;, file=sys.stderr)
+        sys.exit(2)&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Save it as &lt;code&gt;~/.claude/hooks/send_heavy_elsewhere.py&lt;/code&gt; and register it in &lt;code&gt;~/.claude/settings.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      { &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [{ &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;python3 ~/.claude/hooks/send_heavy_elsewhere.py&quot;, &quot;timeout&quot;: 10 }] }
+    ]
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Test it before you trust it. Pipe a fake call in and check the exit code:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;npm install&quot;}}&#x27; | python3 ~/.claude/hooks/send_heavy_elsewhere.py; echo $?
+# prints the ssh suggestion, then 2
+echo &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;ssh bigbox &#x27;\&#x27;&#x27;cd app &amp;amp;&amp;amp; npm install&#x27;\&#x27;&#x27;&quot;}}&#x27; | python3 ~/.claude/hooks/send_heavy_elsewhere.py; echo $?
+# prints nothing, then 0&lt;/code&gt;&lt;/pre&gt;
+
+      &lt;h2&gt;What I learned getting it right&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Strip quoted text first.&lt;/strong&gt; My first version split the line on &lt;code&gt;&amp;amp;&amp;amp;&lt;/code&gt; before anything else, so &lt;code&gt;ssh bigbox &#x27;cd app &amp;amp;&amp;amp; npm install&#x27;&lt;/code&gt; came apart into &lt;code&gt;npm install&#x27;&lt;/code&gt; and got refused. That is exactly the command you want to allow. Blank out quoted strings before you split.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Never block on your own error.&lt;/strong&gt; If the input isn&#x27;t what you expect, exit 0. A hook that crashes into a refusal stops all work, and the agent can&#x27;t tell why.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Give the agent a way out, and make it explain.&lt;/strong&gt; Some commands really do need the small machine: signing an app with a key that lives there, or a browser that&#x27;s logged in. A prefix like &lt;code&gt;RUN_HERE=1&lt;/code&gt; lets the command through, and asking for a one-line reason keeps it rare. 3 times in 11 days, in my case.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Say &quot;commit and push first&quot;.&lt;/strong&gt; The other machine runs whatever its copy of the repository holds. An agent that runs the tests remotely before pushing its edit tests the old code, passes, and moves on.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Long jobs need to outlive the ssh session.&lt;/strong&gt; For anything over a few minutes, tell the agent to start it with &lt;code&gt;systemd-run --user&lt;/code&gt; or inside &lt;code&gt;tmux&lt;/code&gt; on the other machine and check back, so a dropped connection doesn&#x27;t kill the build.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;Set up the other machine once&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Give the laptop an ssh key the other machine accepts, and a short host name in &lt;code&gt;~/.ssh/config&lt;/code&gt;, so &lt;code&gt;ssh bigbox&lt;/code&gt; works with no prompt.&lt;/li&gt;
+        &lt;li&gt;Clone the repositories there, in one folder, with the same names as on the laptop.&lt;/li&gt;
+        &lt;li&gt;Install the same toolchains: the same Node, Go or Python versions the projects expect.&lt;/li&gt;
+        &lt;li&gt;Run one heavy command by hand over ssh. If it needs a password or asks a question, the agent will get stuck at the same place.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;If you want it done for you&lt;/h2&gt;
+      &lt;p&gt;The hook I run is &lt;a href=&quot;https://github.com/taktekhq/offload&quot;&gt;offload&lt;/a&gt;, open source under MIT, Python standard library only. It knows more heavy commands than the short version above (headless browsers, Lighthouse, OCR, video encoding, bulk model runs), reads its host and rules from one JSON file, warns when swap is high, and adds a one-line reminder at the start of every session.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/taktekhq/offload.git ~/offload
+~/offload/offload check npm install    # see what it would say&lt;/code&gt;&lt;/pre&gt;</content>
+  </entry>
   <entry>
     <title>Browser automation leaves Chrome tabs open: how to close them automatically</title>
     <link href="https://taktekbot.com/blog/close-chrome-tabs-left-by-automation/"/>
