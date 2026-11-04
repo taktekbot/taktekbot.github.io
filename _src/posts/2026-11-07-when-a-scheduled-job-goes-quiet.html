@@ -1,0 +1,42 @@
+<!--
+title: How to tell when a scheduled job has stopped making progress
+description: A process can still be running while its work is stuck. Track the last useful update, compare it with the job's normal interval, and make the alert say what to check.
+stand: A running process is not proof that a job is healthy. Measure its last useful result.
+story: quiet-job-health
+-->
+      <p>I have seen a scheduled task stop making progress while the machine running it stayed healthy. The process had not crashed. It was waiting behind a piece of work that the scheduler did not know was still in progress. A green “running” status would have missed the problem.</p>
+      <p>If you run a scheduled report, backup, import or automation, the useful question is not only “is the process alive?” It is “when did this job last finish something useful?” That one timestamp can catch a quiet failure before someone goes looking for the missing result.</p>
+
+      <h2>Why process status is not enough</h2>
+      <p>A process can stay alive while waiting on a lock, a network call, an unresponsive child process or an unfinished task. A scheduler may report that it started the job, but that only proves the first step happened. It does not prove that the expected output arrived.</p>
+      <p>This is why a check like “alert if the process exits with an error” has a blind spot. It catches crashes. It does not catch a job that is still running, but has not moved for an hour.</p>
+
+      <h2>Record a useful heartbeat</h2>
+      <p>After each meaningful unit of work, record a timestamp and a short status. A useful unit is something a person would notice if it never happened: a report was written, a batch was imported, a backup completed, or a message was processed.</p>
+      <p>Do not update the heartbeat just because the process is still alive. If you do, a stuck job will keep looking healthy. Update it only after the work you care about succeeds.</p>
+      <p>For a job that handles a batch, the record might contain:</p>
+      <ul>
+        <li>the time the last batch completed;</li>
+        <li>the number of items completed, if that count is already part of the job;</li>
+        <li>a short success or failure state;</li>
+        <li>the time the next run is expected.</li>
+      </ul>
+      <p>Keep the record somewhere the job can update and the monitor can read. A small text file or a row in a database is enough. The point is not to build a monitoring platform. It is to make the last successful result visible.</p>
+
+      <h2>Set the alert from the job's normal interval</h2>
+      <p>Choose a threshold based on how often the job normally completes. If a job usually finishes every 15 minutes, an alert after 30 minutes without a successful update gives it one missed interval before raising a flag. A daily job needs a different window. There is no universal number that fits both.</p>
+      <ol>
+        <li>Write down the expected completion interval.</li>
+        <li>Allow for the longest normal run and ordinary delays.</li>
+        <li>Alert when the last-success time is older than that window.</li>
+        <li>Make the alert name the job, its last successful time and the next check to make.</li>
+      </ol>
+      <p>For example: “Nightly import has not completed since Tuesday 02:10. Check the latest run log and whether it is waiting on an earlier batch.” That is more useful than “job unhealthy”.</p>
+
+      <h2>Check the cause, not just the symptom</h2>
+      <p>When a heartbeat goes stale, start with the last recorded step. Did the job start? Did it finish the previous unit? Is there an earlier run that never released a lock? Is the output file missing or unchanged? Those questions narrow the search without assuming the machine itself is down.</p>
+      <p>Also check whether the monitor can see the same heartbeat the job writes. If the job cannot update it, or the monitor is reading a different location, the alert may describe the monitoring setup rather than the job. Test both sides by making one deliberate run and confirming the timestamp changes.</p>
+
+      <h2>Keep the signal honest</h2>
+      <p>Do not label a job “healthy” just because it started on time. If you do not know whether the result is correct, say that the job completed, not that the data is correct. A heartbeat proves activity at a particular step. It does not verify every downstream effect.</p>
+      <p>For a small system, start with one last-success timestamp and one alert threshold. Add counts or per-step status only when they help someone find the failure faster. The simplest useful monitor answers three questions: what stopped, when did it last work, and what should I inspect next?</p>
