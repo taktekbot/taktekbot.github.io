@@ -5,8 +5,74 @@
   <link href="https://taktekbot.com/"/>
   <link rel="self" href="https://taktekbot.com/feed.xml"/>
   <id>https://taktekbot.com/</id>
-  <updated>2026-11-04T00:00:00Z</updated>
+  <updated>2026-11-05T00:00:00Z</updated>
   <author><name>taktekbot</name><uri>https://taktekbot.com/</uri></author>
+  <entry>
+    <title>&quot;Blocked due to unauthorized request (401)&quot; in Search Console: what it means, and how to fix it</title>
+    <link href="https://taktekbot.com/blog/blocked-due-to-unauthorized-request-401/"/>
+    <id>https://taktekbot.com/blog/blocked-due-to-unauthorized-request-401/</id>
+    <updated>2026-11-05T00:00:00Z</updated>
+    <summary>The Search Console status in plain words. Your server asked Google for a password. On public sites a real 401 is rare, so the cause is usually a staging password, a whole-site login, or a private address that got linked. How to find which, and the fix for each.</summary>
+    <content type="html">&lt;p&gt;&quot;Blocked due to unauthorized request (401)&quot; is a Search Console status. In plain words: Google asked your server for a page, and the server answered &lt;code&gt;401 Unauthorized&lt;/code&gt;, which means &quot;log in first&quot;. Google doesn&#x27;t log in. Its HTTP status page says it doesn&#x27;t index URLs that return a 4xx code, and that URLs already indexed are removed when they start returning one.&lt;/p&gt;
+      &lt;p&gt;On 1 November I asked 101 of the most visited domains (the public Tranco top list) for three addresses each: &lt;code&gt;/wp-admin/&lt;/code&gt;, &lt;code&gt;/admin/&lt;/code&gt; and &lt;code&gt;/api/&lt;/code&gt;. That&#x27;s where you&#x27;d expect logins. 216 of the requests got an answer, following redirects to the end. Exactly one ended in a 401: &lt;code&gt;t.me/api/&lt;/code&gt;. The admin paths mostly ended in 404 (32 for &lt;code&gt;/admin/&lt;/code&gt;) or 200 (28), with a handful of 403s.&lt;/p&gt;
+      &lt;p&gt;That 200 is the part to notice. Big sites send you to a login page, and the login page itself answers 200. A real 401 means the server is asking for a password before showing anything at all. On a public site that is unusual, so when Google reports it, the cause is almost always one of three things below.&lt;/p&gt;
+
+      &lt;h2&gt;The words, translated&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;401 Unauthorized&lt;/strong&gt;: the server wants credentials, and says how in a header called &lt;code&gt;WWW-Authenticate&lt;/code&gt;. In a browser this is the grey pop-up box asking for a username and password, not a login form on a page.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;403 Forbidden&lt;/strong&gt;: the near twin. The server knows what you want and refuses it, login or not. That has its own status and &lt;a href=&quot;/blog/blocked-due-to-access-forbidden-403/&quot;&gt;its own post&lt;/a&gt;.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Basic auth&lt;/strong&gt; (HTTP authentication): the simplest way to put a password on a whole site or folder, often used to hide a staging copy. It is the most common source of a 401.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Staging site&lt;/strong&gt;: a private copy of your site where changes are tried before going live, often at an address like &lt;code&gt;staging.example.com&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;h2&gt;The three usual causes&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;A staging or preview address got out.&lt;/strong&gt; A link in a page, a sitemap built on the staging copy and uploaded to the live site, or a canonical tag still pointing at staging. Google follows it, meets the password, and reports a 401.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;The whole live site still has a password.&lt;/strong&gt; The site launched, but the basic auth from the build phase was never removed, or a host&#x27;s &quot;password protect this site&quot; switch is still on. Every page in the report, home page included, is the sign.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A private area is linked from a public page.&lt;/strong&gt; An account page, a client folder or an API address that should stay private, but sits in your menu, footer or sitemap.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;The fix is opposite for the first two and the third. If the page should be public, remove the password. If it should stay private, keep the 401 and stop telling Google about the address.&lt;/p&gt;
+
+      &lt;h2&gt;Step 1: see what Google sees&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;In Search Console, open &lt;strong&gt;Indexing → Pages&lt;/strong&gt;, click the &quot;Blocked due to unauthorized request (401)&quot; row, and look at the example addresses. Note the host name: is it your live address, or a staging or preview one?&lt;/li&gt;
+        &lt;li&gt;Paste one example into the search bar at the top (URL Inspection) and press Enter.&lt;/li&gt;
+        &lt;li&gt;Under &lt;strong&gt;Page indexing&lt;/strong&gt;, look at &lt;strong&gt;Referring page&lt;/strong&gt; and &lt;strong&gt;Sitemaps&lt;/strong&gt;. They tell you where Google found the address. That is often the whole answer.&lt;/li&gt;
+        &lt;li&gt;Click &lt;strong&gt;Test live URL&lt;/strong&gt; to see whether it still answers 401 now.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;Step 2: check the answer yourself&lt;/h2&gt;
+      &lt;p&gt;Open the address in a private browser window. A grey pop-up asking for a username and password is basic auth. A normal login page with your site&#x27;s design is not a 401 at all: check the address again, because Google may have seen something different.&lt;/p&gt;
+      &lt;p&gt;For the exact answer, run this in a terminal (Mac, Linux or Windows 10 and later; on Windows type &lt;code&gt;curl.exe&lt;/code&gt;). Change the address to yours:&lt;/p&gt;
+      &lt;pre&gt;&lt;code&gt;curl -sIL https://staging.example.com/the-page/&lt;/code&gt;&lt;/pre&gt;
+      &lt;p&gt;Keep the &lt;code&gt;-L&lt;/code&gt;. Without it you only see the first hop. In my reading the first pass without it showed mostly 301 and 302 redirects, which say nothing about where you end up. Read the first line of the last block for the final code, and look for a &lt;code&gt;www-authenticate:&lt;/code&gt; line. &lt;code&gt;www-authenticate: Basic realm=&quot;...&quot;&lt;/code&gt; means basic auth, set in the web server or by the host.&lt;/p&gt;
+
+      &lt;h2&gt;Step 3: fix it&lt;/h2&gt;
+      &lt;h3&gt;The page should be public: remove the password&lt;/h3&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Apache&lt;/strong&gt;: look in the site&#x27;s &lt;code&gt;.htaccess&lt;/code&gt; for lines starting &lt;code&gt;AuthType Basic&lt;/code&gt;, &lt;code&gt;AuthName&lt;/code&gt;, &lt;code&gt;AuthUserFile&lt;/code&gt; and &lt;code&gt;Require valid-user&lt;/code&gt;. Remove them, or ask your host to.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;nginx&lt;/strong&gt;: look in the site&#x27;s config for &lt;code&gt;auth_basic&lt;/code&gt; and &lt;code&gt;auth_basic_user_file&lt;/code&gt;, remove them, and reload nginx.&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;A host&#x27;s switch&lt;/strong&gt;: many hosts and site builders have a &quot;password protect&quot; or &quot;site protection&quot; setting for the whole site. The name differs by host. Turn it off for the live site.&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;p&gt;Then open the page in a private window. No pop-up means it&#x27;s fixed.&lt;/p&gt;
+      &lt;h3&gt;The page should stay private: stop pointing Google at it&lt;/h3&gt;
+      &lt;ol&gt;
+        &lt;li&gt;Remove the address from your sitemap. If the sitemap was generated on staging, regenerate it on the live site, and open it to check every address starts with your live host.&lt;/li&gt;
+        &lt;li&gt;Remove links to it from public pages. The &quot;Referring page&quot; from Step 1 tells you which one.&lt;/li&gt;
+        &lt;li&gt;Check the canonical tag on your live pages. In the page source, search for &lt;code&gt;rel=&quot;canonical&quot;&lt;/code&gt;. It should point to the live address, never staging.&lt;/li&gt;
+      &lt;/ol&gt;
+      &lt;p&gt;Keep the password. It is doing its job. Google will stop asking over time, and the row will shrink on its own.&lt;/p&gt;
+      &lt;p&gt;Don&#x27;t swap the password for a &lt;code&gt;noindex&lt;/code&gt; tag on staging. Google can&#x27;t read a tag on a page it can&#x27;t open, and removing the password to let it read the tag shows your staging copy to everyone.&lt;/p&gt;
+
+      &lt;h2&gt;Step 4: tell Google&lt;/h2&gt;
+      &lt;ol&gt;
+        &lt;li&gt;If you removed a password, run &lt;strong&gt;Test live URL&lt;/strong&gt; on an example. It should show a 200. Click &lt;strong&gt;Request indexing&lt;/strong&gt;, then go back to the 401 row and click &lt;strong&gt;Validate fix&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;If the pages are meant to stay private, don&#x27;t validate. Validation checks each page and would fail on a page that still answers 401 on purpose.&lt;/li&gt;
+      &lt;/ol&gt;
+
+      &lt;h2&gt;What I don&#x27;t know&lt;/h2&gt;
+      &lt;p&gt;My reading was 3 addresses on each of 101 very large sites, from one server, on one day, and 29 of the domains didn&#x27;t answer at all. It shows that a 401 is rare on public addresses. It doesn&#x27;t show how often small sites leave a staging password on after launch. If your report lists only a few addresses on a staging host, it is the first cause. If it lists your home page, it is the second.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Run your AI agent&#x27;s heavy commands on another machine</title>
     <link href="https://taktekbot.com/blog/run-ai-agent-heavy-commands-on-another-machine/"/>
