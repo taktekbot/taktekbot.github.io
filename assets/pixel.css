@@ -1,0 +1,52 @@
+/* taktek, dark only: light pixel letters on a dark grid that covers the whole page. The only round thing and the only colour is the green dot, taktekbot's face. */
+:root{color-scheme:dark;--bg:#0D0D0E;--ink:#F4F2EE;--ink-2:#D6D4CF;--muted:#9A9AA0;--grid:rgba(255,255,255,.08);--signal:#2BE38C;--cell:8px;--line:1px;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+@media (max-width:720px){:root{--cell:4px}}
+*{box-sizing:border-box}
+html{min-height:100%;background-color:var(--bg);
+  background-image:linear-gradient(to right,var(--grid) var(--line),transparent var(--line)),linear-gradient(to bottom,var(--grid) var(--line),transparent var(--line));
+  background-size:var(--cell) var(--cell);background-position:0 0}
+body{margin:0;background:transparent;color:var(--ink);font-family:var(--mono)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.wrap{max-width:760px;margin:0 auto;padding:48px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:72px}
+.stack{display:flex;flex-direction:column;gap:72px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+canvas.px{display:block;max-width:100%;height:auto;image-rendering:pixelated}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:16px;text-decoration:none}
+.face{display:block;width:calc(var(--cell)*6);height:calc(var(--cell)*6);flex:none}
+.face circle{fill:var(--signal)}
+.face rect{fill:var(--bg)}
+@media (prefers-reduced-motion:no-preference){.face .eyes{transform-origin:50% 50%;animation:blink 5s infinite}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.head .mail{font-size:13px;text-decoration:none;border-bottom:2px solid var(--ink)}
+.head .mail:hover{border-color:var(--signal)}
+
+.block{display:flex;flex-direction:column;gap:20px}
+p{margin:0;font-size:15px;line-height:1.65;max-width:62ch;color:var(--ink-2)}
+p b{color:var(--ink);font-weight:700}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-variant-numeric:tabular-nums}
+.nums div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.nums strong{font-size:20px;color:var(--ink)}
+.nums span{font-size:12px;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px}
+.links a,.doc a{text-decoration:none;border-bottom:2px solid var(--ink);overflow-wrap:anywhere}
+.links a:hover,.doc a:hover{border-color:var(--signal)}
+
+.doc{display:flex;flex-direction:column;gap:16px}
+.doc h2{font-size:15px;font-weight:700;margin:24px 0 0;text-transform:uppercase;letter-spacing:.04em}
+.doc .sub{color:var(--muted);font-size:13px}
+.doc ul,.doc ol{margin:0;padding-left:20px;font-size:15px;line-height:1.65;color:var(--ink-2);max-width:62ch}
+.lede-box{display:flex;flex-direction:column;gap:12px;border-left:4px solid var(--signal);padding-left:16px}
+
+main > footer{margin-top:72px}
+footer{display:flex;flex-direction:column;gap:20px;font-size:12px;line-height:1.6;color:var(--muted);border-top:2px solid var(--ink);padding-top:24px}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+footer nav a{text-decoration:none}
+footer nav a:hover{color:var(--ink)}
+.entities{display:flex;flex-wrap:wrap;gap:16px 40px}
+address{font-style:normal}
+address b{color:var(--ink-2)}
+@media (max-width:480px){.nums strong{font-size:16px}}
